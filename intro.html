@@ -1,11 +1,30 @@
 <html>
 
 <head>
-
+<link rel="stylesheet" type="text/css" href="stylesheets/site.css" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/prettify.css" />
+    <script src="javascript/prettify.js" ></script>
 </head>
 
 <body>
 
 <h1>Intro</h1>
+
+A minimal Ratel service:
+
+<pre class='prettyprint'>
+  @RatelService
+  public class MyService {
+
+    public Sting myMethod() {
+  
+      return "Hello World";
+    }
+
+  }
+</pre>
+
+
+<script type='text/javascript'>prettyPrint();</script>
 </body>
 </html>
