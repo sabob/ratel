@@ -10,3 +10,20 @@ pre.programlisting {
     line-height: normal;
 }
 
+span.varname, code.varname {
+    color: blue;
+    font-weight: normal;
+}
+
+span.symbol, code.symbol {
+    color: red;
+    font-weight: normal;
+}
+
+span.command, code.command {
+    color: #7F0055;
+}
+
+span.token, code.token {
+    color: maroon;
+}
