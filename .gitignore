@@ -1,0 +1,10 @@
+/ratel-bench/build/
+/ratel-examples/build/
+/ratel-bench/dist/
+/ratel-bench/nbproject/private/
+/ratel-examples/dist/
+/ratel-examples/nbproject/private/
+/build/
+/dist/
+/ratel-examples/
+/ratel-bench/
