@@ -65,6 +65,7 @@
     <target name="init" description="Initialize folders" depends="clean">
         <mkdir dir="build/web"/>
         <mkdir dir="../dist" />
+        <mkdir dir="${dir.weblib}"/>
         <copy todir="build/web">
             <fileset dir="web">
                 <exclude name="**/META-INF/**"/>
