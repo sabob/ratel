@@ -16,21 +16,21 @@
 
 <pre class="prettyprint programlisting linenums">
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app>
-    <filter>
-        <filter-name>ratelFilter</filter-name>
-        <filter-class>com.google.ratel.RatelFilter</filter-class>
-        <init-param>
-            <param-name>packageNames</param-name>
-            <param-value>com.mycorp.service</param-value>
-        </init-param>
-    </filter>
+&lt;web-app&gt;
+    &lt;filter&gt;
+        &lt;filter-name&gt;ratelFilter&lt;/filter-name&gt;
+        &lt;filter-class&gt;com.google.ratel.RatelFilter&lt;/filter-class&gt;
+        &lt;init-param&gt;
+            &lt;param-name&gt;packageNames&lt;/param-name&gt;
+            &lt;param-value&gt;com.mycorp.service&lt;/param-value&gt;
+        &lt;/init-param&gt;
+    &lt;/filter&gt;
     
-    <filter-mapping>
-        <filter-name>ratelFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-</web-app>
+    &lt;filter-mapping&gt;
+        &lt;filter-name&gt;ratelFilter&lt;/filter-name&gt;
+        &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+    &lt;/filter-mapping&gt;
+&lt;/web-app&gt;
 </pre>
 
 <p>3. Create a Ratel service to handle incoming requests (A Ratel service is a POJO annotated with @RatelService:</p>
