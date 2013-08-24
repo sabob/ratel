@@ -8,11 +8,36 @@
 
 <body>
 
-<h1>Intro</h1>
+<h1>Introduction to Ratel</h1>
 
-A minimal Ratel service:
+<p>1. Add ratel.jar to your classpath.</p>
+
+<p>2. Add RatelFilter to your web.xml and map it for all requests:</p>
 
 <pre class="prettyprint programlisting linenums">
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app>
+    <filter>
+        <filter-name>ratelFilter</filter-name>
+        <filter-class>com.google.ratel.RatelFilter</filter-class>
+        <init-param>
+            <param-name>packageNames</param-name>
+            <param-value>com.mycorp.service</param-value>
+        </init-param>
+    </filter>
+    
+    <filter-mapping>
+        <filter-name>ratelFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+</web-app>
+</pre>
+
+<p>3. Create a Ratel service to handle incoming requests (A Ratel service is a POJO annotated with @RatelService:</p>
+
+<pre class="prettyprint programlisting linenums">
+package com.mycorp.service;
+
   @RatelService
   public class MyService {
 
@@ -23,6 +48,11 @@ A minimal Ratel service:
     }
 
   }
+</pre>
+
+Ratel maps this service to the URL:
+<pre class="prettyprint programlisting">
+http://localhost/MyService/MyMethod
 </pre>
 
 
