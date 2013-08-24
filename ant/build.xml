@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one
+   or more contributor license agreements.  See the NOTICE file
+   distributed with this work for additional information
+   regarding copyright ownership.  The ASF licenses this file
+   to you under the Apache License, Version 2.0 (the
+   "License"); you may not use this file except in compliance
+   with the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+   KIND, either express or implied.  See the License for the
+   specific language governing permissions and limitations
+   under the License.
+-->
+<project name="ratel" default="dist" basedir="..">
+    
+    <property file="ant/build.properties"/>
+   <property name="jar.junit" value="junit-${junit.version}.jar"/>
+   <property name="jar.log4j" value="log4j-${log4j.version}.jar"/>
+   <property name="jar.servlet" value="servlet-api-${servlet-api.version}.jar"/>
+   <property name="jar.portlet" value="portlet-api-${portlet-api.version}.jar"/>
+   <property name="jar.slf4j" value="slf4j-api-${slf4j.version}.jar"/>
+   <property name="jar.velocity" value="velocity-${velocity.version}.jar"/>
+   <property name="jar.ant" value="ant-${antjar.version}.jar"/>
+   <property name="javac.source" value="1.6"/>
+   <property name="repository" value="http://repo1.maven.org"/>
+   <property name="maven-bundle" value="../maven-upload"/>
+
+    <!--
+     Macro Definitions
+     -->
+    
+    <macrodef name="downloadMacro">
+        <attribute name="name"/>
+        <attribute name="path"/>
+        <sequential>
+            <get src="${repository}/maven2/@{path}/@{name}"
+                 dest="ratel/lib/@{name}"
+                 verbose="true"
+                 usetimestamp="true"/>            
+        </sequential>
+    </macrodef>
+    
+    <macrodef name="rhinoscript">
+
+         <text name="text"/>
+
+         <sequential>
+             
+             <script src="C:/dev/os/ratel/ant/handlebars.js" language="javascript">
+                 
+             </script>
+
+             <script language="javascript" >
+                 <classpath>
+                 <!--<fileset dir="c:/jdk6/lib/java/" includes="js.jar"/>
+                 <fileset dir="../../../lib/build-java/" includes="*.jar"></fileset>-->
+                 
+                 </classpath><![CDATA[
+                     importPackage(java.lang, java.util, java.io);
+                     //System.out.println("Hello from JavaScript!!");
+                     //create shell, execute something and grab global
+                     var shell = org.mozilla.javascript.tools.shell.Main;
+                     //var args = ["-e","var a='STRING';"];
+                     //shell.exec(args);
+                     var shellGlobal = shell.global;
+                     //grab functions from shell global and place in current global
+                     var load=shellGlobal.load;
+                     load.load("moo");
+                     //var print=shellGlobal.print;
+                     var defineClass=shellGlobal.defineClass;
+                     var deserialize=shellGlobal.deserialize;
+                     var doctest=shellGlobal.doctest;
+                     var gc=shellGlobal.gc;
+                     var help=shellGlobal.help;
+                     var loadClass=shellGlobal.loadClass;
+                     var quit=shellGlobal.quit;
+                     var readFile=shellGlobal.readFile;
+                     var readUrl=shellGlobal.readUrl;
+                     var runCommand=shellGlobal.runCommand;
+                     var seal=shellGlobal.seal;
+                     var serialize=shellGlobal.serialize;
+                     var spawn=shellGlobal.spawn;
+                     var sync=shellGlobal.sync;
+                     var toint32=shellGlobal.toint32;
+                     var version=shellGlobal.version;
+                     var environment=shellGlobal.environment;     
+                     @{text}
+             ]]></script>
+         </sequential>
+     </macrodef>
+    
+    <presetdef name="javac">
+        <javac includeantruntime="false" />
+    </presetdef>
+    
+    <path id="compile.classpath">
+        <fileset dir="ratel/lib">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="clean" description="clean project">
+        <delete dir="dist" />
+        <delete dir="build" />
+    </target>
+    
+    <target name="init" description="Initialize folders" depends="clean">
+        <mkdir dir="build/classes"/>
+        <mkdir dir="dist" />
+    </target>
+
+    <target name="compile" depends="init" description="compile ratel">
+        <javac destdir="build/classes" debug="true" srcdir="ratel/src" target="1.6" source="${javac.source}">
+            <classpath refid="compile.classpath"/>
+        </javac>
+        
+        <copy todir="build/classes">
+            <fileset dir="ratel/src">
+                
+            </fileset>
+        </copy>
+        
+    </target>
+    
+    <target name="build" depends="compile" description="jar ratel">
+         <jar destfile="dist/ratel-${version}.jar">
+    <fileset dir="build/classes"
+             excludes="**/Test.class"
+    />
+  </jar>
+    </target>
+    
+    <target name="build-examples" description="build ratel-examples WAR file" depends="build">
+      <ant antfile="ant/build.xml" 
+           dir="ratel-examples"
+           target="dist" 
+           inheritall="false"/>
+   </target>
+   
+   
+    <target name="dist" depends="build, build-examples" description="create ratel distribution">
+   </target>
+   
+    <target name="deploy" depends="dist" description="Deploy ratel examples">
+        <ant antfile="ant/build.xml" 
+           dir="ratel-examples"
+           target="deploy" 
+           inheritall="false"/>
+   </target>
+   
+   <target name="get-deps" description="download JAR dependencies">
+      <!--<downloadMacro name="${jar.collections}" path="commons-collections/commons-collections/${commons-collections.version}"/>
+      <downloadMacro name="${jar.lang}" path="commons-lang/commons-lang/${commons-lang.version}"/>-->
+      <downloadMacro name="${jar.log4j}" path="log4j/log4j/${log4j.version}"/>
+      <downloadMacro name="${jar.junit}" path="junit/junit/${junit.version}"/>
+      <downloadMacro name="${jar.servlet}" path="javax/servlet/servlet-api/${servlet-api.version}"/>
+      <downloadMacro name="${jar.portlet}" path="javax/portlet/portlet-api/${portlet-api.version}"/>
+      <downloadMacro name="${jar.slf4j}" path="org/slf4j/slf4j-api/${slf4j.version}"/>
+      <downloadMacro name="${jar.velocity}" path="org/apache/velocity/velocity/${velocity.version}"/>
+      <downloadMacro name="${jar.ant}" path="org/apache/ant/ant/${antjar.version}"/>
+      <ant antfile="ant/build.xml" 
+           dir="ratel-examples"
+           target="get-deps"
+           inheritall="false"/>
+     
+   </target>
+   
+   <target name="build-handlebars" description="Build handlebars templates">
+         <rhinoscript>
+             print("Hello World!")
+             shellGlobal.load("handlebars.js");
+         </rhinoscript>
+
+   </target>
+    
+</project>

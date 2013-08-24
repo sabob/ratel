@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="gatein-war" basedir=".">
+    <description>Builds (portlet) war.</description>
+    
+
+    <target name="portlet-war" description="Build WAR">
+		<war destfile="dist/TestPortlet.war" webxml="web/WEB-INF/web.xml">
+			<fileset dir="build/web">
+				<include name="**"/>
+        <exclude name="*/lib/portlet*"/>
+        <exclude name="*/lib/pluto*"/>
+        <exclude name="*/lib/castor*"/>
+        <exclude name="*/lib/commons-logging*"/>
+			</fileset>
+		</war>
+    
+    <delete dir="C:/apps/gateln/webapps/TestPortlet/"/>
+    
+    <copyfile src="dist/TestPortlet.war" dest="C:/apps/gateln/webapps/TestPortlet.war"/>
+	</target>
+          
+</project>

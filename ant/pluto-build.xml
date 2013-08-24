@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="pluto-war" basedir=".">
+    <description>Builds pluto (portlet) war.</description>
+    
+    <path id="classes">
+        <!--
+        Pluto Ant Tasks depend upon the following libraries:
+          * pluto-ant-tasks-${version}.jar
+          * pluto-util-${version}.jar
+          * pluto-descriptor-api-${version}.jar
+          * pluto-descriptor-util-${version}.jar
+          * commons-logging-1.0.4.jar
+          * castor-1.1.1.jar
+        -->
+        <fileset dir="build/web/WEB-INF/classes" includes="**/*"/>
+        
+        <fileset dir="web/WEB-INF/lib" includes="**/*.jar"/>
+        <!--<fileset dir="/path/to/commons-logging" includes="**/*.jar"/>
+        <fileset dir="/path/to/castor" includes="**/*.jar"/>-->
+    </path>
+
+    <typedef name="passemble" classname="org.apache.pluto.ant.AssembleTask"
+             classpathref="classes"/>
+
+    <target name="passemble" description="passemble">
+        <mkdir dir="dist/WEB-INF"/>
+        <passemble 
+            webxml="web/WEB-INF/web.xml" 
+            portletxml="web/WEB-INF/portlet.xml" 
+            destfile="dist/WEB-INF/web.xml"/>
+    </target>
+          
+</project>
