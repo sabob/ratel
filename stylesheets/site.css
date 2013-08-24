@@ -1,15 +1,12 @@
-
 pre.programlisting {
     font-size:      9pt;
     padding:        5pt 2pt;
     border:         1pt solid black;
     background:     #eeeeee;
     font-family:    "Courier New",courier;
-}
-
-pre.programlisting{
     padding:1em;
     border:1px solid #888;
     text-align: left;
     line-height: normal;
 }
+
