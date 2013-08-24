@@ -10,20 +10,24 @@ pre.programlisting {
     line-height: normal;
 }
 
-span.varname, code.varname {
+code.filename, code.filename span.pln {
+}
+
+code.varname, code.varname span.pln, code.varname span.atv, code.varname span.atn {
     color: blue;
     font-weight: normal;
 }
 
-span.symbol, code.symbol {
+span.symbol, span.symbol span.pln, span.symbol span.atn, span.symbol span.tag,
+span.symbol span.atv {
     color: red;
     font-weight: normal;
 }
 
-span.command, code.command {
+span.command, span.command span.pln {
     color: #7F0055;
 }
 
-span.token, code.token {
+span.token, span.token span.pln, span.token span.atv {
     color: maroon;
 }
