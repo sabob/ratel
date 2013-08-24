@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd"
+             version="2.0">
+  
+    <portlet>
+        <description>TestPortletDescription</description>
+        <portlet-name>TestPortlet</portlet-name>
+        <display-name>Test Portlet</display-name>
+        <portlet-class>com.google.ratel.portlet.TestPortlet</portlet-class>
+        <supports>
+            <mime-type>text/html</mime-type>
+        </supports>
+        <portlet-info>
+            <title>About Test Portlet</title>
+        </portlet-info>
+    </portlet>
+    
+    <filter>
+      <filter-name>testResourceFilter</filter-name>
+      <filter-class>com.google.ratel.portlet.TestResourceFilter</filter-class>
+      <lifecycle>ACTION_PHASE</lifecycle>
+      <lifecycle>EVENT_PHASE</lifecycle>
+      <lifecycle>RENDER_PHASE</lifecycle>
+      <lifecycle>RESOURCE_PHASE</lifecycle>
+   </filter>
+
+   <filter-mapping>
+      <filter-name>testResourceFilter</filter-name>
+      <portlet-name>*</portlet-name>
+   </filter-mapping>
+  
+
+</portlet-app>
+
+

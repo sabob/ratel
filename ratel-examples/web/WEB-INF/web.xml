@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="ClaimsLodging" version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    <filter>
+        <filter-name>
+            ratelFilter
+        </filter-name>
+        <filter-class>
+            com.google.ratel.RatelFilter
+        </filter-class>
+        <init-param>
+            <param-name>packageNames</param-name>
+            <param-value>co.za.mom, com.mycorp.service</param-value>
+        </init-param>
+        <init-param>
+            <param-name>maxRequestSize</param-name>
+            <param-value>2097152</param-value>
+        </init-param>
+    </filter>
+    <!--
+    <filter-mapping>
+        <filter-name>ratelFilter</filter-name>
+        <url-pattern>/rest/*</url-pattern>
+    </filter-mapping>
+    -->
+    <filter-mapping>
+        <filter-name>ratelFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
+    <display-name>Claims Lodging</display-name>
+    <listener>
+        <listener-class>org.h2.server.web.DbStarter</listener-class>
+    </listener>
+    <listener>
+        <listener-class>com.mycorp.util.StartupListener</listener-class>
+    </listener>
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+</web-app>

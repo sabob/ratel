@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Javascript Single page app demo</title>
+        <script data-main="app" src="lib/jquery.js"></script>
+
+        <script>
+                    $(function() {
+            try {
+            $("#hide").click(function(e) {
+            e.preventDefault();
+                    $("#hideTarget").fadeOut('fast', function() {
+            throw new Error("err");
+                    console.log("hidden");
+            });
+            });
+            } catch(e) {
+            console.log("err", e);
+            } finally {
+            console.log("done");
+            }
+            $("#show").click(function(e) {
+            e.preventDefault();
+                    $("#hideTarget").fadeIn('fast', function() {
+            console.log("shown");
+            });
+            });
+            });
+        </script>
+
+    </head>
+
+
+    <body class="tundra" style="background-color:#fcfcfc;">
+        <a id="hide" href="">hide</a>         <a id="show" href="">show</a>
+
+        <div id="hideTarget">I must be hidden</div>
+
+
+
+    </body>
+
+</html>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one
+   or more contributor license agreements.  See the NOTICE file
+   distributed with this work for additional information
+   regarding copyright ownership.  The ASF licenses this file
+   to you under the Apache License, Version 2.0 (the
+   "License"); you may not use this file except in compliance
+   with the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+   KIND, either express or implied.  See the License for the
+   specific language governing permissions and limitations
+   under the License.
+-->
+<project name="ratel-examples" default="help" basedir="..">
+   
+    <property file="../ant/build.properties"/>
+    <property file="ant/build.properties"/>
+    <property file="../ratel-examples/ant/build.properties"/>
+    
+    <property name="dir.web" value="web"/>
+    <property name="dir.weblib" value="${dir.web}/WEB-INF/lib"/>
+    <property name="repository" value="http://repo1.maven.org"/>
+   
+    <property name="jar.log4j" value="log4j-${log4j.version}.jar"/>
+    <property name="jar.servlet" value="servlet-api-${servlet-api.version}.jar"/>
+    <property name="jar.portlet" value="portlet-api-${portlet-api.version}.jar"/>
+    <property name="jar.collections" value="commons-collections-${commons-collections.version}.jar"/>
+   <property name="jar.lang" value="commons-lang-${commons-lang.version}.jar"/>
+    <property name="jar.velocity" value="velocity-${velocity.version}.jar"/>
+    
+    <presetdef name="javac">
+        <javac includeantruntime="false" />
+    </presetdef>
+    
+    <path id="compile.classpath">
+        <fileset dir="build/web/WEB-INF/lib">
+            <include name="*.jar"/>
+        </fileset>
+        <fileset dir="../ratel/lib">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+    
+    <macrodef name="webDownloadMacro">
+        <attribute name="name"/>
+        <attribute name="path"/>
+        <sequential>
+            <get src="${repository}/maven2/@{path}/@{name}" 
+                 dest="${dir.weblib}/@{name}"
+                 verbose="true"
+                 usetimestamp="true"/>            
+        </sequential>
+    </macrodef> 
+
+    <target name="clean" description="clean project">
+        <delete dir="build" />
+    </target>
+    
+    <target name="init" description="Initialize folders" depends="clean">
+        <mkdir dir="build/web"/>
+        <mkdir dir="../dist" />
+        <copy todir="build/web">
+            <fileset dir="web">
+                <exclude name="**/META-INF/**"/>
+            </fileset>
+        </copy>
+        <copy todir="build/web/WEB-INF/lib">
+            <fileset dir="../dist">
+                <include name="ratel*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="compile" depends="init" description="compile ratel">
+        <mkdir dir="build/web/WEB-INF/classes"/>
+        <javac destdir="build/web/WEB-INF/classes" debug="true" srcdir="src/java">
+            <classpath refid="compile.classpath"/>
+        </javac>
+        <copy todir="build/web/WEB-INF/classes/META-INF">
+            <fileset dir="src/java/META-INF"/>
+        </copy>
+    </target>
+    
+    <target name="war" depends="compile" description="Build War">
+        <war destfile="../dist/ratel-examples.war" webxml="build/web/WEB-INF/web.xml">
+            <fileset dir="build/web"/>
+            <lib dir="build/web/WEB-INF/lib"/>
+            <!--<classes dir="build/classes"/>-->
+        </war>
+    </target>
+    
+    <target name="dist" depends="war" description="Build distribution">
+    </target>
+    
+    <target name="deploy" description="copy WAR files to app server" depends="war">
+        <echo> Deploying to: ${dir.appserver}</echo>
+        <delete file="${dir.appserver}/ratel-examples.war" quiet="true"/>
+        <sleep seconds="5"/>
+        <copy file="../dist/ratel-examples.war" todir="${dir.appserver}" overwrite="true"/>
+    </target>
+    
+    <target name="get-deps" description="download JAR dependencies">
+        <mkdir dir="${dir.weblib}"/>
+        <webDownloadMacro name="${jar.log4j}" path="log4j/log4j/${log4j.version}"/>
+        <webDownloadMacro name="${jar.collections}" path="commons-collections/commons-collections/${commons-collections.version}"/>
+        <webDownloadMacro name="${jar.lang}" path="commons-lang/commons-lang/${commons-lang.version}"/>
+    </target>
+
+</project>

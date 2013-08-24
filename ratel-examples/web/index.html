@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+        <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="no-store, no-cache, must-revalidate, post-check=0, pre-check=0">
+        <META HTTP-EQUIV="EXPIRES" CONTENT="0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="js/lib/jquery.js"></script>
+        <script>
+            function toJson(formId) {
+            var object = toObject(formId);
+            var json = JSON.stringify(object);
+            return json;
+        }
+
+        function toObject(formId) {
+            var result = {};
+            var array = $('#' + formId).serializeArray();
+            $.each(array, function() {
+                if (result[this.name]) {
+                    if (!result[this.name].push) {
+                        result[this.name] = [result[this.name]];
+                    }
+                    result[this.name].push(this.value || '');
+                } else {
+                    result[this.name] = this.value || '';
+                }
+            });
+            return result;
+        }
+        </script>
+
+        <title>Click Services</title>
+
+        <script>
+
+            $(function() {
+                $("#getJson").click(function(e) {
+                    e.preventDefault();
+                    var link = e.target;
+                    getJson(link.href);
+                });
+
+                $("#getPojo").click(function(e) {
+                    e.preventDefault();
+                    var link = e.target;
+                    getPojo(link.href);
+                });
+
+                $("#getNestedPojo").click(function(e) {
+                    e.preventDefault();
+                    var link = e.target;
+                    getNestedPojo(link.href);
+                });
+
+                $("#getArray").click(function(e) {
+                    e.preventDefault();
+                    var link = e.target;
+                    getArray(link.href);
+                });
+
+                $("#getInteger").click(function(e) {
+                    e.preventDefault();
+                    var link = e.target;
+                    getInteger(link.href);
+                });
+
+                $("#getIntegerArray").click(function(e) {
+                    e.preventDefault();
+                    var link = e.target;
+                    getIntegerArray(link.href);
+                });
+
+                $("#getPrimitiveBoolean").click(function(e) {
+                    e.preventDefault();
+                    var link = e.target;
+                    getPrimitiveBoolean(link.href);
+                });
+
+                $("#getPrimitiveLong").click(function(e) {
+                    e.preventDefault();
+                    var link = e.target;
+                    getPrimitiveLong(link.href);
+                });
+
+                $("#getPrimitiveLongArray").click(function(e) {
+                    e.preventDefault();
+                    var link = e.target;
+                    getPrimitiveLongArray(link.href);
+                });
+
+                $("#getParam").click(function(e) {
+                    e.preventDefault();
+                    var link = e.target;
+                    getParam(link.href);
+                });
+
+                $("#getParams").click(function(e) {
+                    e.preventDefault();
+                    var link = e.target;
+                    getParams(link.href);
+                });
+                
+                $("#getExceptionWithArgs").click(function(e) {
+                    e.preventDefault();
+                    var link = e.target;
+                    getExceptionWithArgs(link.href);
+                });
+                
+                $("#getExceptionWithRuntime").click(function(e) {
+                    e.preventDefault();
+                    var link = e.target;
+                    getExceptionWithRuntime(link.href);
+                });
+                
+                $("#exceptionWithJsonSubmit").click(function(e) {
+                    e.preventDefault();
+                    var link = e.target;
+                    getExceptionWithJson(link.href);
+                });
+
+                $("#getJsonParam").click(function(e) {
+                    e.preventDefault();
+                    var link = e.target;
+                    getJsonParam(link.href);
+                });
+
+                $("#getMixedParams").click(function(e) {
+                    e.preventDefault();
+                    var link = e.target;
+                    getMixedParams(link.href);
+                });
+
+                $("#formPostParamSubmit").click(function(e) {
+                    e.preventDefault();
+                    var link = e.target;
+                    doFormPostParam(link.href);
+                });
+
+                $("#formPostParamsSubmit").click(function(e) {
+                    e.preventDefault();
+                    var link = e.target;
+                    doFormPostParams(link.href);
+                });
+            });
+
+            function getJson(url) {
+                var data = '{"msg": "Hello", "date":"2013/01/01"}';
+                makeRequest(url, data);
+            }
+
+            function getNestedPojo(url) {
+                var data = '{"firstname": "bob", "lastname":"Smith", "org" : {"name":"Mega corp"}}';
+                makeRequest(url, data);
+            }
+
+            function getPojo(url) {
+                var data = '{"firstname": "bob", "lastname":"Smith"}';
+                makeRequest(url, data);
+            }
+
+            function getArray(url) {
+                var data = '[4, 3000, true, {"firstname": "bob", "lastname":"Smith"}]';
+                makeRequest(url, data);
+            }
+            
+            function getExceptionWithArgs(url) {
+                GET(url);
+            }
+            
+            function getExceptionWithRuntime(url) {
+                GET(url);
+            }
+            
+            function getExceptionWithJson(url) {
+                var data = toJson("getExceptionWithJson");
+                //var data = $('#getExceptionWithJson').serialize();
+                var url = $('#getExceptionWithJson').attr('action');
+                makeRequest(url, data);
+            }
+
+            function getParam(url) {
+                GET(url);
+            }
+
+            function getParams(url) {
+                GET(url);
+            }
+
+            function getJsonParam(url) {
+                GET(url);
+            }
+
+            function getMixedParams(url) {
+                GET(url);
+            }
+
+            function getInteger(url) {
+                var data = '9';
+                makeRequest(url, data);
+            }
+
+            function getIntegerArray(url) {
+                //var data = '[9, 8, 7]';
+                //makeRequest(url, data);
+                GET(url);
+            }
+
+            function getPrimitiveLong(url) {
+                var data = '999999999999999';
+                makeRequest(url, data);
+            }
+
+            function getPrimitiveLongArray(url) {
+                //var data = '[9, 8, 7]';
+                //makeRequest(url, data);
+                GET(url);
+            }
+
+            function getPrimitiveBoolean(url) {
+                var data = 'true';
+                makeRequest(url, data);
+            }
+
+            function doFormPostParam() {
+                var data = $('#formPostParam').serialize();
+                var url = $('#formPostParam').attr('action');
+                POST(url, data);
+            }
+
+            function doFormPostParams() {
+                var data = $('#formPostParams').serialize();
+                var url = $('#formPostParams').attr('action');
+                POST(url, data);
+            }
+
+            function makeRequest(url, data) {
+                var request = $.ajax({
+                    url: url,
+                    type: "POST",
+                    data: data,
+                    contentType: "application/json; charset=utf-8"
+                });
+                request.done(function(msg) {
+                    $("#log").html(msg);
+                });
+                request.fail(function(jqXHR, textStatus) {
+                    alert("Request failed: " + textStatus);
+                });
+            }
+
+            function POST(url, data) {
+                var request = $.ajax({
+                    url: url,
+                    type: "POST",
+                    //dataType: 'json',
+                    data: data
+                });
+                request.done(function(msg) {
+                    $("#log").html(msg);
+                });
+                request.fail(function(jqXHR, textStatus) {
+                    alert("POST failed: " + textStatus);
+                });
+            }
+
+            function GET(url) {
+                var request = $.ajax({
+                    url: url,
+                    type: "GET"
+                });
+                request.done(function(msg) {
+                    $("#log").html(msg);
+                });
+                request.fail(function(jqXHR, textStatus) {
+                    alert("Request failed: " + textStatus);
+                });
+            }
+
+        </script>
+
+    </head>
+
+    <body>
+        <h1>Click Services</h1>
+
+        <h3>
+            <a href="js/spa.html">Javascript Single Page App Demo</a>
+        </h3>
+
+        <h3>Tests</h3>
+
+        <p>
+            <a href="tests/PersonService/getJson" id="getJson">getJson(java.lang.String)</a>
+        </p>
+
+        <p>
+            <a href="tests/PersonService/getPojo" id="getPojo">getPojo(Person)</a>
+        </p>
+
+        <p>
+            <a href="tests/PersonService/getNestedPojo" id="getNestedPojo">getNestedPojo(Person)</a>
+        </p>
+
+        <p>
+            <a href="tests/PersonService/getArray" id="getArray">getArray(5, 30000, true, Person)</a>            
+        </p>
+
+        <p>
+            <a href="tests/PersonService/getPrimitiveBoolean" id="getPrimitiveBoolean">getPrimitiveBoolean(true)</a>
+        </p>
+
+        <p>
+            <a href="tests/PersonService/getInteger" id="getInteger">getInteger(9)</a>
+        </p>
+
+        <p>
+            <a href="tests/PersonService/getIntegerArray?id=9&id=8&id=7" id="getIntegerArray">getIntegerArray(9, 8, 7)</a>
+        </p>
+
+        <p>
+            <a href="tests/PersonService/getPrimitiveLong" id="getPrimitiveLong">getPrimitiveLong(999999999999999)</a>
+        </p>
+
+        <p>
+            <a href="tests/PersonService/getPrimitiveLongArray?id=9&id=8&id=7" id="getPrimitiveLongArray">getPrimitiveLongArray(9, 8, 7)</a>
+        </p>
+
+
+        <p>
+            <a href="tests/PersonService/getParam?id=789" id="getParam">getParam(789)</a>
+        </p>
+
+        <p>
+            <a href="tests/PersonService/getParams?id=789&employed=true&description=Hello" id="getParams">getParams(789, true, "Hello")</a>
+        </p>
+        
+        <p>
+            <a href="tests/PersonService/getExceptionWithArgs" id="getExceptionWithArgs">getExceptionWithArgs()</a>
+        </p>
+        
+        <p>
+            <a href="tests/PersonService/getExceptionWithRuntime" id="getExceptionWithRuntime">getExceptionWithRuntime()</a>
+        </p>
+        
+        <form action="tests/PersonService/getExceptionWithJson" method="post" id='getExceptionWithJson'>
+            <p>
+                Exception while posting JSON
+            </p>
+            <label for="file">Firstname:</label><br/>
+            <input type="text" name="firstname"><br/>
+            <label for="file">Lastname:</label><br/>
+            <input type="text" name="lastname"><br/>
+            <input type="submit" name="submit" value="Submit" id='exceptionWithJsonSubmit'>
+        </form>
+
+        <p>
+            <a href='tests/PersonService/getJsonParam?person={"firstname": "bob", "lastname":"Smith", "org" : {"name":"Mega corp"}}' id="getJsonParam">getJsonParam({"firstname": "bob", "lastname":"Smith", "org" : {"name":"Mega corp"}})</a>
+        </p>
+
+        <p>
+            <a href='tests/PersonService/getMixedParams?person={"firstname": "bob", "lastname":"Smith", "org" : {"name":"Mega corp"}}&description=Hello' id="getMixedParams">getMixedParams({"firstname": "bob", "lastname":"Smith", "org" : {"name":"Mega corp"}}, Hello)</a>
+        </p>
+
+
+        <form action="tests/PersonService/formParam" method="post" id='formPostParam'>
+            <p>
+                Form param test
+            </p>
+            <label for="file">Name:</label><br/>
+            <input type="text" name="name"><br/>
+            <input type="submit" name="submit" value="Submit" id='formPostParamSubmit'>
+        </form>
+
+        <form action="tests/PersonService/formParams" method="post" id='formPostParams'>
+            <p>
+                Form params test
+            </p>
+            <label>Description:</label><br/>
+            <input type="text" name="description"><br/>
+
+            <label>Person:</label><br/>
+            <input type="text" name="person" value='{"firstname": "bob", "lastname":"Smith", "org" : {"name":"Mega corp"}}'><br/>
+            <input type="submit" name="submit" value="Submit" id='formPostParamsSubmit'>
+        </form>
+
+
+        <p>
+            <a href='tests/PersonService/doFormPostParams' id="doFormPostParams">doFormPostParams()</a>
+        </p>
+
+        <form action="tests/PersonService/upload" method="post" enctype="multipart/form-data">
+            <p>
+                Upload File Test
+            </p>
+            <label for="file">Files:</label><br/>
+            <input type="file" name="file" id="file"><br/>
+            <input type="file" name="file" id="file"><br/>
+            <input type="submit" name="submit" value="Submit">
+        </form>
+
+        <form action="tests/PersonService/uploadFileItem" method="post" enctype="multipart/form-data">
+            <p>
+                Upload File Item to a named service method parameter -> uploadFileItem(FileItem fileItem);
+            </p>
+            <label for="file">Files:</label><br/>
+            <input type="file" name="file" id="file"><br/>
+            <input type="submit" name="submit" value="Submit">
+        </form>
+
+        <form action="tests/PersonService/uploadFileItems" method="post" enctype="multipart/form-data">
+            <p>
+                Upload File Items to a named service method parameter -> uploadFileItems(FileItem[] fileItem);
+            </p>
+            <label for="file">Files:</label><br/>
+            <input type="file" name="file" id="file"><br/>
+            <input type="file" name="file" id="file"><br/>
+            <input type="submit" name="submit" value="Submit">
+        </form>
+
+
+        <table class="table">
+            <tr>
+                <th>
+                    Service Name
+                </th>
+                <th>
+                    Method Name
+                </th>
+                <th>
+                    Argument Details
+                </th>
+                <th>
+                    URL
+                </th>
+
+            </tr>
+            <tr>
+                <td>
+                    <pre>PersonService</pre>
+                </td>
+
+                <td>
+                    <pre>formParams (String, Person<span style="color:red">*</span>)</pre>
+                </td>
+                <td>
+                    <pre>( <span class="annot">@Param</span>(name=<span class="str">"id"</span>, required=<span class="kwd">false</span>) <span class="arg">String</span>, @JsonParam(name="person", required=true) <span class="arg">Person</span><span style="color:red">*</span>)</pre>
+                </td>
+                <td>
+                    <a href="/ratel-examples/tests/PersonService/formParams?ping=true">/tests/PersonService/formParams</a>
+                </td>
+
+
+            </tr>
+
+
+            <ul>
+
+            </ul>
+        </li>
+        <li>
+            <a href="/ratel-examples/tests/PersonService/getIntegerArray?ping=true">/tests/PersonService/getIntegerArray ( Integer[]<span style="color:red">*</span> )</a>
+            <ul>
+
+            </ul>
+        </li>
+        <li>
+            <a href="/ratel-examples/tests/PersonService/getNestedPojo?ping=true">/tests/PersonService/getNestedPojo ( Person )</a>
+            <ul>
+
+            </ul>
+        </li>
+        <li>
+            <a href="/ratel-examples/tests/PersonService/getPrimitiveLongArray?ping=true">/tests/PersonService/getPrimitiveLongArray ( long[]<span style="color:red">*</span> )</a>
+
+            <ul>
+
+            </ul>
+        </li>
+    </table>
+
+
+</body>
+</html>
+
+

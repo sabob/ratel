@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0">
+    <persistence-unit name="manager1" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+
+      <properties>
+            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
+            <!--<property name="javax.persistence.jdbc.url"    value="jdbc:h2:~/ratel;AUTO_SERVER=TRUE" />-->
+            <property name="javax.persistence.jdbc.url"    value="jdbc:h2:mem:ratel" />
+          <property name="javax.persistence.jdbc.user"   value="sa" />
+          <property name="javax.persistence.jdbc.password"   value="sa" />
+
+<!--       <property name="javax.persistence.jdbc.driver" value="com.p6spy.engine.spy.P6SpyDriver"/> -->
+    
+         <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+         <property name="hibernate.max_fetch_depth" value="3"/>
+         <property name="javax.persistence.validation.mode" value="NONE"/>
+                    <property name="hibernate.hbm2ddl.auto" value="create"/> 
+<!--           <property name="hibernate.hbm2ddl.auto" value="update"/> -->
+         <property name="hibernate.show_sql" value="true"/>
+         <property name="hibernate.naming.strategy" value="org.hibernate.cfg.ImprovedNamingStrategy"/>
+                 
+         <!-- cache configuration -->
+         <!-- 
+         <property name="hibernate.ejb.classcache.org.hibernate.ejb.test.Item" value="read-write"/>
+         <property name="hibernate.ejb.collectioncache.org.hibernate.ejb.test.Item.distributors" value="read-write, RegionName"/>
+         -->
+
+         <!-- alternatively to <class> and <property> declarations, you can use a regular hibernate.cfg.xml file -->
+         <!-- property name="hibernate.ejb.cfgfile" value="/org/hibernate/ejb/test/hibernate.cfg.xml"/ -->
+      </properties>
+   </persistence-unit>
+</persistence>
