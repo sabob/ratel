@@ -50,6 +50,7 @@ public class ClassFinder {
      * <p>Instantiates the type of MBeanHarvester that will return all classes in the entire classpath.</p>
      */
     public ClassFinder(ServletContext servletContext) {
+        this.servletContext = servletContext;
     }
 
     /**
@@ -78,14 +79,12 @@ public class ClassFinder {
     public ClassFinder(ServletContext servletContext, Class annotationClass, List<String> packageNames) {
         this.servletContext = servletContext;
         this.annotationClass = annotationClass;
-
         this.packageNames = packageNames;
     }
-    
+
     public ClassFinder(ServletContext servletContext, Class annotationClass, String... packageNames) {
         this.servletContext = servletContext;
         this.annotationClass = annotationClass;
-
         this.packageNames = Arrays.asList(packageNames);
     }
 
@@ -93,10 +92,12 @@ public class ClassFinder {
         if (this.packageNames == null || this.packageNames.isEmpty()) {
             return true;
         }
-        
+
         for (String packageName : packageNames) {
-            if (className.indexOf(packageName) >= 0) {
-                return true;                
+            if (packageName != null) {
+                if (className.indexOf(packageName) >= 0) {
+                    return true;
+                }
             }
         }
         return false;

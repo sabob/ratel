@@ -49,28 +49,23 @@ public class DefaultErrorHandlerService implements ErrorHandlerService {
             logService.error("Could not handle request", throwable);
 
             ServiceResolver serviceResolver = ratelConfig.getServiceResolver();
-            String path = serviceResolver.resolvePath(request);
 
-            String serviceName = serviceResolver.resolveServiceName(path);
-
-            ClassData serviceData = serviceResolver.resolveService(serviceName);
 
             Class serviceClass = null;
             Method method = null;
 
-            if (serviceData != null) {
+            try {
+                RequestTargetData targetData = serviceResolver.resolveTarget(request);
+                if (targetData != null) {
 
-                serviceClass = serviceData.getServiceClass();
+                    ClassData serviceData = targetData.getClassData();
+                    serviceClass = serviceData.getServiceClass();
 
-                String methodName = serviceResolver.resolveMethodName(path);
-                if (methodName != null) {
-
-                    MethodData methodData = serviceResolver.resolveMethod(serviceData, methodName);
-
-                    if (methodData != null) {
-                        method = methodData.getMethod();
-                    }
+                    MethodData methodData = targetData.getMethodData();
+                    method = methodData.getMethod();
                 }
+            } catch (RuntimeException ignore) {
+                // If we cannot lookup the service and method we continue printing other information
             }
 
             ErrorReport errorReport = new ErrorReport(throwable, serviceClass, method, mode, request, ratelConfig);

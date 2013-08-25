@@ -8,6 +8,8 @@ package com.google.ratel.util;
  *
  */
 public class Constants {
+    
+    public static String HELP = "/help";
 
     /**
      * The plain text content type constant: <tt>text/plain</tt>.

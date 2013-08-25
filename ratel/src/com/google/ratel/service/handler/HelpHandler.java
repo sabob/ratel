@@ -447,7 +447,7 @@ public class HelpHandler {
         RatelConfig ratelConfig = context.getRatelConfig();
         ServiceResolver resolver = ratelConfig.getServiceResolver();
         String path = resolver.resolvePath(context.getRequest());
-        String prefix = StringUtils.remove(path, RequestHandler.HELP);
+        String prefix = StringUtils.remove(path, Constants.HELP);
         return prefix;
     }
 }

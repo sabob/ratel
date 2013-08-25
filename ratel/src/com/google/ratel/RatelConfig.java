@@ -104,6 +104,10 @@ public class RatelConfig {
             getJsonService().onInit(servletContext);
             getInvokeHandler().onInit(servletContext);
 
+            if (getMode() == Mode.PROFILE || getMode() == Mode.PRODUCTION) {
+            getServiceResolver().resolveServices();
+        }
+
         } catch (Exception e) {
             ErrorHandlerService errorHandler = getErrorHandlerService();
             errorHandler.handleInitializationException(e, getMode(), getServletContext(), getLogService());
@@ -221,10 +225,6 @@ public class RatelConfig {
 
         Mode localMode = getMode();
         localServiceResolver.setMode(localMode);
-
-        if (localMode == Mode.PROFILE || localMode == Mode.PRODUCTION) {
-            localServiceResolver.resolveServices();
-        }
 
         for (String packageName : packageNameList) {
             localServiceResolver.getPackageNames().add(packageName);
@@ -377,7 +377,7 @@ public class RatelConfig {
     }
 
     protected Mode createMode() {
-        return Mode.DEBUG;
+        return Mode.PRODUCTION;
         /*
          Mode localMode = Mode.getMode(modeValue);
 

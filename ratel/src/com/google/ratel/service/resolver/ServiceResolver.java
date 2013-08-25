@@ -4,6 +4,7 @@ import java.util.*;
 import javax.servlet.*;
 import com.google.ratel.service.classdata.ClassData;
 import com.google.ratel.service.classdata.MethodData;
+import com.google.ratel.service.classdata.RequestTargetData;
 import javax.servlet.http.*;
 
 /**
@@ -17,13 +18,15 @@ public interface ServiceResolver {
 
     public String resolvePath(HttpServletRequest request);
 
-    public String resolveServiceName(String path);
+    public RequestTargetData resolveTarget(HttpServletRequest request);
 
-    public ClassData resolveService(String serviceName);
+    //public String resolveServiceName(String path);
 
-    public String resolveMethodName(String path);
+    //public ClassData resolveService(String serviceName);
 
-    public MethodData resolveMethod(ClassData classData, String methodName);
+    //public String resolveMethodName(String path);
+
+    //public MethodData resolveMethod(ClassData classData, String methodName);
 
     public Map<String, ClassData> resolveServices();
 

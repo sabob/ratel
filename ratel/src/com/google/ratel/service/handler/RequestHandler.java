@@ -12,6 +12,7 @@ import com.google.ratel.deps.lang3.StringUtils;
 import com.google.ratel.Context;
 import com.google.ratel.RatelConfig;
 import com.google.ratel.core.RatelHttpServletResponse;
+import com.google.ratel.service.classdata.RequestTargetData;
 import com.google.ratel.service.json.*;
 import com.google.ratel.util.*;
 
@@ -23,8 +24,6 @@ public class RequestHandler {
     //private ServiceResolver serviceResolver;
     //private ServletContext servletContext;
     //private ClassDataService classDataService;
-    public static String HELP = "/help";
-
     public static String PING_PARAM = "ping";
 
     private int maxRequestSize = -1;
@@ -46,54 +45,32 @@ public class RequestHandler {
             RatelConfig ratelConfig = context.getRatelConfig();
             RatelHttpServletRequest request = context.getRequest();
             ServiceResolver serviceResolver = ratelConfig.getServiceResolver();
-            String path = serviceResolver.resolvePath(request);
 
-            if (path.endsWith(HELP)) {
-                Mode mode = context.getRatelConfig().getMode();
-                if (mode == Mode.PROFILE || mode == Mode.PRODUCTION) {
-                    return false;
+            //String path = serviceResolver.resolvePath(request);
 
-                } else {
-                    HelpHandler helpHandler = ratelConfig.getHelpHandler();
-                    helpHandler.handleHelp(context);
-                    return false;
+            RequestTargetData target = serviceResolver.resolveTarget(request);
 
-                }
-            }
-
-
-            String serviceName = serviceResolver.resolveServiceName(path);
-
-            ClassData serviceData = serviceResolver.resolveService(serviceName);
-
-            if (serviceData != null) {
-
-                Class serviceClass = serviceData.getServiceClass();
-
-                String methodName = serviceResolver.resolveMethodName(path);
-                if (methodName == null) {
-                    // TODO use constructor or a default method?
-                    throw new RuntimeException("No method found in URL: " + path);
-                }
-
-                MethodData methodData = serviceResolver.resolveMethod(serviceData, methodName);
-
-                if (methodData == null) {
-                    // TODO use constructor or a default method???
-                    throw new RuntimeException("Method " + methodName + " not found on " + serviceClass.getName());
-                }
-
-                Object service = createService(serviceClass);
-
-                invokeMethod(context, service, methodData);
-
-            } else {
-                // TODO print error report
+            if (target == null) {
+                // Continue processing the request since Ratel could not resolve the request to a service
                 return true;
             }
 
+            if (target.isHelpRequest()) {
+                HelpHandler helpHandler = ratelConfig.getHelpHandler();
+                helpHandler.handleHelp(context);
+                return false;
+            }
+
+            ClassData serviceData = target.getClassData();
+            MethodData methodData = target.getMethodData();
+
+            Class serviceClass = serviceData.getServiceClass();
+
+            Object service = createService(serviceClass);
+
+            invokeMethod(context, service, methodData);
+
         } catch (Exception e) {
-            // TODO print error report
             throw new RuntimeException(e);
         }
 
@@ -112,7 +89,7 @@ public class RequestHandler {
         boolean isPost = RatelUtils.isPost(request);
         //boolean isGet = false;
         //if (!isPost) {
-            //isGet = Constants.GET.equals(request.getMethod());
+        //isGet = Constants.GET.equals(request.getMethod());
         //}
 
         String contentType = request.getContentType();

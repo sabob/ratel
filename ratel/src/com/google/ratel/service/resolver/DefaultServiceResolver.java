@@ -9,6 +9,8 @@ import com.google.ratel.util.RatelUtils;
 import com.google.ratel.service.classdata.ClassDataService;
 import com.google.ratel.deps.lang3.StringUtils;
 import com.google.ratel.core.RatelService;
+import com.google.ratel.service.classdata.*;
+import com.google.ratel.util.Constants;
 import com.google.ratel.util.Mode;
 import javax.servlet.http.*;
 
@@ -48,6 +50,7 @@ public class DefaultServiceResolver implements ServiceResolver {
 
     @Override
     public void onDestroy(ServletContext servletContext) {
+        this.servletContext = null;
     }
 
     @Override
@@ -57,34 +60,40 @@ public class DefaultServiceResolver implements ServiceResolver {
     }
 
     @Override
-    public String resolveServiceName(String path) {
-        int index = path.lastIndexOf("/");
-        if (index == -1) {
+    public RequestTargetData resolveTarget(HttpServletRequest request) {
+
+        String path = resolvePath(request);
+
+        if (isHelpRequest(request, path)) {
+            RequestTargetData target = new RequestTargetData();
+            target.setHelpRequest(true);
+            return target;
+        }
+
+        String serviceName = resolveServiceName(path);
+        ClassData serviceData = resolveService(serviceName);
+
+        if (serviceData == null) {
             return null;
         }
 
-        String serviceName = path.substring(0, index);
-        return serviceName;
-    }
-
-    @Override
-    public ClassData resolveService(String path) {
-        ClassData serviceData = getService(path);
-        if (serviceData != null) {
-            return serviceData;
-        }
-        return null;
-    }
-
-    @Override
-    public String resolveMethodName(String path) {
-        int index = path.lastIndexOf("/");
-        if (index == -1) {
-            return null;
+        String methodName = resolveMethodName(path);
+        if (methodName == null) {
+            // TODO use constructor or a default method?
+            throw new RuntimeException("No service method found for request path: '" + path + "'");
         }
 
-        String methodName = path.substring(index + 1);
-        return methodName;
+        MethodData methodData = resolveMethod(serviceData, methodName);
+
+        if (methodData == null) {
+            Class serviceClass = serviceData.getServiceClass();
+            // TODO use constructor or a default method???
+            throw new RuntimeException("Method " + methodName + " not found on " + serviceClass.getName());
+        }
+
+        RequestTargetData target = new RequestTargetData(serviceData, methodData);
+
+        return target;
     }
 
     @Override
@@ -93,8 +102,8 @@ public class DefaultServiceResolver implements ServiceResolver {
         if (!resolvedAllServices) {
 
             ClassDataService classDataService = new ClassDataService(servletContext, getPackageNames());
-        Map<String, ClassData> allServicesMap = classDataService.getAllServiceClassData();
-        serviceByPathMap.putAll(allServicesMap);
+            Map<String, ClassData> allServicesMap = classDataService.getAllServiceClassData();
+            serviceByPathMap.putAll(allServicesMap);
 
             resolvedAllServices = true;
         }
@@ -106,13 +115,73 @@ public class DefaultServiceResolver implements ServiceResolver {
         serviceByPathMap.clear();
     }
 
-    @Override
-    public MethodData resolveMethod(ClassData classData, String methodName) {
+    public List<String> getPackageNames() {
+        return packageNames;
+    }
+
+    public void setPackageNames(
+        List<String> packageNames) {
+        this.packageNames = packageNames;
+    }
+
+    /**
+     * @return the mode
+     */
+    public Mode getMode() {
+        return mode;
+    }
+
+    /**
+     * @param mode the mode to set
+     */
+    public void setMode(Mode mode) {
+        this.mode = mode;
+    }
+
+    protected boolean isHelpRequest(HttpServletRequest request, String path) {
+        // Ratel doesn't render help in prod modes
+        if (getMode().isAtleast(Mode.DEVELOPMENT)) {
+            if (path.endsWith(Constants.HELP)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected String resolveServiceName(String path) {
+        int index = path.lastIndexOf("/");
+        if (index == -1) {
+            return null;
+        }
+
+        String serviceName = path.substring(0, index);
+        return serviceName;
+    }
+
+    protected ClassData resolveService(String path) {
+        ClassData serviceData = getService(path);
+        if (serviceData != null) {
+            return serviceData;
+        }
+        return null;
+    }
+
+    protected String resolveMethodName(String path) {
+        int index = path.lastIndexOf("/");
+        if (index == -1) {
+            return null;
+        }
+
+        String methodName = path.substring(index + 1);
+        return methodName;
+    }
+
+    protected MethodData resolveMethod(ClassData classData, String methodName) {
         MethodData methodData = classData.getMethods().get(methodName);
         return methodData;
     }
 
-    public ClassData getService(String path) {
+    protected ClassData getService(String path) {
 
         // If in production or profile mode.
         if (mode == Mode.PROFILE || mode == Mode.PRODUCTION) {
@@ -161,29 +230,6 @@ public class DefaultServiceResolver implements ServiceResolver {
         //ignore
         //}
         return serviceData;
-    }
-
-    public List<String> getPackageNames() {
-        return packageNames;
-    }
-
-    public void setPackageNames(
-        List<String> packageNames) {
-        this.packageNames = packageNames;
-    }
-
-    /**
-     * @return the mode
-     */
-    public Mode getMode() {
-        return mode;
-    }
-
-    /**
-     * @param mode the mode to set
-     */
-    public void setMode(Mode mode) {
-        this.mode = mode;
     }
 
     protected Class getServiceClass(String servicePath, String servicesPackage) {
