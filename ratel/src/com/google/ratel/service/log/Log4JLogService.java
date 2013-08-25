@@ -54,6 +54,7 @@ public class Log4JLogService implements LogService {
      * @param servletContext the application servlet context
      * @throws Exception if an error occurs initializing the LogService
      */
+    @Override
     public void onInit(ServletContext servletContext) throws Exception {
         logger = Logger.getLogger(getName());
     }
@@ -61,7 +62,8 @@ public class Log4JLogService implements LogService {
     /**
      * @see LogService#onDestroy()
      */
-    public void onDestroy() {
+    @Override
+    public void onDestroy(ServletContext servletContext) {
     }
 
     /**
@@ -69,6 +71,7 @@ public class Log4JLogService implements LogService {
      *
      * @param message the message to log
      */
+    @Override
     public void debug(Object message) {
         logger.debug(message);
     }

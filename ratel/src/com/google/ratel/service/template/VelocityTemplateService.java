@@ -213,6 +213,7 @@ public class VelocityTemplateService implements TemplateService {
      * @param servletContext the application servlet velocityContext
      * @throws Exception if an error occurs initializing the Template Service
      */
+    @Override
     public void onInit(ServletContext servletContext) throws Exception {
         this.servletContext = servletContext;
 
@@ -258,7 +259,8 @@ public class VelocityTemplateService implements TemplateService {
     /**
      * @see TemplateService#onDestroy()
      */
-    public void onDestroy() {
+    @Override
+    public void onDestroy(ServletContext servletContext) {
         // Dereference any allocated objects
         velocityEngine = null;
         writerPool = null;

@@ -69,7 +69,7 @@ public interface LogService {
     /**
      * Destroy the LogService.
      */
-    public void onDestroy();
+    public void onDestroy(ServletContext servletContext);
 
     /**
      * Log the given message at [debug] logging level.

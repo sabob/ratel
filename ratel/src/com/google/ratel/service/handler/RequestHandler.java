@@ -35,7 +35,7 @@ public class RequestHandler {
     public void onInit(ServletContext servletContext) {
     }
 
-    public void onDestroy() {
+    public void onDestroy(ServletContext servletContext) {
     }
 
     public boolean handle(Context context) {
@@ -110,16 +110,16 @@ public class RequestHandler {
         RatelHttpServletResponse response = context.getResponse();
 
         boolean isPost = RatelUtils.isPost(request);
-        boolean isGet = false;
-        if (!isPost) {
-            isGet = Constants.GET.equals(request.getMethod());
-
-        }
+        //boolean isGet = false;
+        //if (!isPost) {
+            //isGet = Constants.GET.equals(request.getMethod());
+        //}
 
         String contentType = request.getContentType();
 
-        JsonService jsonService = context.getRatelConfig().getJsonService();
-        InvokeHandler invokeHandler = new InvokeHandler(jsonService, getMaxRequestSize());
+        RatelConfig ratelConfig = context.getRatelConfig();
+        JsonService jsonService = ratelConfig.getJsonService();
+        InvokeHandler invokeHandler = ratelConfig.getInvokeHandler();
 
         try {
 
@@ -129,7 +129,7 @@ public class RequestHandler {
             if (StringUtils.isBlank(contentType)) {
 
                 if (request.getParameter(PING_PARAM) != null) {
-                    HelpHandler helpHandler = context.getRatelConfig().getHelpHandler();
+                    HelpHandler helpHandler = ratelConfig.getHelpHandler();
                     Object result = helpHandler.invokeAsPing(service, methodData, context);
                     RatelUtils.writeContent(jsonService, response, result, Constants.HTML);
 

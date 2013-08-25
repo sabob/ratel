@@ -41,14 +41,14 @@ public class HelpHandler {
         }
     }
 
-    public void onDestroy() {
+    public void onDestroy(ServletContext servletContext) {
     }
 
     public void handleHelp(Context context) throws Exception {
         ServiceResolver serviceResolver = context.getRatelConfig().getServiceResolver();
 
         //Map<String, ClassData> serviceData = classDataService.getAllServiceClassData();
-        Map<String, ClassData> serviceData = serviceResolver.getServiceClassData();
+        Map<String, ClassData> serviceData = serviceResolver.resolveServices();
 
         // TODO replace template with native to remove dependency on Velocity and other commons libs!
         HtmlStringBuffer html = new HtmlStringBuffer();

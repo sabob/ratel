@@ -49,7 +49,7 @@ public interface FileUploadService {
     /**
      * Destroy the FileUploadService.
      */
-    public void onDestroy();
+    public void onDestroy(ServletContext servletContext);
 
     /**
      * Return a parsed list of FileItem from the request.

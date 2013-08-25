@@ -32,8 +32,8 @@ public class DefaultErrorHandlerService implements ErrorHandlerService {
     }
 
     @Override
-    public void onDestroy() {
-        servletContext = null;
+    public void onDestroy(ServletContext servletContext) {
+        this.servletContext = null;
     }
 
     @Override

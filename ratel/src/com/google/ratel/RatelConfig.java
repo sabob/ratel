@@ -14,6 +14,8 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import com.google.ratel.service.handler.HelpHandler;
+import com.google.ratel.service.invoke.DefaultInvokeHandler;
+import com.google.ratel.service.invoke.InvokeHandler;
 import com.google.ratel.service.json.*;
 import com.google.ratel.service.json.jackson.JacksonService;
 import com.google.ratel.service.log.*;
@@ -37,6 +39,8 @@ public class RatelConfig {
     protected ServletContext servletContext;
 
     protected RequestHandler requestHandler;
+
+    private InvokeHandler invokeHandler;
 
     protected HelpHandler helpHandler;
 
@@ -81,12 +85,10 @@ public class RatelConfig {
             setFileUploadService(createFileUploadService());
 
             setServiceResolver(createServiceResolver());
-            for (String packageName : packageNameList) {
-                getServiceResolver().getPackageNames().add(packageName);
-            }
 
             setRequestHandler(createRequestHandler());
-            getRequestHandler().setMaxRequestSize(this.maxRequestSize);
+
+            setInvokeHandler(createInvokeHandler());
 
             setHelpHandler(createHelpHandler());
 
@@ -100,24 +102,26 @@ public class RatelConfig {
             getRequestHandler().onInit(servletContext);
             getHelpHandler().onInit(servletContext);
             getJsonService().onInit(servletContext);
+            getInvokeHandler().onInit(servletContext);
 
         } catch (Exception e) {
-                ErrorHandlerService errorHandler = getErrorHandlerService();
-                errorHandler.handleInitializationException(e, getMode(), getServletContext(), getLogService());
+            ErrorHandlerService errorHandler = getErrorHandlerService();
+            errorHandler.handleInitializationException(e, getMode(), getServletContext(), getLogService());
         }
     }
 
     public void onDestroy(ServletContext servletContext) {
         if (getTemplateService() != null) {
-            getTemplateService().onDestroy();
+            getTemplateService().onDestroy(servletContext);
         }
-        getServiceResolver().onDestroy();
-        getHelpHandler().onDestroy();
-        getRequestHandler().onDestroy();
-        getFileUploadService().onDestroy();
+        getServiceResolver().onDestroy(servletContext);
+        getInvokeHandler().onDestroy(servletContext);
+        getHelpHandler().onDestroy(servletContext);
+        getRequestHandler().onDestroy(servletContext);
+        getFileUploadService().onDestroy(servletContext);
         getJsonService().onDestroy(servletContext);
-        getErrorHandlerService().onDestroy();
-        getLogService().onDestroy();
+        getErrorHandlerService().onDestroy(servletContext);
+        getLogService().onDestroy(servletContext);
         this.setServletContext(null);
     }
 
@@ -187,7 +191,16 @@ public class RatelConfig {
     }
 
     protected RequestHandler createRequestHandler() {
-        return new RequestHandler();
+        RequestHandler localRequestHandler = new RequestHandler();
+        localRequestHandler.setMaxRequestSize(this.maxRequestSize);
+        return localRequestHandler;
+    }
+
+    protected InvokeHandler createInvokeHandler() {
+        DefaultInvokeHandler localInvokeHandler = new DefaultInvokeHandler();
+        localInvokeHandler.setJsonService(getJsonService());
+        localInvokeHandler.setMaxRequestSize(getMaxRequestSize());
+        return localInvokeHandler;
     }
 
     protected HelpHandler createHelpHandler() {
@@ -204,13 +217,17 @@ public class RatelConfig {
     }
 
     protected ServiceResolver createServiceResolver() {
-        ServiceResolver localServiceResolver = new ServiceResolver();
-        
+        DefaultServiceResolver localServiceResolver = new DefaultServiceResolver();
+
         Mode localMode = getMode();
         localServiceResolver.setMode(localMode);
 
         if (localMode == Mode.PROFILE || localMode == Mode.PRODUCTION) {
-            localServiceResolver.resolveAllServices();
+            localServiceResolver.resolveServices();
+        }
+
+        for (String packageName : packageNameList) {
+            localServiceResolver.getPackageNames().add(packageName);
         }
         return localServiceResolver;
     }
@@ -398,5 +415,19 @@ public class RatelConfig {
      */
     public void setErrorHandlerService(ErrorHandlerService errorHandlerService) {
         this.errorHandlerService = errorHandlerService;
+    }
+
+    /**
+     * @return the invokeHandler
+     */
+    public InvokeHandler getInvokeHandler() {
+        return invokeHandler;
+    }
+
+    /**
+     * @param invokeHandler the invokeHandler to set
+     */
+    public void setInvokeHandler(InvokeHandler invokeHandler) {
+        this.invokeHandler = invokeHandler;
     }
 }

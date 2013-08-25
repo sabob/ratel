@@ -69,13 +69,15 @@ public class ConsoleLogService implements LogService {
      * @param servletContext the application servlet context
      * @throws Exception if an error occurs while initializing the LogService
      */
+    @Override
     public void onInit(ServletContext servletContext) throws Exception {
     }
 
     /**
      * @see LogService#onDestroy()
      */
-    public void onDestroy() {
+    @Override
+    public void onDestroy(ServletContext servletContext) {
     }
 
     /**

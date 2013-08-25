@@ -10,7 +10,7 @@ public interface ErrorHandlerService {
     
     public void onInit(ServletContext servletContext);
     
-    public void onDestroy();
+    public void onDestroy(ServletContext servletContext);
 
     public void handleRuntimeException(Throwable throwable, Mode mode, HttpServletRequest request, HttpServletResponse response, RatelConfig config);
     

@@ -110,7 +110,7 @@ public class JacksonService implements JsonService {
         JsonNode node = (JsonNode) wrapper.unwrap();
         try {
             //T result = reader.readValue(node);
-            T result = mapper.reader().readValue(node);
+            T result = mapper.reader(type).readValue(node);
             return result;
         } catch (Exception ex) {
             throw new RuntimeException(ex);

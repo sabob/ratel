@@ -137,7 +137,7 @@ public class CommonsFileUploadService implements FileUploadService {
      * @see FileUploadService#onDestroy()
      */
     @Override
-    public void onDestroy() {
+    public void onDestroy(ServletContext servletContext) {
     }
 
     /**

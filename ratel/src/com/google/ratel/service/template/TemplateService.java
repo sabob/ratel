@@ -44,7 +44,7 @@ public interface TemplateService {
     /**
      * Destroy the TemplateService.
      */
-    public void onDestroy();
+    public void onDestroy(ServletContext servletContext);
 
     /**
      * Render the given template and model to the writer.

@@ -18,7 +18,6 @@
  */
 package com.google.ratel.service.log;
 
-
 import javax.servlet.ServletContext;
 
 import org.slf4j.Logger;
@@ -57,6 +56,7 @@ public class Slf4jLogService implements LogService {
      * @param servletContext the application servlet context
      * @throws Exception if an error occurs initializing the LogService
      */
+    @Override
     public void onInit(ServletContext servletContext) throws Exception {
         logger = LoggerFactory.getLogger(getName());
     }
@@ -64,7 +64,8 @@ public class Slf4jLogService implements LogService {
     /**
      * @see LogService#onDestroy()
      */
-    public void onDestroy() {
+    @Override
+    public void onDestroy(ServletContext servletContext) {
     }
 
     /**
