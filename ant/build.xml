@@ -113,6 +113,7 @@
     <target name="init" description="Initialize folders" depends="clean">
         <mkdir dir="build/classes"/>
         <mkdir dir="dist" />
+        <mkdir dir="ratel/lib" />
     </target>
 
     <target name="compile" depends="init" description="compile ratel">
