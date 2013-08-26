@@ -1,5 +1,6 @@
 package com.google.ratel;
 
+import com.google.ratel.core.Mode;
 import com.google.ratel.service.handler.RequestHandler;
 import java.io.*;
 import java.util.*;
@@ -27,13 +28,15 @@ public class RatelFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
 
         Class<? extends RatelConfig> ratelConfigClass = getConfigClass(filterConfig);
-        ratelConfig = createRatelConfig(ratelConfigClass);
+        this.ratelConfig = createRatelConfig(ratelConfigClass);
 
         this.servletContext = filterConfig.getServletContext();
         List<String> packageNameList = getPackageNames(filterConfig);
         int maxRequestSize = getMaxRequestSize(filterConfig);
+        Mode mode = getMode(filterConfig);
+        this.ratelConfig.setMode(mode);
 
-        ratelConfig.onInit(servletContext, packageNameList, maxRequestSize);
+        this.ratelConfig.onInit(servletContext, packageNameList, maxRequestSize);
     }
 
     @Override
@@ -100,5 +103,9 @@ public class RatelFilter implements Filter {
 
     protected int getMaxRequestSize(FilterConfig filterConfig) {
         return FilterUtils.getMaxRequestSize(filterConfig);
+    }
+    
+    protected Mode getMode(FilterConfig filterConfig) {
+        return FilterUtils.getMode(filterConfig);
     }
 }

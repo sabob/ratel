@@ -33,7 +33,11 @@ public enum Mode {
     }
 
     public static Mode getMode(String key) {
-        return lookup.get(key);
+        if (key == null) {
+            return null;
+        }
+
+        return lookup.get(key.toLowerCase());
     }
 
     public boolean isAtleast(Mode mode) {

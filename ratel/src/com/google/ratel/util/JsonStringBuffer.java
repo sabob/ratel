@@ -388,7 +388,7 @@ public class JsonStringBuffer {
                 if (obj.getClass().isArray()) {
                     key(entry.getKey());
                     String[] ar = (String[]) obj;
-                    array(ar);
+                    array((Object[]) ar);
                 } else {
                     append(entry.getKey(), entry.getValue());
                 }

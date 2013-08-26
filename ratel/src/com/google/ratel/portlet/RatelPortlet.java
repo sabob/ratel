@@ -6,6 +6,7 @@ package com.google.ratel.portlet;
 
 import com.google.ratel.Context;
 import com.google.ratel.RatelConfig;
+import com.google.ratel.core.*;
 import com.google.ratel.service.handler.RequestHandler;
 import java.io.*;
 import java.util.*;
@@ -47,12 +48,13 @@ public class RatelPortlet extends GenericPortlet {
         }
         
         Class<? extends RatelConfig> ratelConfigClass = getConfigClass(getFilterConfig());
+        ratelConfig = createRatelConfig(ratelConfigClass);
 
         List<String> packageNameList = getPackageNames(getFilterConfig());
-
         int maxRequestSize = getMaxRequestSize(getFilterConfig());
+        Mode mode = getMode(getFilterConfig());
+        ratelConfig.setMode(mode);
 
-        ratelConfig = createRatelConfig(ratelConfigClass);
         ratelConfig.onInit(getServletContext(), packageNameList, maxRequestSize);
     }
 
@@ -102,6 +104,34 @@ public class RatelPortlet extends GenericPortlet {
         }
     }
 
+    /**
+     * @return the servletContext
+     */
+    public ServletContext getServletContext() {
+        return servletContext;
+    }
+
+    /**
+     * @param servletContext the servletContext to set
+     */
+    public void setServletContext(ServletContext servletContext) {
+        this.servletContext = servletContext;
+    }
+
+    /**
+     * @return the filterConfig
+     */
+    public FilterConfig getFilterConfig() {
+        return filterConfig;
+    }
+
+    /**
+     * @param filterConfig the filterConfig to set
+     */
+    public void setFilterConfig(FilterConfig filterConfig) {
+        this.filterConfig = filterConfig;
+    }
+
     public RatelConfig createRatelConfig(Class<? extends RatelConfig> ratelConfigClass) {
         return FilterUtils.createRatelConfig(ratelConfigClass);
     }
@@ -137,32 +167,8 @@ public class RatelPortlet extends GenericPortlet {
     protected int getMaxRequestSize(FilterConfig filterConfig) {
         return FilterUtils.getMaxRequestSize(filterConfig);
     }
-
-    /**
-     * @return the servletContext
-     */
-    public ServletContext getServletContext() {
-        return servletContext;
-    }
-
-    /**
-     * @param servletContext the servletContext to set
-     */
-    public void setServletContext(ServletContext servletContext) {
-        this.servletContext = servletContext;
-    }
-
-    /**
-     * @return the filterConfig
-     */
-    public FilterConfig getFilterConfig() {
-        return filterConfig;
-    }
-
-    /**
-     * @param filterConfig the filterConfig to set
-     */
-    public void setFilterConfig(FilterConfig filterConfig) {
-        this.filterConfig = filterConfig;
+    
+    protected Mode getMode(FilterConfig filterConfig) {
+        return FilterUtils.getMode(filterConfig);
     }
 }

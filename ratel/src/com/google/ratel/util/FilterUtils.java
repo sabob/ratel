@@ -5,6 +5,7 @@
 package com.google.ratel.util;
 
 import com.google.ratel.*;
+import com.google.ratel.core.*;
 import com.google.ratel.deps.lang3.*;
 import java.util.*;
 import javax.servlet.*;
@@ -19,6 +20,8 @@ public class FilterUtils {
     public static final String INIT_PARAM_PACKAGE_NAMES = "packageNames";
 
     public static final String INIT_PARAM_MAX_REQUEST_SIZE = "maxRequestSize";
+    
+    public static final String INIT_PARAM_MODE = "mode";
     
     public static RatelConfig createRatelConfig(Class<? extends RatelConfig> ratelConfigClass) {
         try {
@@ -73,5 +76,15 @@ public class FilterUtils {
             return maxRequestSize;
         }
         return -1;
+    }
+
+    public static Mode getMode(FilterConfig filterConfig) {
+        String str = filterConfig.getInitParameter(INIT_PARAM_MODE);
+        if (StringUtils.isNotBlank(str)) {
+            Mode mode = Mode.getMode(str);
+            System.out.println("Ratel Mode: " + mode);
+            return mode;
+        }
+        return null;
     }
 }
