@@ -1,4 +1,4 @@
-package com.google.ratel.util;
+package com.google.ratel.core;
 
 import java.util.HashMap;
 import java.util.Map;

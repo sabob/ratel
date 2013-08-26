@@ -6,7 +6,6 @@ package com.google.ratel.portlet;
 
 import com.google.ratel.Context;
 import com.google.ratel.RatelConfig;
-import static com.google.ratel.RatelFilter.INIT_PARAM_CONFIG_CLASS;
 import com.google.ratel.service.handler.RequestHandler;
 import java.io.*;
 import java.util.*;
@@ -18,9 +17,7 @@ import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.servlet.ServletContext;
 import javax.servlet.http.*;
-import com.google.ratel.deps.lang3.*;
-import static com.google.ratel.RatelFilter.INIT_PARAM_MAX_REQUEST_SIZE;
-import static com.google.ratel.RatelFilter.INIT_PARAM_PACKAGE_NAMES;
+import com.google.ratel.util.*;
 import javax.servlet.FilterConfig;
 
 /**
@@ -45,15 +42,15 @@ public class RatelPortlet extends GenericPortlet {
             setFilterConfig(createFilterConfig(servletContext, config));
 
         } catch (Exception e) {
-            portletContext.log("ServletContext could not be initialized - " + ServletContext.class.getName(), e);
+            portletContext.log("ServletContext could not be initialized from PortletContext - " + portletContext.getClass().getName(), e);
             throw new PortletException(e);
         }
+        
+        Class<? extends RatelConfig> ratelConfigClass = getConfigClass(getFilterConfig());
 
-        Class<? extends RatelConfig> ratelConfigClass = getConfigClass(filterConfig);
+        List<String> packageNameList = getPackageNames(getFilterConfig());
 
-        List<String> packageNameList = getPackageNames(config);
-
-        int maxRequestSize = getMaxRequestSize(config);
+        int maxRequestSize = getMaxRequestSize(getFilterConfig());
 
         ratelConfig = createRatelConfig(ratelConfigClass);
         ratelConfig.onInit(getServletContext(), packageNameList, maxRequestSize);
@@ -106,20 +103,7 @@ public class RatelPortlet extends GenericPortlet {
     }
 
     public RatelConfig createRatelConfig(Class<? extends RatelConfig> ratelConfigClass) {
-        try {
-            if (ratelConfigClass == null) {
-                return new RatelConfig();
-            }
-            RatelConfig localRatelConfig = ratelConfigClass.newInstance();
-
-            System.out.println("RatelConfig created: " + localRatelConfig.getClass().getName());
-            return localRatelConfig;
-
-        } catch (Exception e) {
-            System.out.println("Could not instantiate RatelConfig: " + ratelConfigClass + ". Using " + RatelConfig.class.getName());
-            e.printStackTrace();
-            return new RatelConfig();
-        }
+        return FilterUtils.createRatelConfig(ratelConfigClass);
     }
 
     protected ServletContext createServletContext(PortletContext portletContext) {
@@ -141,43 +125,17 @@ public class RatelPortlet extends GenericPortlet {
         HttpServletResponse servletResponse = new HttpServletResponseImpl(resourceResponse);
         return servletResponse;
     }
-    
+
     protected Class<? extends RatelConfig> getConfigClass(FilterConfig filterConfig) {
-
-        Class configClass = null;
-        String value = filterConfig.getInitParameter(INIT_PARAM_CONFIG_CLASS);
-        if (StringUtils.isNotBlank(value)) {
-            try {
-                configClass= Class.forName(value);
-                System.out.println("RatelConfig class specified: " + configClass.getName());
-            } catch (ClassNotFoundException e) {
-                System.out.println("Could not load custom RatelConfig: " + value + ". Using " + RatelConfig.class.getName());
-                e.printStackTrace();
-            }
-        }
-        return configClass;
+        return FilterUtils.getConfigClass(filterConfig);
     }
 
-    protected List<String> getPackageNames(PortletConfig config) {
-        List<String> packageNameList = new ArrayList<String>();
-        String packageNames = config.getInitParameter(INIT_PARAM_PACKAGE_NAMES);
-        if (StringUtils.isNotBlank(packageNames)) {
-            StringTokenizer st = new StringTokenizer(packageNames, ",");
-            while (st.hasMoreTokens()) {
-                String packageName = st.nextToken().trim();
-                packageNameList.add(packageName);
-            }
-        }
-        return packageNameList;
+    protected List<String> getPackageNames(FilterConfig filterConfig) {
+        return FilterUtils.getPackageNames(filterConfig);
     }
 
-    protected int getMaxRequestSize(PortletConfig config) {
-        String str = config.getInitParameter(INIT_PARAM_MAX_REQUEST_SIZE);
-        if (StringUtils.isNotBlank(str)) {
-            int maxRequestSize = Integer.parseInt(str);
-            return maxRequestSize;
-        }
-        return -1;
+    protected int getMaxRequestSize(FilterConfig filterConfig) {
+        return FilterUtils.getMaxRequestSize(filterConfig);
     }
 
     /**

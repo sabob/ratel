@@ -8,7 +8,7 @@ import com.google.ratel.core.RatelHttpServletRequest;
 import com.google.ratel.core.RatelHttpServletResponse;
 import com.google.ratel.service.error.*;
 import com.google.ratel.service.error.ErrorHandlerService;
-import com.google.ratel.util.Mode;
+import com.google.ratel.core.Mode;
 import com.google.ratel.service.handler.RequestHandler;
 import java.util.*;
 import javax.servlet.*;
@@ -59,12 +59,19 @@ public class RatelConfig {
     private ErrorHandlerService errorHandlerService;
 
     protected int maxRequestSize;
+    
+    public RatelConfig() {
+    }
 
     public void onInit(ServletContext servletContext, List<String> packageNameList, int maxRequestSize) {
 
         try {
             setServletContext(servletContext);
-            setMode(createMode());
+
+            if (getMode() == null) {
+                setMode(createMode());
+            }
+
             setLogService(createLogService());
             setErrorHandlerService(createErrorHandlerService());
         } catch (Exception e) {

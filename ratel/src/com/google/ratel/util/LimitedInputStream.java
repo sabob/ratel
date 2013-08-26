@@ -26,7 +26,7 @@ import java.io.InputStream;
  *
  * @version $Id: LimitedInputStream.java 1454691 2013-03-09 12:15:54Z simonetripodi $
  */
-public abstract class LimitedInputStream extends FilterInputStream implements Closeable {
+public abstract class LimitedInputStream extends FilterInputStream {
 
     /**
      * The maximum size of an item, in bytes.

@@ -2,7 +2,7 @@ package com.google.ratel.service.error;
 
 import com.google.ratel.RatelConfig;
 import com.google.ratel.service.log.*;
-import com.google.ratel.util.Mode;
+import com.google.ratel.core.Mode;
 import javax.servlet.*;
 import javax.servlet.http.*;
 

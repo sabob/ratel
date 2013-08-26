@@ -11,7 +11,7 @@ import com.google.ratel.deps.lang3.StringUtils;
 import com.google.ratel.core.RatelService;
 import com.google.ratel.service.classdata.*;
 import com.google.ratel.util.Constants;
-import com.google.ratel.util.Mode;
+import com.google.ratel.core.Mode;
 import javax.servlet.http.*;
 
 /**

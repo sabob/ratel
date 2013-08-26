@@ -24,7 +24,7 @@ import com.google.ratel.service.json.JsonElementWrapper;
 import com.google.ratel.service.json.JsonService;
 import com.google.ratel.service.template.TemplateException;
 import com.google.ratel.util.HtmlStringBuffer;
-import com.google.ratel.util.Mode;
+import com.google.ratel.core.Mode;
 import com.google.ratel.util.RatelUtils;
 import java.io.File;
 import java.io.FileInputStream;

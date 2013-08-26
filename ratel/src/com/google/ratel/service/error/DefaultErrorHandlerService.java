@@ -1,5 +1,6 @@
 package com.google.ratel.service.error;
 
+import com.google.ratel.core.Mode;
 import com.google.ratel.*;
 import com.google.ratel.deps.io.*;
 import com.google.ratel.service.classdata.*;

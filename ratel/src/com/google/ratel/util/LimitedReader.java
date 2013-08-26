@@ -25,7 +25,7 @@ import java.io.Reader;
  * used, if the content length is unknown.
  *
  */
-public abstract class LimitedReader extends FilterReader implements Closeable {
+public abstract class LimitedReader extends FilterReader {
 
     /**
      * The maximum size of an item, in bytes.
