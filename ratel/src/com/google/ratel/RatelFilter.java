@@ -27,14 +27,18 @@ public class RatelFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
+        this.servletContext = filterConfig.getServletContext();
+
         Class<? extends RatelConfig> ratelConfigClass = getConfigClass(filterConfig);
         this.ratelConfig = createRatelConfig(ratelConfigClass);
 
-        this.servletContext = filterConfig.getServletContext();
-        List<String> packageNameList = getPackageNames(filterConfig);
-        int maxRequestSize = getMaxRequestSize(filterConfig);
+        FilterUtils.setRatelConfig(this.ratelConfig, this.servletContext);
+
         Mode mode = getMode(filterConfig);
         this.ratelConfig.setMode(mode);
+
+        List<String> packageNameList = getPackageNames(filterConfig);
+        int maxRequestSize = getMaxRequestSize(filterConfig);
 
         this.ratelConfig.onInit(servletContext, packageNameList, maxRequestSize);
     }

@@ -18,9 +18,6 @@ public class JacksonService implements JsonService {
 
     private boolean serializeNulls;
 
-    //ObjectReader reader;
-
-    //ObjectWriter writer;
     ObjectMapper mapper;
 
     public JacksonService() {
@@ -38,14 +35,8 @@ public class JacksonService implements JsonService {
         }
 
         if (isPrettyPrint()) {
-            System.out.println("pretty on");
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
         }
-
-        // To create thread-safe immutable JSON reader and writer:  
-        //reader = mapper.reader();
-        //writer = mapper.writer();
-
     }
 
     @Override

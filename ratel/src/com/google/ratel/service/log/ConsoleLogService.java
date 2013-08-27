@@ -95,6 +95,7 @@ public class ConsoleLogService implements LogService {
      *
      * @param message the message to log
      */
+    @Override
     public void debug(Object message) {
         log(DEBUG_LEVEL, String.valueOf(message), null);
     }
@@ -105,6 +106,7 @@ public class ConsoleLogService implements LogService {
      * @param message the message to log
      * @param error the error to log
      */
+    @Override
     public void debug(Object message, Throwable error) {
         log(DEBUG_LEVEL, String.valueOf(message), error);
     }
@@ -114,6 +116,7 @@ public class ConsoleLogService implements LogService {
      *
      * @param message the message to log
      */
+    @Override
     public void error(Object message) {
         log(ERROR_LEVEL, String.valueOf(message), null);
     }
@@ -124,6 +127,7 @@ public class ConsoleLogService implements LogService {
      * @param message the message to log
      * @param error the error to log
      */
+    @Override
     public void error(Object message, Throwable error) {
         log(ERROR_LEVEL, String.valueOf(message), error);
     }
@@ -133,6 +137,7 @@ public class ConsoleLogService implements LogService {
      *
      * @param message the message to log
      */
+    @Override
     public void info(Object message) {
         log(INFO_LEVEL, String.valueOf(message), null);
     }
@@ -143,6 +148,7 @@ public class ConsoleLogService implements LogService {
      * @param message the message to log
      * @param error the error to log
      */
+    @Override
     public void info(Object message, Throwable error) {
         log(INFO_LEVEL, String.valueOf(message), error);
     }
@@ -152,6 +158,7 @@ public class ConsoleLogService implements LogService {
      *
      * @param message the message to log
      */
+    @Override
     public void trace(Object message) {
         log(TRACE_LEVEL, String.valueOf(message), null);
     }
@@ -162,6 +169,7 @@ public class ConsoleLogService implements LogService {
      * @param message the message to log
      * @param error the error to log
      */
+    @Override
     public void trace(Object message, Throwable error) {
         log(TRACE_LEVEL, String.valueOf(message), error);
     }
@@ -171,6 +179,7 @@ public class ConsoleLogService implements LogService {
      *
      * @param message the message to log
      */
+    @Override
     public void warn(Object message) {
         log(WARN_LEVEL, String.valueOf(message), null);
     }
@@ -181,6 +190,7 @@ public class ConsoleLogService implements LogService {
      * @param message the message to log
      * @param error the error to log
      */
+    @Override
     public void warn(Object message, Throwable error) {
         log(WARN_LEVEL, String.valueOf(message), error);
     }
@@ -190,6 +200,7 @@ public class ConsoleLogService implements LogService {
      *
      * @return true if [debug] level logging is enabled
      */
+    @Override
     public boolean isDebugEnabled() {
         return logLevel <= DEBUG_LEVEL;
     }
@@ -199,6 +210,7 @@ public class ConsoleLogService implements LogService {
      *
      * @return true if [info] level logging is enabled
      */
+    @Override
     public boolean isInfoEnabled() {
         return logLevel <= INFO_LEVEL;
     }
@@ -208,6 +220,7 @@ public class ConsoleLogService implements LogService {
      *
      * @return true if [trace] level logging is enabled
      */
+    @Override
     public boolean isTraceEnabled() {
         return logLevel <= TRACE_LEVEL;
     }

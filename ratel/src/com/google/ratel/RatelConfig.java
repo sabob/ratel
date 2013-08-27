@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.google.ratel;
 
 import com.google.ratel.core.RatelHttpServletRequest;
@@ -23,13 +19,18 @@ import com.google.ratel.service.log.LogService;
 import com.google.ratel.service.resolver.*;
 import com.google.ratel.service.template.*;
 import com.google.ratel.service.upload.*;
+import com.google.ratel.util.RatelUtils;
 
 /**
  *
  */
 public class RatelConfig {
 
-    public static final String[] MODE_VALUES = { "production", "profile", "development", "debug", "trace" };
+    /**
+     * The servlet context attribute name. The RatelFilter/RatelPortlet stores the RatelConfig instance in the ServletContext using this
+     * context attribute name. The value of this constant is {@value}.
+     */
+    public static final String CONTEXT_NAME = "com.google.ratel.RatelConfig";
 
     /**
      * The application mode: [ PRODUCTION | PROFILE | DEVELOPMENT | DEBUG | TRACE ].
@@ -59,11 +60,13 @@ public class RatelConfig {
     private ErrorHandlerService errorHandlerService;
 
     protected int maxRequestSize;
-    
+
     public RatelConfig() {
     }
 
     public void onInit(ServletContext servletContext, List<String> packageNameList, int maxRequestSize) {
+
+        long start = System.currentTimeMillis();
 
         try {
             setServletContext(servletContext);
@@ -73,10 +76,21 @@ public class RatelConfig {
             }
 
             setLogService(createLogService());
+
+            if (getLogService().isInfoEnabled()) {
+                getLogService().info("***  Initializing Ratel " + RatelUtils.getRatelVersion() + " in " + getMode() + " mode  ***");
+
+                String msg = "created LogService: " + getLogService().getClass().getName();
+                getLogService().info(msg);
+            }
+
             setErrorHandlerService(createErrorHandlerService());
         } catch (Exception e) {
-            if (getLogService() != null) {
-                getLogService().error("Could not initialize Ratel", e);
+            if (getLogService() == null) {
+                System.out.println("[Ratel] [error] Could not initialize Ratel");
+            } else {
+                getLogService().error("Could not initialize Ratel");
+
             }
             throw new RuntimeException(e);
         }
@@ -86,18 +100,39 @@ public class RatelConfig {
             setPackageNameList(packageNameList);
 
             setJsonService(createJsonService());
+            if (getLogService().isInfoEnabled()) {
+                getLogService().info("created JsonService: " + getJsonService().getClass().getName());
+            }
 
             setTemplateService(createTemplateService());
+            if (getLogService().isInfoEnabled()) {
+                getLogService().info("created TemplateService: " + getServiceName(getTemplateService()));
+            }
 
             setFileUploadService(createFileUploadService());
+            if (getLogService().isInfoEnabled()) {
+                getLogService().info("created FileUploadService: " + getServiceName(getFileUploadService()));
+            }
 
             setServiceResolver(createServiceResolver());
+            if (getLogService().isInfoEnabled()) {
+                getLogService().info("created ServiceResolver: " + getServiceName(getServiceResolver()));
+            }
 
             setRequestHandler(createRequestHandler());
+            if (getLogService().isInfoEnabled()) {
+                getLogService().info("created RequestHandler: " + getServiceName(getRequestHandler()));
+            }
 
             setInvokeHandler(createInvokeHandler());
+            if (getLogService().isInfoEnabled()) {
+                getLogService().info("created InvokeHandler: " + getServiceName(getInvokeHandler()));
+            }
 
             setHelpHandler(createHelpHandler());
+            if (getLogService().isInfoEnabled()) {
+                getLogService().info("created HelpHandler: " + getServiceName(getHelpHandler()));
+            }
 
             getLogService().onInit(servletContext);
             getErrorHandlerService().onInit(servletContext);
@@ -112,8 +147,14 @@ public class RatelConfig {
             getInvokeHandler().onInit(servletContext);
 
             if (getMode() == Mode.PROFILE || getMode() == Mode.PRODUCTION) {
-            getServiceResolver().resolveServices();
-        }
+                getServiceResolver().resolveServices();
+            }
+
+            long time = System.currentTimeMillis() - start;
+            if (getLogService().isInfoEnabled()) {
+                getLogService().info("Ratel " + RatelUtils.getRatelVersion() + " initialized in " + getMode() + " mode in "
+                    + format(time));
+            }
 
         } catch (Exception e) {
             ErrorHandlerService errorHandler = getErrorHandlerService();
@@ -158,8 +199,7 @@ public class RatelConfig {
     protected JsonService createJsonService() {
         //GsonService service = new GsonService();
         JacksonService service = new JacksonService();
-        System.out.println("JSON service: " + service.getClass().getSimpleName());
-        // TODO depends on mode, prod these should be false
+
         if (getMode().isAtleast(Mode.DEBUG)) {
             service.setPrettyPrint(true);
             service.setSerializeNulls(true);
@@ -436,5 +476,17 @@ public class RatelConfig {
      */
     public void setInvokeHandler(InvokeHandler invokeHandler) {
         this.invokeHandler = invokeHandler;
+    }
+
+    private String getServiceName(Object obj) {
+        if (obj == null) {
+            return "no service specified";
+        } else {
+            return obj.getClass().getName();
+        }
+    }
+
+    private String format(long millis) {
+        return String.format("%.2fs", millis / 1000.0);
     }
 }

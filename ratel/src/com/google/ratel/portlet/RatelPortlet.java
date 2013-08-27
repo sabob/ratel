@@ -49,6 +49,7 @@ public class RatelPortlet extends GenericPortlet {
         
         Class<? extends RatelConfig> ratelConfigClass = getConfigClass(getFilterConfig());
         ratelConfig = createRatelConfig(ratelConfigClass);
+        FilterUtils.setRatelConfig(ratelConfig, this.servletContext);
 
         List<String> packageNameList = getPackageNames(getFilterConfig());
         int maxRequestSize = getMaxRequestSize(getFilterConfig());

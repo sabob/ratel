@@ -392,6 +392,7 @@ public class RatelUtils {
         defaultValues.put(Void.class, null);
         defaultValues.put(Calendar.class, Calendar.getInstance());
     }
+
     private final static Set<Class> collectionTypes = new HashSet<Class>();
 
     static {
@@ -401,6 +402,38 @@ public class RatelUtils {
         collectionTypes.add(List.class);
         collectionTypes.add(Vector.class);
         collectionTypes.add(Hashtable.class);
+    }
+    
+     /**
+     * Return the Click Framework version string.
+     *
+     * @return the Click Framework version string
+     */
+    public static String getRatelVersion() {
+        ResourceBundle bundle = getBundle("ratel");
+        return bundle.getString("ratel-version");
+    }
+    
+    /**
+     * Return the application configuration service instance from the given
+     * servlet context.
+     *
+     * @param servletContext the servlet context to get the config service instance
+     * @return the application config service instance
+     */
+    public static RatelConfig getRatelConfig(ServletContext servletContext) {
+        RatelConfig ratelConfig = (RatelConfig) servletContext.getAttribute(RatelConfig.CONTEXT_NAME);
+
+        if (ratelConfig != null) {
+            return ratelConfig;
+
+        } else {
+            String msg =
+                "could not find RatelConfig in the ServletContext under the name '" + RatelConfig.CONTEXT_NAME + "'.\nThis can occur"
+                + " if RatelUtils.getRatelConfig() is called before RatelFilter/RatelPortlet is initialized by the container.";
+
+            throw new RuntimeException(msg);
+        }
     }
 
     /**
@@ -1121,7 +1154,7 @@ public class RatelUtils {
 
         return false;
     }
-    
+
     public static String prettyPrintJson(String json) {
         Context context = Context.getContext();
         JsonService jsonService = context.getRatelConfig().getJsonService();
