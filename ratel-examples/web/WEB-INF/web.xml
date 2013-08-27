@@ -8,6 +8,10 @@
             com.google.ratel.RatelFilter
         </filter-class>
         <init-param>
+            <param-name>mode</param-name>
+            <param-value>trace</param-value>
+        </init-param>
+        <init-param>
             <param-name>packageNames</param-name>
             <param-value>co.za.mom, com.mycorp.service</param-value>
         </init-param>

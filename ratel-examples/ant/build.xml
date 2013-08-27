@@ -33,6 +33,16 @@
     <property name="jar.collections" value="commons-collections-${commons-collections.version}.jar"/>
    <property name="jar.lang" value="commons-lang-${commons-lang.version}.jar"/>
     <property name="jar.velocity" value="velocity-${velocity.version}.jar"/>
+    <property name="jar.antlr" value="antlr-${antlr.version}.jar"/>
+    <property name="jar.h2" value="h2-${h2.version}.jar"/>
+    <property name="jar.dom4j" value="dom4j-${dom4j.version}.jar"/>
+    <property name="jar.hibernate-commons-annotations" value="hibernate-commons-annotations-${hibernate-commons-annotations.version}.jar"/>
+    <property name="jar.hibernate-core" value="hibernate-core-${hibernate.version}.jar"/>
+    <property name="jar.hibernate-entitymanager" value="hibernate-entitymanager-${hibernate.version}.jar"/>
+    <property name="jar.hibernate-jpa" value="hibernate-jpa-2.0-api-${hibernate-jpa.version}.jar"/>
+    <property name="jar.javassist" value="javassist-${javassist.version}.jar"/>
+    <property name="jar.jboss-logging" value="jboss-logging-${jboss-logging.version}.jar"/>
+    <property name="jar.jboss-transaction-api" value="jboss-transaction-api_1.1_spec-${jboss-transaction-api.version}.jar"/>
     
     <presetdef name="javac">
         <javac includeantruntime="false" />
@@ -108,9 +118,20 @@
     
     <target name="get-deps" description="download JAR dependencies">
         <mkdir dir="${dir.weblib}"/>
-        <webDownloadMacro name="${jar.log4j}" path="log4j/log4j/${log4j.version}"/>
         <webDownloadMacro name="${jar.collections}" path="commons-collections/commons-collections/${commons-collections.version}"/>
         <webDownloadMacro name="${jar.lang}" path="commons-lang/commons-lang/${commons-lang.version}"/>
+        <webDownloadMacro name="${jar.antlr}" path="antlr/antlr/${antlr.version}"/>
+        <webDownloadMacro name="${jar.h2}" path="com/h2database/h2/${h2.version}"/>
+        <webDownloadMacro name="${jar.dom4j}" path="dom4j/dom4j/${dom4j.version}"/>
+        <webDownloadMacro name="${jar.hibernate-commons-annotations}" path="org/hibernate/common/hibernate-commons-annotations/${hibernate-commons-annotations.version}"/>
+        <webDownloadMacro name="${jar.hibernate-core}" path="org/hibernate/hibernate-core/${hibernate.version}"/>
+        <webDownloadMacro name="${jar.hibernate-entitymanager}" path="org/hibernate/hibernate-entitymanager/${hibernate.version}"/>
+        <webDownloadMacro name="${jar.hibernate-jpa}" path="org/hibernate/javax/persistence/hibernate-jpa-2.0-api/${hibernate-jpa.version}"/>
+        <webDownloadMacro name="${jar.javassist}" path="org/javassist/javassist/${javassist.version}"/>
+        <webDownloadMacro name="${jar.jboss-logging}" path="org/jboss/logging/jboss-logging/${jboss-logging.version}"/>
+        <webDownloadMacro name="${jar.jboss-transaction-api}" path="org/jboss/spec/javax/transaction/jboss-transaction-api_1.1_spec/${jboss-transaction-api.version}"/>        
+        <webDownloadMacro name="${jar.log4j}" path="log4j/log4j/${log4j.version}"/>
+        <webDownloadMacro name="${jar.velocity}" path="org/apache/velocity/velocity/${velocity.version}"/>
     </target>
 
 </project>
