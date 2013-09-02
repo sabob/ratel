@@ -20,9 +20,22 @@ import com.google.ratel.service.resolver.*;
 import com.google.ratel.service.template.*;
 import com.google.ratel.service.upload.*;
 import com.google.ratel.util.RatelUtils;
+import java.text.Format;
 
 /**
+ * Provides a default implementation of the {@link Container} interface
+ * to make it easier for developers to create their own containers.
+ * <p/>
+ * The following example shows how to create an HTML <tt>div</tt> element:
  *
+ * <pre class="prettyprint linenums">
+ * public class Div extends AbstractContainer {
+ *
+ *     public String getTag() {
+ *         // Return the HTML tag
+ *         return "div";
+ *     }
+ * } </pre>
  */
 public class RatelConfig {
 
@@ -61,6 +74,15 @@ public class RatelConfig {
 
     protected int maxRequestSize;
 
+    /** The format class. */
+    private Class<? extends Format> formatClass;
+
+    /** The character encoding of this application. */
+    private String charset;
+
+    /** The default application locale.*/
+    private Locale locale;
+
     public RatelConfig() {
     }
 
@@ -96,6 +118,9 @@ public class RatelConfig {
         }
 
         try {
+            setLocale(createLocale());
+            setCharset(createCharset());
+            setFormatClass(createFormatClass());
             setMaxRequestSize(maxRequestSize);
             setPackageNameList(packageNameList);
 
@@ -280,7 +305,6 @@ public class RatelConfig {
     }
 
     protected TemplateService createTemplateService() {
-        //return new VelocityTemplateService();
         return null;
     }
 
@@ -301,7 +325,7 @@ public class RatelConfig {
     public void setServletContext(ServletContext servletContext) {
         this.servletContext = servletContext;
     }
-
+    
     /**
      * @return the maxRequestSize
      */
@@ -436,6 +460,19 @@ public class RatelConfig {
          */
     }
 
+    protected Class<? extends Format> createFormatClass() {
+        return Format.class;
+    }
+    
+     protected Locale createLocale() {
+         return null;
+    }
+     
+     protected String createCharset() {
+         //return "UTF-8";
+         return null;
+     }
+
     /**
      * @return the logService
      */
@@ -478,6 +515,50 @@ public class RatelConfig {
         this.invokeHandler = invokeHandler;
     }
 
+
+    /**
+     * @return the formatClass
+     */
+    public Class<? extends Format> getFormatClass() {
+        return formatClass;
+    }
+
+    /**
+     * @param formatClass the formatClass to set
+     */
+    public void setFormatClass(Class<? extends Format> formatClass) {
+        this.formatClass = formatClass;
+    }
+
+
+    /**
+     * @return the charset
+     */
+    public String getCharset() {
+        return charset;
+    }
+
+    /**
+     * @param charset the charset to set
+     */
+    public void setCharset(String charset) {
+        this.charset = charset;
+    }
+
+    /**
+     * @return the locale
+     */
+    public Locale getLocale() {
+        return locale;
+    }
+
+    /**
+     * @param locale the locale to set
+     */
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
+    
     private String getServiceName(Object obj) {
         if (obj == null) {
             return "no service specified";

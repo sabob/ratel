@@ -6,22 +6,25 @@ import javax.servlet.http.HttpSession;
 import com.google.ratel.deps.fileupload.FileItem;
 import com.google.ratel.core.RatelHttpServletRequest;
 import com.google.ratel.core.RatelHttpServletResponse;
+import com.google.ratel.util.FlashAttribute;
 
 public class Context {
-    
+
     /**
-     * The attribute key used for storing any error that occurred while
-     * Context is created.
+     * The user's session Locale key: &nbsp; <tt>locale</tt>.
      */
-    public static final String CONTEXT_FATAL_ERROR = "_context_fatal_error";
+    public static final String LOCALE = "locale";
 
     private static ThreadLocal<Context> THREAD_LOCAL_CONTEXT = new ThreadLocal<Context>();
 
     private ServletContext servletContext;
+
     private RatelHttpServletRequest request;
+
     private RatelHttpServletResponse response;
+
     private RatelConfig ratelConfig;
-    
+
     public Context() {
     }
 
@@ -38,7 +41,7 @@ public class Context {
         this.response = response;
         this.ratelConfig = ratelConfig;
     }
-    
+
     /**
      * @return the servletContext
      */
@@ -89,7 +92,7 @@ public class Context {
     public HttpSession getSession() {
         return getRequest().getSession();
     }
-    
+
     public static boolean hasContext() {
         return THREAD_LOCAL_CONTEXT.get() != null;
     }
@@ -105,6 +108,7 @@ public class Context {
 
     /**
      * Bind the request context to the current thread.
+     *
      * @param requestContext the request context
      */
     public static void bindContext(Context requestContext) {
@@ -114,27 +118,23 @@ public class Context {
             THREAD_LOCAL_CONTEXT.remove();
         }
     }
-    
+
     /**
-     * Returns a map of <tt>FileItem arrays</tt> keyed on request parameter
-     * name for "multipart" POST requests (file uploads). Thus each map entry
-     * will consist of one or more <tt>FileItem</tt> objects.
+     * Returns a map of <tt>FileItem arrays</tt> keyed on request parameter name for "multipart" POST requests (file uploads). Thus each map
+     * entry will consist of one or more <tt>FileItem</tt> objects.
      *
-     * @return map of <tt>FileItem arrays</tt> keyed on request parameter name
-     * for "multipart" POST requests
+     * @return map of <tt>FileItem arrays</tt> keyed on request parameter name for "multipart" POST requests
      */
     public Map<String, FileItem[]> getFileItemMap() {
         return getRequest().getFileItemMap();
     }
 
     /**
-     * Returns the value of a request parameter as a FileItem, for
-     * "multipart" POST requests (file uploads), or null if the parameter
-     * is not found.
+     * Returns the value of a request parameter as a FileItem, for "multipart" POST requests (file uploads), or null if the parameter is not
+     * found.
      * <p/>
-     * If there were multivalued parameters in the request (ie two or more
-     * file upload fields with the same name), the first fileItem
-     * in the array is returned.
+     * If there were multivalued parameters in the request (ie two or more file upload fields with the same name), the first fileItem in the
+     * array is returned.
      *
      * @param name the name of the parameter of the fileItem to retrieve
      *
@@ -163,5 +163,120 @@ public class Context {
      */
     public void setRatelConfig(RatelConfig ratelConfig) {
         this.ratelConfig = ratelConfig;
+    }
+
+    /**
+     * Return the users Locale.
+     * <p/>
+     * If the users Locale is stored in their session this will be returned. Else if the click-app configuration defines a default Locale
+     * this value will be returned, otherwise the request's Locale will be returned.
+     * <p/>
+     * To override the default request Locale set the users Locale using the {@link #setLocale(Locale)} method.
+     * <p/>
+     * Pages and Controls obtain the users Locale using this method.
+     *
+     * @return the users Locale in the session, or if null the request Locale
+     */
+    public Locale getLocale() {
+        Locale locale = (Locale) getSessionAttribute(LOCALE);
+
+        if (locale == null) {
+
+            if (ratelConfig.getLocale() != null) {
+                locale = ratelConfig.getLocale();
+
+            } else {
+                locale = getRequest().getLocale();
+            }
+        }
+
+        return locale;
+    }
+
+    /**
+     * This method stores the given Locale in the users session. If the given Locale is null, the "locale" attribute will be removed from
+     * the session.
+     * <p/>
+     * The Locale object is stored in the session using the {@link #LOCALE} key.
+     *
+     * @param locale the Locale to store in the users session using the key "locale"
+     */
+    public void setLocale(Locale locale) {
+        if (locale == null && hasSession()) {
+            getSession().removeAttribute(LOCALE);
+        } else {
+            setSessionAttribute(LOCALE, locale);
+        }
+    }
+    
+    /**
+     * Return the named session attribute, or null if not defined.
+     * <p/>
+     * If the session is not defined this method will return null, and a
+     * session will not be created.
+     * <p/>
+     * This method supports {@link FlashAttribute} which when accessed are then
+     * removed from the session.
+     *
+     * @param name the name of the session attribute
+     * @return the named session attribute, or null if not defined
+     */
+    public Object getSessionAttribute(String name) {
+        if (hasSession()) {
+            Object object = getSession().getAttribute(name);
+
+            if (object instanceof FlashAttribute) {
+                FlashAttribute flashObject = (FlashAttribute) object;
+                object = flashObject.getValue();
+                removeSessionAttribute(name);
+            }
+
+            return object;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * This method will set the named object in the HttpSession.
+     * <p/>
+     * This method will create a session if one does not already exist.
+     *
+     * @param name the storage name for the object in the session
+     * @param value the object to store in the session
+     */
+    public void setSessionAttribute(String name, Object value) {
+        getSession().setAttribute(name, value);
+    }
+
+    /**
+     * Remove the named attribute from the session. If the session does not
+     * exist or the name is null, this method does nothing.
+     *
+     * @param name of the attribute to remove from the session
+     */
+    public void removeSessionAttribute(String name) {
+        if (hasSession() && name != null) {
+            getSession().removeAttribute(name);
+        }
+    }
+
+    /**
+     * Return true if there is a session and it contains the named attribute.
+     *
+     * @param name the name of the attribute
+     * @return true if the session contains the named attribute
+     */
+    public boolean hasSessionAttribute(String name) {
+        return (getSessionAttribute(name) != null);
+    }
+
+    /**
+     * Return true if a HttpSession exists, or false otherwise.
+     *
+     * @return true if a HttpSession exists, or false otherwise
+     */
+    public boolean hasSession() {
+        return (request.getSession(false) != null);
     }
 }

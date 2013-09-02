@@ -40,6 +40,15 @@ public enum Mode {
         return lookup.get(key.toLowerCase());
     }
 
+    public boolean isProductionModes() {
+        return this.level <= PROFILE.level;
+    }
+
+    public boolean isDevelopmentModes() {
+        return this.level >= DEVELOPMENT.level;
+    }
+
+    @Deprecated
     public boolean isAtleast(Mode mode) {
         return this.level >= mode.level;
     }

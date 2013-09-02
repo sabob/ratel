@@ -7,7 +7,8 @@ package com.google.ratel.util;
 import com.google.ratel.deps.io.IOUtils;
 import java.io.*;
 import static java.lang.String.format;
-import java.util.logging.*;
+import java.util.*;
+import java.util.Date;
 
 /**
  *
@@ -40,6 +41,12 @@ public class LimitedReaderTest {
         } catch (IOException ex) {
             ex.printStackTrace();;
         }
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, 1950);
+        Date d= new Date();
+        d.setYear(1950);
+        System.out.println("epoch: " + c.getTimeInMillis());
+        System.out.println("epoch: " + c.getTime());
 
 
 

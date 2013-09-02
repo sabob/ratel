@@ -318,7 +318,7 @@ public class HttpServletRequestImpl implements HttpServletRequest {
    */
   @Override
   public String getServletPath() {
-    throw new UnsupportedOperationException();
+      return resourceRequest.getResourceID();
   }
 
 

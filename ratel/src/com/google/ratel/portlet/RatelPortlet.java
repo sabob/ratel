@@ -75,22 +75,18 @@ public class RatelPortlet extends GenericPortlet {
             HttpServletRequest request = createServletRequest(resourceRequest, getServletContext());
             HttpServletResponse response = createServletResponse(resourceResponse, getServletContext());
 
-            // CLK-312. Apply request.setCharacterEncoding before wrapping
-            // request in ClickRequestWrapper
-            /*
-             String charset = clickServlet.getConfigService().getCharset();
-             if (charset != null) {
+            // Apply request.setCharacterEncoding before wrapping request in RatelHttpServletRequest
+             String charset = ratelConfig.getCharset();
+            if (charset != null) {
 
-             try {
-             request.setCharacterEncoding(charset);
+                try {
+                    request.setCharacterEncoding(charset);
 
-             } catch (UnsupportedEncodingException ex) {
-             String msg =
-             "The character encoding " + charset + " is invalid.";
-             System.out.println(msg);
-             ex.printStackTrace();
-             }
-             }*/
+                } catch (UnsupportedEncodingException ex) {
+                    String msg = "The character encoding " + charset + " is invalid.";
+                    ratelConfig.getLogService().error(msg, ex);
+                }
+            }
 
             Context context = ratelConfig.createAndBindContext(request, response);
             RequestHandler requestHandler = ratelConfig.getRequestHandler();

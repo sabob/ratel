@@ -112,11 +112,9 @@ public class RatelHttpServletRequest extends HttpServletRequestWrapper {
                     }
                 }
 
-            } catch (Throwable t) {
+            } catch (Exception e) {
 
-                // Don't throw error here as it will break Context creation.
-                // Instead add the error as a request attribute.
-                request.setAttribute(Context.CONTEXT_FATAL_ERROR, t);
+                throw new RuntimeException(e);
 
             } finally {
                 fileItemMap = Collections.unmodifiableMap(fileItems);

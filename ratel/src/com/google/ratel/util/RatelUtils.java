@@ -37,6 +37,7 @@ import com.google.ratel.service.classdata.ClassData;
 import com.google.ratel.service.classdata.MethodData;
 import com.google.ratel.service.json.*;
 import com.google.ratel.service.json.JsonService;
+import java.net.*;
 
 /**
  *
@@ -1161,5 +1162,134 @@ public class RatelUtils {
         JsonElementWrapper wrapper = jsonService.parseJson(json);
         String result = jsonService.toJson(wrapper);
         return result;
+    }
+    
+    
+    /**
+     * URL encode the specified value using the "UTF-8" encoding scheme.
+     * <p/>
+     * For example <tt>(http://host?name=value with spaces)</tt> will become
+     * <tt>(http://host?name=value+with+spaces)</tt>.
+     * <p/>
+     * This method uses {@link URLEncoder#encode(java.lang.String, java.lang.String)}
+     * internally.
+     *
+     * @param value the value to encode using "UTF-8"
+     * @return an encoded URL string
+     */
+    public static String encodeURL(Object value) {
+        if (value == null) {
+            throw new IllegalArgumentException("Null object parameter");
+        }
+
+        try {
+            return URLEncoder.encode(value.toString(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * URL decode the specified value using the "UTF-8" encoding scheme.
+     * <p/>
+     * For example <tt>(http://host?name=value+with+spaces)</tt> will become
+     * <tt>(http://host?name=value with spaces)</tt>.
+     * <p/>
+     * This method uses {@link URLDecoder#decode(java.lang.String, java.lang.String)}
+     * internally.
+     *
+     * @param value the value to decode using "UTF-8"
+     * @return an encoded URL string
+     */
+    public static String decodeURL(Object value) {
+        if (value == null) {
+            throw new IllegalArgumentException("Null object parameter");
+        }
+
+        try {
+            return URLDecoder.decode(value.toString(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Return an encoded URL value for the given object using the context
+     * request character encoding or "UTF-8" if the request character encoding
+     * is not specified.
+     * <p/>
+     * For example <tt>(http://host?name=value with spaces)</tt> will become
+     * <tt>(http://host?name=value+with+spaces)</tt>.
+     * <p/>
+     * This method uses
+     * {@link URLEncoder#encode(java.lang.String, java.lang.String)} internally.
+     *
+     * @param object the object value to encode as a URL string
+     * @param context the context providing the request character encoding
+     * @return an encoded URL string
+     */
+    public static String encodeUrl(Object object, Context context) {
+        if (object == null) {
+            throw new IllegalArgumentException("Null object parameter");
+        }
+        if (context == null) {
+            throw new IllegalArgumentException("Null context parameter");
+        }
+
+        String charset = context.getRequest().getCharacterEncoding();
+
+        try {
+            if (charset == null) {
+                return URLEncoder.encode(object.toString(), "UTF-8");
+
+            } else {
+                return URLEncoder.encode(object.toString(), charset);
+            }
+
+        } catch (UnsupportedEncodingException uee) {
+            throw new RuntimeException(uee);
+        }
+    }
+
+    /**
+     * Return the value string limited to maxlength characters. If the string
+     * gets curtailed, "..." is appended to it.
+     * <p/>
+     * Adapted from Velocity Tools Formatter.
+     *
+     * @param value the string value to limit the length of
+     * @param maxlength the maximum string length
+     * @return a length limited string
+     */
+    public static String limitLength(String value, int maxlength) {
+        return limitLength(value, maxlength, "...");
+    }
+
+    /**
+     * Return the value string limited to maxlength characters. If the string
+     * gets curtailed and the suffix parameter is appended to it.
+     * <p/>
+     * Adapted from Velocity Tools Formatter.
+     *
+     * @param value the string value to limit the length of
+     * @param maxlength the maximum string length
+     * @param suffix the suffix to append to the length limited string
+     * @return a length limited string
+     */
+    public static String limitLength(String value, int maxlength, String suffix) {
+        String ret = value;
+        if (value.length() > maxlength) {
+            ret = value.substring(0, maxlength - suffix.length()) + suffix;
+        }
+        return ret;
+    }
+    
+    public static String getExtension(String path) {
+        int index = path.lastIndexOf(".");
+        if (index != -1) {
+            String ext = path.substring(index + 1);
+            return ext;
+        }
+        return "";
     }
 }
