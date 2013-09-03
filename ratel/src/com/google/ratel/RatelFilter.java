@@ -1,9 +1,7 @@
 package com.google.ratel;
 
-import com.google.ratel.core.Mode;
 import com.google.ratel.service.handler.RequestHandler;
 import java.io.*;
-import java.util.*;
 import javax.servlet.*;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -28,19 +26,7 @@ public class RatelFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
 
         this.servletContext = filterConfig.getServletContext();
-
-        Class<? extends RatelConfig> ratelConfigClass = getConfigClass(filterConfig);
-        this.ratelConfig = createRatelConfig(ratelConfigClass);
-
-        FilterUtils.setRatelConfig(this.ratelConfig, this.servletContext);
-
-        Mode mode = getMode(filterConfig);
-        this.ratelConfig.setMode(mode);
-
-        List<String> packageNameList = getPackageNames(filterConfig);
-        int maxRequestSize = getMaxRequestSize(filterConfig);
-
-        this.ratelConfig.onInit(servletContext, packageNameList, maxRequestSize);
+        this.ratelConfig = FilterUtils.globalInit(filterConfig);
     }
 
     @Override
@@ -87,25 +73,5 @@ public class RatelFilter implements Filter {
     public void destroy() {
         ratelConfig.onDestroy(servletContext);
         servletContext = null;
-    }
-    
-    protected RatelConfig createRatelConfig(Class<? extends RatelConfig> ratelConfigClass) {
-        return FilterUtils.createRatelConfig(ratelConfigClass);
-    }
-
-    protected Class<? extends RatelConfig> getConfigClass(FilterConfig filterConfig) {
-        return FilterUtils.getConfigClass(filterConfig);
-    }
-
-    protected List<String> getPackageNames(FilterConfig filterConfig) {
-        return FilterUtils.getPackageNames(filterConfig);
-    }
-
-    protected int getMaxRequestSize(FilterConfig filterConfig) {
-        return FilterUtils.getMaxRequestSize(filterConfig);
-    }
-    
-    protected Mode getMode(FilterConfig filterConfig) {
-        return FilterUtils.getMode(filterConfig);
     }
 }

@@ -5,6 +5,7 @@ import com.google.ratel.core.RatelHttpServletResponse;
 import com.google.ratel.service.error.*;
 import com.google.ratel.service.error.ErrorHandlerService;
 import com.google.ratel.core.Mode;
+import com.google.ratel.deps.lang3.builder.*;
 import com.google.ratel.service.handler.RequestHandler;
 import java.util.*;
 import javax.servlet.*;
@@ -45,6 +46,7 @@ public class RatelConfig {
      */
     public static final String CONTEXT_NAME = "com.google.ratel.RatelConfig";
 
+    public static int DEFAULT_MAX_REQUEST_SIZE = -1;
     /**
      * The application mode: [ PRODUCTION | PROFILE | DEVELOPMENT | DEBUG | TRACE ].
      */
@@ -72,7 +74,7 @@ public class RatelConfig {
 
     private ErrorHandlerService errorHandlerService;
 
-    protected int maxRequestSize;
+    protected int maxRequestSize = DEFAULT_MAX_REQUEST_SIZE;
 
     /** The format class. */
     private Class<? extends Format> formatClass;
@@ -86,7 +88,7 @@ public class RatelConfig {
     public RatelConfig() {
     }
 
-    public void onInit(ServletContext servletContext, List<String> packageNameList, int maxRequestSize) {
+    public void onInit(ServletContext servletContext) {
 
         long start = System.currentTimeMillis();
 
@@ -118,11 +120,21 @@ public class RatelConfig {
         }
 
         try {
-            setLocale(createLocale());
-            setCharset(createCharset());
-            setFormatClass(createFormatClass());
-            setMaxRequestSize(maxRequestSize);
-            setPackageNameList(packageNameList);
+            if (getLocale() == null) {
+                setLocale(createLocale());
+            }
+            if (getCharset()== null) {
+                setCharset(createCharset());
+            }
+            if (getFormatClass()== null) {
+                setFormatClass(createFormatClass());
+            }
+            if (getMaxRequestSize() == DEFAULT_MAX_REQUEST_SIZE) {
+                setMaxRequestSize(createMaxRequestSize());
+            }
+            if (getPackageNameList() == null) {
+                setPackageNameList(createPackageNameList());
+            }
 
             setJsonService(createJsonService());
             if (getLogService().isInfoEnabled()) {
@@ -179,6 +191,7 @@ public class RatelConfig {
             if (getLogService().isInfoEnabled()) {
                 getLogService().info("Ratel " + RatelUtils.getRatelVersion() + " initialized in " + getMode() + " mode in "
                     + format(time));
+                getLogService().info("RatelCongfig initialized with the properties: " + toString());
             }
 
         } catch (Exception e) {
@@ -459,6 +472,14 @@ public class RatelConfig {
          return mode;
          */
     }
+    
+    protected int createMaxRequestSize() {
+        return DEFAULT_MAX_REQUEST_SIZE;
+    }
+    
+    protected List<String> createPackageNameList() {
+        return null;
+    }
 
     protected Class<? extends Format> createFormatClass() {
         return Format.class;
@@ -569,5 +590,14 @@ public class RatelConfig {
 
     private String format(long millis) {
         return String.format("%.2fs", millis / 1000.0);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        ToStringStyle style = ToStringStyle.MULTI_LINE_STYLE;
+        ReflectionToStringBuilder builder = new ReflectionToStringBuilder(this, style);
+        builder.setExcludeFieldNames("servletContext");
+        return builder.toString();
     }
 }

@@ -1,5 +1,6 @@
 package com.google.ratel.service.resolver;
 
+import com.google.ratel.RatelConfig;
 import java.util.*;
 import java.util.concurrent.*;
 import javax.servlet.*;
@@ -39,6 +40,8 @@ public class DefaultServiceResolver implements ServiceResolver {
     protected List<String> packageNames = new ArrayList<String>();
 
     protected Mode mode;
+    
+    protected RatelConfig ratelConfig;
 
     public DefaultServiceResolver() {
     }
@@ -46,10 +49,12 @@ public class DefaultServiceResolver implements ServiceResolver {
     @Override
     public void onInit(ServletContext servletContext) {
         this.servletContext = servletContext;
+        this.ratelConfig = RatelUtils.getRatelConfig(servletContext);
     }
 
     @Override
     public void onDestroy(ServletContext servletContext) {
+        this.ratelConfig = null;
         this.servletContext = null;
     }
 
@@ -184,7 +189,7 @@ public class DefaultServiceResolver implements ServiceResolver {
     protected ClassData getService(String path) {
 
         // If in production or profile mode.
-        if (mode == Mode.PROFILE || mode == Mode.PRODUCTION) {
+        if (mode.isProductionModes()) {
             ClassData classData = serviceByPathMap.get(path);
             return classData;
         }
@@ -207,20 +212,17 @@ public class DefaultServiceResolver implements ServiceResolver {
             if (serviceClass != null) {
                 serviceData = new ClassData();
                 serviceData.setServiceClass(serviceClass);
+                serviceData.setServicePath(path);
 
                 RatelUtils.populateMethods(serviceData);
-
-                //page = new XmlConfigService.PageElm(path, pageClass,
-                //                                  commonHeaders,
-                //                                autobinding);
 
                 serviceByPathMap.put(path, serviceData);
                 //addToClassMap(page);
 
-                //if (logService.isDebugEnabled()) {
-                //    String msg = path + " -> " + pageClass.getName();
-                //    logService.debug(msg);
-                //}
+                if (ratelConfig.getLogService().isDebugEnabled()) {
+                    String msg = path + " -> " + serviceClass.getName();
+                    ratelConfig.getLogService().debug(msg);
+                }
 
                 break;
             }

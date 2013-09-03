@@ -46,17 +46,8 @@ public class RatelPortlet extends GenericPortlet {
             portletContext.log("ServletContext could not be initialized from PortletContext - " + portletContext.getClass().getName(), e);
             throw new PortletException(e);
         }
-        
-        Class<? extends RatelConfig> ratelConfigClass = getConfigClass(getFilterConfig());
-        ratelConfig = createRatelConfig(ratelConfigClass);
-        FilterUtils.setRatelConfig(ratelConfig, this.servletContext);
 
-        List<String> packageNameList = getPackageNames(getFilterConfig());
-        int maxRequestSize = getMaxRequestSize(getFilterConfig());
-        Mode mode = getMode(getFilterConfig());
-        ratelConfig.setMode(mode);
-
-        ratelConfig.onInit(getServletContext(), packageNameList, maxRequestSize);
+        this.ratelConfig = FilterUtils.globalInit(filterConfig);
     }
 
     @Override
@@ -129,10 +120,6 @@ public class RatelPortlet extends GenericPortlet {
         this.filterConfig = filterConfig;
     }
 
-    public RatelConfig createRatelConfig(Class<? extends RatelConfig> ratelConfigClass) {
-        return FilterUtils.createRatelConfig(ratelConfigClass);
-    }
-
     protected ServletContext createServletContext(PortletContext portletContext) {
         ServletContext localServletContext = new ServletContextImpl(portletContext);
         return localServletContext;
@@ -151,21 +138,5 @@ public class RatelPortlet extends GenericPortlet {
     protected HttpServletResponse createServletResponse(ResourceResponse resourceResponse, ServletContext servletContext) {
         HttpServletResponse servletResponse = new HttpServletResponseImpl(resourceResponse);
         return servletResponse;
-    }
-
-    protected Class<? extends RatelConfig> getConfigClass(FilterConfig filterConfig) {
-        return FilterUtils.getConfigClass(filterConfig);
-    }
-
-    protected List<String> getPackageNames(FilterConfig filterConfig) {
-        return FilterUtils.getPackageNames(filterConfig);
-    }
-
-    protected int getMaxRequestSize(FilterConfig filterConfig) {
-        return FilterUtils.getMaxRequestSize(filterConfig);
-    }
-    
-    protected Mode getMode(FilterConfig filterConfig) {
-        return FilterUtils.getMode(filterConfig);
     }
 }

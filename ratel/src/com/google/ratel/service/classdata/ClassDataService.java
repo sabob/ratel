@@ -40,9 +40,11 @@ public class ClassDataService {
                         break;
                     }
                 }
-                
-                //serviceName = StringUtils.removeStart(serviceName, ".");
+
                 String servicePath = serviceName.replace(".", "/");
+                if (!servicePath.startsWith("/")) {
+                    servicePath = "/" + servicePath;
+                }
                 ClassData classData = new ClassData();
                 classData.setServiceClass(serviceClass);
                 classData.setServicePath(servicePath);

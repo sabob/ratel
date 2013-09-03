@@ -424,17 +424,7 @@ public class RatelUtils {
      */
     public static RatelConfig getRatelConfig(ServletContext servletContext) {
         RatelConfig ratelConfig = (RatelConfig) servletContext.getAttribute(RatelConfig.CONTEXT_NAME);
-
-        if (ratelConfig != null) {
-            return ratelConfig;
-
-        } else {
-            String msg =
-                "could not find RatelConfig in the ServletContext under the name '" + RatelConfig.CONTEXT_NAME + "'.\nThis can occur"
-                + " if RatelUtils.getRatelConfig() is called before RatelFilter/RatelPortlet is initialized by the container.";
-
-            throw new RuntimeException(msg);
-        }
+        return ratelConfig;
     }
 
     /**

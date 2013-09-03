@@ -14,7 +14,6 @@ import com.google.ratel.RatelConfig;
 import com.google.ratel.core.RatelHttpServletResponse;
 import com.google.ratel.service.classdata.RequestTargetData;
 import com.google.ratel.service.json.*;
-import com.google.ratel.util.*;
 
 /**
  * http://localhost:8080/click-service/tests/PersonService/getJson http://localhost:8080/click-service/tests/PersonService/getPerson

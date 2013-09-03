@@ -407,8 +407,7 @@ public class PerformanceFilter implements Filter {
      */
     protected void loadConfiguration() {
 
-        ServletContext servletContext = getFilterConfig().getServletContext();
-        ratelConfig = RatelUtils.getRatelConfig(servletContext);
+        this.ratelConfig = FilterUtils.globalInit(filterConfig);
 
         // Get gzip enabled parameter
         String param = filterConfig.getInitParameter("compression-enabled");

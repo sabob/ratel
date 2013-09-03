@@ -15,13 +15,46 @@ import javax.servlet.*;
  */
 public class FilterUtils {
 
-    public static final String INIT_PARAM_CONFIG_CLASS = "configClass";
+    public static final String CONTEXT_PARAM_CONFIG_CLASS = "ratel.configClass";
 
-    public static final String INIT_PARAM_PACKAGE_NAMES = "packageNames";
+    public static final String CONTEXT_PARAM_PACKAGE_NAMES = "ratel.packageNames";
 
-    public static final String INIT_PARAM_MAX_REQUEST_SIZE = "maxRequestSize";
+    public static final String CONTEXT_PARAM_MAX_REQUEST_SIZE = "ratel.maxRequestSize";
 
-    public static final String INIT_PARAM_MODE = "mode";
+    public static final String CONTEXT_PARAM_MODE = "ratel.mode";
+
+    public static final String CONTEXT_PARAM_CHARSET = "ratel.charset";
+    
+    public static RatelConfig globalInit(FilterConfig filterConfig) {
+        ServletContext servletContext = filterConfig.getServletContext();
+        
+        // Check if config has already been loaded
+        RatelConfig ratelConfig = RatelUtils.getRatelConfig(servletContext);
+        if (ratelConfig != null) {
+            return ratelConfig;
+        }
+
+        Class<? extends RatelConfig> ratelConfigClass = FilterUtils.getConfigClass(filterConfig);
+        ratelConfig = createRatelConfig(ratelConfigClass);
+
+        setRatelConfig(ratelConfig, servletContext);
+
+        Mode mode = FilterUtils.getMode(filterConfig);
+        ratelConfig.setMode(mode);
+
+        String charset = FilterUtils.getCharset(filterConfig);
+        ratelConfig.setCharset(charset);
+
+        List<String> packageNameList = FilterUtils.getPackageNames(filterConfig);
+        ratelConfig.setPackageNameList(packageNameList);
+
+        int maxRequestSize = getMaxRequestSize(filterConfig);
+       ratelConfig.setMaxRequestSize(maxRequestSize);
+
+        ratelConfig.onInit(servletContext);
+
+        return ratelConfig;
+    }
     
     public static void setRatelConfig(RatelConfig ratelConfig, ServletContext servletContext) {
         servletContext.setAttribute(RatelConfig.CONTEXT_NAME, ratelConfig);
@@ -48,23 +81,33 @@ public class FilterUtils {
 
     public static Class<? extends RatelConfig> getConfigClass(FilterConfig filterConfig) {
 
-        Class configClass = null;
-        String value = filterConfig.getInitParameter(INIT_PARAM_CONFIG_CLASS);
+        ServletContext servletContext = filterConfig.getServletContext();
+
+        String value = servletContext.getInitParameter(CONTEXT_PARAM_CONFIG_CLASS);
         if (StringUtils.isNotBlank(value)) {
+
             try {
-                configClass = Class.forName(value);
+                Class configClass = Class.forName(value);
                 System.out.println("[Ratel] [info ] RatelConfig class specified: " + configClass.getName());
+                return configClass;
+
             } catch (ClassNotFoundException e) {
                 System.out.println("[Ratel] [error] Could not load custom RatelConfig: " + value + ". Using " + RatelConfig.class.getName() + " instead.");
                 e.printStackTrace();
             }
         }
-        return configClass;
+
+        warnIfInitParamUsed(filterConfig, CONTEXT_PARAM_PACKAGE_NAMES);
+        return null;
     }
 
     public static List<String> getPackageNames(FilterConfig filterConfig) {
+
+        ServletContext servletContext = filterConfig.getServletContext();
+
         List<String> packageNameList = new ArrayList<String>();
-        String packageNames = filterConfig.getInitParameter(INIT_PARAM_PACKAGE_NAMES);
+        String packageNames = servletContext.getInitParameter(CONTEXT_PARAM_PACKAGE_NAMES);
+
         if (StringUtils.isNotBlank(packageNames)) {
             StringTokenizer st = new StringTokenizer(packageNames, ",");
             while (st.hasMoreTokens()) {
@@ -72,24 +115,58 @@ public class FilterUtils {
                 packageNameList.add(packageName);
             }
         }
+
+        warnIfInitParamUsed(filterConfig, CONTEXT_PARAM_PACKAGE_NAMES);
         return packageNameList;
     }
 
     public static int getMaxRequestSize(FilterConfig filterConfig) {
-        String str = filterConfig.getInitParameter(INIT_PARAM_MAX_REQUEST_SIZE);
+
+        ServletContext servletContext = filterConfig.getServletContext();
+
+        String str = servletContext.getInitParameter(CONTEXT_PARAM_MAX_REQUEST_SIZE);
         if (StringUtils.isNotBlank(str)) {
             int maxRequestSize = Integer.parseInt(str);
             return maxRequestSize;
         }
-        return -1;
+
+        warnIfInitParamUsed(filterConfig, CONTEXT_PARAM_MAX_REQUEST_SIZE);
+        return RatelConfig.DEFAULT_MAX_REQUEST_SIZE;
     }
 
     public static Mode getMode(FilterConfig filterConfig) {
-        String str = filterConfig.getInitParameter(INIT_PARAM_MODE);
+
+        ServletContext servletContext = filterConfig.getServletContext();
+
+        String str = servletContext.getInitParameter(CONTEXT_PARAM_MODE);
+
         if (StringUtils.isNotBlank(str)) {
             Mode mode = Mode.getMode(str);
             return mode;
         }
+
+        warnIfInitParamUsed(filterConfig, CONTEXT_PARAM_MODE);
         return null;
+    }
+
+    public static String getCharset(FilterConfig filterConfig) {
+
+        ServletContext servletContext = filterConfig.getServletContext();
+
+        String str = servletContext.getInitParameter(CONTEXT_PARAM_CHARSET);
+
+        if (StringUtils.isNotBlank(str)) {
+            return str;
+        }
+
+        warnIfInitParamUsed(filterConfig, CONTEXT_PARAM_CHARSET);
+        return null;
+    }
+    
+    public static void warnIfInitParamUsed(FilterConfig filterConfig, String param) {
+        String str = filterConfig.getInitParameter(param);
+        if (StringUtils.isNotBlank(str)) {
+            System.out.println("The parameter '" + param + "' must be specified as a <context-param> and not as a <init-param> of the filter.");            
+        }
     }
 }
