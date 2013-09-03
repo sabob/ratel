@@ -32,7 +32,6 @@ import java.util.Set;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -288,6 +287,8 @@ public class PerformanceFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) {
         this.filterConfig = filterConfig;
+        this.ratelConfig = FilterUtils.globalInit(filterConfig);
+        loadConfiguration();
     }
 
     /**
@@ -315,11 +316,7 @@ public class PerformanceFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
         FilterChain chain) throws IOException, ServletException {
 
-        if (!configured) {
-            loadConfiguration();
-        }
-
-        if (getRatelConfig().getMode().isDevelopmentModes()) {
+         if (getRatelConfig().getMode().isDevelopmentModes()) {
             chain.doFilter(servletRequest, servletResponse);
             return;
         }
@@ -406,8 +403,6 @@ public class PerformanceFilter implements Filter {
      * Load the filters configuration and set the configured flat to true.
      */
     protected void loadConfiguration() {
-
-        this.ratelConfig = FilterUtils.globalInit(filterConfig);
 
         // Get gzip enabled parameter
         String param = filterConfig.getInitParameter("compression-enabled");
