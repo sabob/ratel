@@ -1094,8 +1094,8 @@ public class RatelUtils {
                         sb.append(", ");
                     }
                 }
+                sb.append(")");
             }
-            sb.append(")");
         }
 
         return sb.toString();

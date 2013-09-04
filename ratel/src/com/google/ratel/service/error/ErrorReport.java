@@ -127,17 +127,22 @@ public class ErrorReport {
      * @param request the page request
      * @param servletContext the servlet context
      */
-    public ErrorReport(Throwable error, Class<?> serviceClass, Method method, Mode mode, HttpServletRequest request,
-        RatelConfig ratelConfig) {
+    public ErrorReport(Throwable throwable, Class<?> serviceClass, Method method, Mode mode, HttpServletRequest request, RatelConfig ratelConfig) {
 
-        this.error = error;
         this.serviceClass = serviceClass;
         this.method = method;
         this.mode = mode;
         this.request = request;
         this.ratelConfig = ratelConfig;
 
-        if (error instanceof TemplateException && ((TemplateException) error).isParseError()) {
+        Throwable temp = getTemplateException(throwable);
+        if (temp == null) {
+            error = throwable;
+        } else {
+            error = temp;
+        }
+
+        if (isParseError(error)) {
 
             TemplateException te = (TemplateException) error;
 
@@ -786,4 +791,28 @@ public class ErrorReport {
             return true;
         }
     }
+
+    protected boolean isParseError(Throwable error) {
+        if (error instanceof TemplateException) {
+            TemplateException te = (TemplateException) error;
+            return te.isParseError();
+        }
+        return false;
+    }
+
+    protected Throwable getTemplateException(Throwable error) {
+        if (error instanceof TemplateException) {
+            return error;
+        }
+
+        Throwable root = error;
+        while (root.getCause() != null) {
+            root = root.getCause();
+            if (root instanceof TemplateException) {
+                return root;
+            }
+        }
+        return root;
+    }
+        
 }

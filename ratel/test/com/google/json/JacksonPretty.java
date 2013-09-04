@@ -5,6 +5,7 @@
 package com.google.json;
 
 import com.google.dao.*;
+import com.google.ratel.deps.jackson.core.*;
 import com.google.ratel.deps.jackson.databind.*;
 import com.google.ratel.deps.jackson.databind.node.ObjectNode;
 import com.google.ratel.deps.jackson.databind.node.TextNode;
@@ -37,7 +38,7 @@ public class JacksonPretty {
         }
     }
 
-    public static void main(String args[]) {
+    public static void main(String args[]) throws JsonProcessingException {
         JacksonPretty test = new JacksonPretty();
         test.mapper = new ObjectMapper();
 
@@ -45,6 +46,12 @@ public class JacksonPretty {
         //test.mapper.setDateFormat(format);
         // Exclude nulls by default
         test.mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        test.mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+         
+        Object[] ar = new Object[1];
+        ar[0] = new Object();
+        String bean = test.mapper.writeValueAsString(ar);
+        System.out.println("empty bean : " + bean);
 
 
         test.testToJson();

@@ -27,6 +27,9 @@ public class JacksonService implements JsonService {
     public void onInit(ServletContext servletContext) {
         mapper = new ObjectMapper();
 
+        // Alow empty beans to be serialized
+        mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+
         // Exclude nulls by default
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 

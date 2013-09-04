@@ -106,7 +106,7 @@ public class DefaultServiceResolver implements ServiceResolver {
 
         if (!resolvedAllServices) {
 
-            ClassDataService classDataService = new ClassDataService(servletContext, getPackageNames());
+            ClassDataService classDataService = new ClassDataService(ratelConfig, getPackageNames());
             Map<String, ClassData> allServicesMap = classDataService.getAllServiceClassData();
             serviceByPathMap.putAll(allServicesMap);
 
@@ -204,33 +204,50 @@ public class DefaultServiceResolver implements ServiceResolver {
         //try {
         //URL resource = servletContext.getResource(path);
         //if (resource != null) {
-        for (int i = 0; i < getPackageNames().size(); i++) {
-            String pagesPackage = getPackageNames().get(i).toString();
 
-            Class serviceClass = getServiceClass(path, pagesPackage);
+        if (getPackageNames().isEmpty()) {
+            String emptyPackageName = null;
+            serviceData = getService(path, emptyPackageName);
 
-            if (serviceClass != null) {
-                serviceData = new ClassData();
-                serviceData.setServiceClass(serviceClass);
-                serviceData.setServicePath(path);
+        } else {
+            for (int i = 0; i < getPackageNames().size(); i++) {
+                String packageName = getPackageNames().get(i).toString();
 
-                RatelUtils.populateMethods(serviceData);
-
-                serviceByPathMap.put(path, serviceData);
-                //addToClassMap(page);
-
-                if (ratelConfig.getLogService().isDebugEnabled()) {
-                    String msg = path + " -> " + serviceClass.getName();
-                    ratelConfig.getLogService().debug(msg);
+                serviceData = getService(path, packageName);
+                if (serviceData != null) {
+                    break;
                 }
-
-                break;
             }
         }
+
         //}
         //} catch (MalformedURLException e) {
         //ignore
         //}
+        return serviceData;
+    }
+    
+    protected ClassData getService(String path, String packageName) {
+
+        ClassData serviceData = null;
+        Class serviceClass = getServiceClass(path, packageName);
+
+        if (serviceClass != null) {
+            serviceData = new ClassData();
+            serviceData.setServiceClass(serviceClass);
+            serviceData.setServicePath(path);
+
+            RatelUtils.populateMethods(serviceData);
+
+            serviceByPathMap.put(path, serviceData);
+            //addToClassMap(page);
+
+            if (ratelConfig.getLogService().isDebugEnabled()) {
+                String msg = path + " -> " + serviceClass.getName();
+                ratelConfig.getLogService().debug(msg);
+            }
+        }
+
         return serviceData;
     }
 
@@ -242,9 +259,12 @@ public class DefaultServiceResolver implements ServiceResolver {
 
         String packageName = "";
         if (StringUtils.isNotBlank(servicesPackage)) {
-            // Append period after package
-            // packageName = 'com.google.ratel.'
-            packageName = servicesPackage + ".";
+
+            if (!servicesPackage.endsWith(".")) {
+                // Append period after package
+                // packageName = 'com.google.ratel.'
+                packageName = servicesPackage + ".";
+            }
         }
 
         String className = "";

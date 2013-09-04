@@ -461,7 +461,7 @@ public class RatelConfig {
     }
 
     protected Mode createMode() {
-        return Mode.PRODUCTION;
+        return Mode.DEVELOPMENT;
         /*
          Mode localMode = Mode.getMode(modeValue);
 

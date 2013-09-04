@@ -66,7 +66,7 @@ public class DefaultErrorHandlerService implements ErrorHandlerService {
                     method = methodData.getMethod();
                 }
             } catch (RuntimeException ignore) {
-                // If we cannot lookup the service and method we continue printing other information
+                // If we cannot lookup the service and method we continue printing the information we have
             }
 
             ErrorReport errorReport = new ErrorReport(throwable, serviceClass, method, mode, request, ratelConfig);

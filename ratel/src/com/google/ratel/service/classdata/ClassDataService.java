@@ -1,5 +1,6 @@
 package com.google.ratel.service.classdata;
 
+import com.google.ratel.*;
 import java.util.*;
 import java.util.Map;
 import javax.servlet.ServletContext;
@@ -10,15 +11,18 @@ import com.google.ratel.core.RatelService;
 
 public class ClassDataService {
 
-    private Map<String, ClassData> serviceByPathMap;
+    protected Map<String, ClassData> serviceByPathMap;
 
-    private ServletContext servletContext;
+    protected ServletContext servletContext;
+    
+    protected RatelConfig ratelConfig;
 
-    private List<String> packageNames;
+    protected List<String> packageNames;
 
-    public ClassDataService(ServletContext servletContext, List<String> packageNames) {
+    public ClassDataService(RatelConfig ratelConfig, List<String> packageNames) {
         this.packageNames = packageNames;
-        this.servletContext = servletContext;
+        this.ratelConfig = ratelConfig;
+        this.servletContext = ratelConfig.getServletContext();
     }
 
     public Map<String, ClassData> getAllServiceClassData() {
@@ -50,6 +54,11 @@ public class ClassDataService {
                 classData.setServicePath(servicePath);
                 
                 RatelUtils.populateMethods(classData);
+
+                if (ratelConfig.getLogService().isDebugEnabled()) {
+                    String msg = servicePath + " -> " + serviceClass.getName();
+                    ratelConfig.getLogService().debug(msg);
+                }
 
                 tempClassDataMap.put(servicePath, classData);
             }

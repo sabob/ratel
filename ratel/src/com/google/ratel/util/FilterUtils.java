@@ -17,7 +17,7 @@ public class FilterUtils {
 
     public static final String CONTEXT_PARAM_CONFIG_CLASS = "ratel.configClass";
 
-    public static final String CONTEXT_PARAM_PACKAGE_NAMES = "ratel.packageNames";
+    public static final String CONTEXT_PARAM_PACKAGE = "ratel.package";
 
     public static final String CONTEXT_PARAM_MAX_REQUEST_SIZE = "ratel.maxRequestSize";
 
@@ -97,7 +97,7 @@ public class FilterUtils {
             }
         }
 
-        warnIfInitParamUsed(filterConfig, CONTEXT_PARAM_PACKAGE_NAMES);
+        warnIfInitParamUsed(filterConfig, CONTEXT_PARAM_CONFIG_CLASS);
         return null;
     }
 
@@ -106,7 +106,7 @@ public class FilterUtils {
         ServletContext servletContext = filterConfig.getServletContext();
 
         List<String> packageNameList = new ArrayList<String>();
-        String packageNames = servletContext.getInitParameter(CONTEXT_PARAM_PACKAGE_NAMES);
+        String packageNames = servletContext.getInitParameter(CONTEXT_PARAM_PACKAGE);
 
         if (StringUtils.isNotBlank(packageNames)) {
             StringTokenizer st = new StringTokenizer(packageNames, ",");
@@ -116,7 +116,7 @@ public class FilterUtils {
             }
         }
 
-        warnIfInitParamUsed(filterConfig, CONTEXT_PARAM_PACKAGE_NAMES);
+        warnIfInitParamUsed(filterConfig, CONTEXT_PARAM_PACKAGE);
         return packageNameList;
     }
 

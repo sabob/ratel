@@ -28,58 +28,67 @@ public class DefaultInvokeHandler implements InvokeHandler {
     }
 
     @Override
-    public Object invokeAsJson(Object target, MethodData methodData, RatelHttpServletRequest request) throws Exception {
+    public Object invokeAsJson(Object target, MethodData methodData, RatelHttpServletRequest request) {
+        try {
 
-        Method method = methodData.getMethod();
-        List<ParameterData> parameters = methodData.getParameters();
+            Method method = methodData.getMethod();
+            List<ParameterData> parameters = methodData.getParameters();
 
-        int argCount = parameters.size();
+            int argCount = parameters.size();
 
-        if (argCount == 0) {
-            // Invoke no-arg method with json
-            Object result = method.invoke(target);
-            return result;
+            if (argCount == 0) {
+                // Invoke no-arg method with json
+                Object result = method.invoke(target);
+                return result;
 
-        } else if (argCount == 1) {
-            JsonArgumentBuilder builder = new JsonArgumentBuilder(getJsonService(), getMaxRequestSize());
-            Object arg = builder.buildArgument(target, methodData, request);
-            //Object arg = buildArgument(target, methodData, request);
-            Object result = method.invoke(target, arg);
-            return result;
+            } else if (argCount == 1) {
+                JsonArgumentBuilder builder = new JsonArgumentBuilder(getJsonService(), getMaxRequestSize());
+                Object arg = builder.buildArgument(target, methodData, request);
+                //Object arg = buildArgument(target, methodData, request);
+                Object result = method.invoke(target, arg);
+                return result;
 
-        } else {
-            JsonArgumentBuilder builder = new JsonArgumentBuilder(getJsonService(), getMaxRequestSize());
-            Object[] args = builder.buildArguments(target, methodData, request);
-            // Invoke multi-arg method with json
-            Object result = method.invoke(target, args);
-            return result;
+            } else {
+                JsonArgumentBuilder builder = new JsonArgumentBuilder(getJsonService(), getMaxRequestSize());
+                Object[] args = builder.buildArguments(target, methodData, request);
+                // Invoke multi-arg method with json
+                Object result = method.invoke(target, args);
+                return result;
+
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
     @Override
-    public Object invokeAsGetOrPost(Object target, MethodData methodData, RatelHttpServletRequest request) throws Exception {
+    public Object invokeAsGetOrPost(Object target, MethodData methodData, RatelHttpServletRequest request) {
 
-        Method method = methodData.getMethod();
-        List<ParameterData> parameters = methodData.getParameters();
+        try {
+            Method method = methodData.getMethod();
+            List<ParameterData> parameters = methodData.getParameters();
 
-        int argCount = parameters.size();
+            int argCount = parameters.size();
 
-        if (argCount == 0) {
-            // Invoke no-arg method with json
-            Object result = method.invoke(target);
-            return result;
+            if (argCount == 0) {
+                // Invoke no-arg method with json
+                Object result = method.invoke(target);
+                return result;
 
-        } else if (argCount == 1) {
-            ParameterArgumentBuilder builder = new ParameterArgumentBuilder(getJsonService());
-            Object arg = builder.buildArgument(target, methodData, request);
-            Object result = method.invoke(target, arg);
-            return result;
+            } else if (argCount == 1) {
+                ParameterArgumentBuilder builder = new ParameterArgumentBuilder(getJsonService());
+                Object arg = builder.buildArgument(target, methodData, request);
+                Object result = method.invoke(target, arg);
+                return result;
 
-        } else {
-            ParameterArgumentBuilder builder = new ParameterArgumentBuilder(getJsonService());
-            Object[] args = builder.buildArguments(target, methodData, request);
-            Object result = method.invoke(target, args);
-            return result;
+            } else {
+                ParameterArgumentBuilder builder = new ParameterArgumentBuilder(getJsonService());
+                Object[] args = builder.buildArguments(target, methodData, request);
+                Object result = method.invoke(target, args);
+                return result;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

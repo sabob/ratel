@@ -44,13 +44,11 @@ public class HelpHandler {
     public void onDestroy(ServletContext servletContext) {
     }
 
-    public void handleHelp(Context context) throws Exception {
+    public void handleHelp(Context context) {
         ServiceResolver serviceResolver = context.getRatelConfig().getServiceResolver();
 
-        //Map<String, ClassData> serviceData = classDataService.getAllServiceClassData();
         Map<String, ClassData> serviceData = serviceResolver.resolveServices();
 
-        // TODO replace template with native to remove dependency on Velocity and other commons libs!
         HtmlStringBuffer html = new HtmlStringBuffer();
 
         renderServiceList(html, serviceData, context);
@@ -62,7 +60,7 @@ public class HelpHandler {
         //templateService.renderTemplate("/help_1.htm", model, writer);
     }
 
-    public Object invokeAsPing(Object target, MethodData methodData, Context context) throws Exception {
+    public Object invokeAsPing(Object target, MethodData methodData, Context context) {
 
         StringBuilder html = new StringBuilder();
 
@@ -80,8 +78,7 @@ public class HelpHandler {
         for (ParameterData parameter : parameters) {
             Class parameterType = parameter.getType();
 
-            Object input = RatelUtils.createInstance(parameterType);
-            String json = jsonService.toJson(input);
+            String json = createJson(jsonService, parameterType);
 
             String displayName = getDisplayName(parameterType);
             if (RatelUtils.isPojo(parameterType)) {
@@ -94,11 +91,14 @@ public class HelpHandler {
 
         Class returnType = method.getReturnType();
         String displayName = getDisplayName(returnType);
-        Object output = RatelUtils.createInstance(returnType);
-        String json = jsonService.toJson(output);
+        String json = createJson(jsonService, returnType);
         html.append("<p><b>Output:</b></p>");
         html.append("<ul>");
-        html.append("<li>").append(displayName).append(" : <pre>").append(json).append("</pre></li>");
+        if (RatelUtils.isPojo(returnType)) {
+                html.append("<li><pre>").append(displayName).append(" : <pre>").append(json).append("</pre></pre></li>");
+            } else {
+                html.append("<li><pre style='display:inline'>").append(displayName).append(" : ").append(json).append("</pre></li>");
+            }
         html.append("</ul>");
 
         String result = pingTemplate.replace("@TOKEN", html.toString());
@@ -449,5 +449,17 @@ public class HelpHandler {
         String path = resolver.resolvePath(context.getRequest());
         String prefix = StringUtils.remove(path, Constants.HELP);
         return prefix;
+    }
+
+    protected String createJson(JsonService jsonService, Class type) {
+
+        try {            
+            Object input = RatelUtils.createInstance(type);
+            String json = jsonService.toJson(input);
+            return json;
+
+        } catch (Exception e) {
+            return "Could not instantiate instance!";
+        }
     }
 }

@@ -493,6 +493,7 @@ public class VelocityTemplateService implements TemplateService {
             // Exception occurred merging template and model. It is possible
             // that some output has already been written, so we will append the
             // error report to the previous output.
+            // UPDATE: No need for this as Ratel only calls this method from Context using a StringWriter, not the HttpRequest underlying Writer
 
             Class serviceClass = null;
             Method method = null;
@@ -514,7 +515,7 @@ public class VelocityTemplateService implements TemplateService {
                 }
             }
 
-            ErrorReport errorReport =
+            /*ErrorReport errorReport =
                 new ErrorReport(te, serviceClass, method, ratelConfig.getMode(), Context.getContext().getRequest(), ratelConfig);
 
             if (velocityWriter == null) {
@@ -522,7 +523,7 @@ public class VelocityTemplateService implements TemplateService {
                     new VelocityWriter(writer, WRITER_BUFFER_SIZE, true);
             }
 
-            velocityWriter.write(errorReport.toString());
+            velocityWriter.write(errorReport.toString());*/
 
             throw te;
 

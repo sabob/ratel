@@ -10,7 +10,7 @@ public interface InvokeHandler {
     
     public void onDestroy(ServletContext servletContext);
     
-    public Object invokeAsJson(Object target, MethodData methodData, RatelHttpServletRequest request) throws Exception;
+    public Object invokeAsJson(Object target, MethodData methodData, RatelHttpServletRequest request);
 
-    public Object invokeAsGetOrPost(Object target, MethodData methodData, RatelHttpServletRequest request) throws Exception;
+    public Object invokeAsGetOrPost(Object target, MethodData methodData, RatelHttpServletRequest request);
 }

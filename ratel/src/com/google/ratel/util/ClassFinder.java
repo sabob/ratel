@@ -159,7 +159,7 @@ public class ClassFinder {
             String classesDirStr = servletContext.getRealPath("/WEB-INF/classes");
             File classesDir = new File(classesDirStr);
             if (classesDir.exists()) {
-                System.out.println("Addding the path " + classesDir.getAbsolutePath()
+                System.out.println("Adding the path " + classesDir.getAbsolutePath()
                     + " to the list of entries that will be searched for Services");
                 entries.add(classesDir);
             } else {
@@ -169,7 +169,7 @@ public class ClassFinder {
             File libDir = new File(libDirStr);
             if (libDir.exists()) {
                 File[] children = libDir.listFiles();
-                System.out.println("Addding the path " + libDir.getAbsolutePath()
+                System.out.println("Adding the path " + libDir.getAbsolutePath()
                     + " to the list of entries that will be searched for Services");
                 entries.add(libDir);
 

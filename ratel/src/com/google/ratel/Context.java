@@ -6,7 +6,9 @@ import javax.servlet.http.HttpSession;
 import com.google.ratel.deps.fileupload.FileItem;
 import com.google.ratel.core.RatelHttpServletRequest;
 import com.google.ratel.core.RatelHttpServletResponse;
-import com.google.ratel.util.FlashAttribute;
+import com.google.ratel.service.template.TemplateService;
+import com.google.ratel.util.*;
+import java.io.*;
 
 public class Context {
 
@@ -17,13 +19,16 @@ public class Context {
 
     private static ThreadLocal<Context> THREAD_LOCAL_CONTEXT = new ThreadLocal<Context>();
 
-    private ServletContext servletContext;
+    protected ServletContext servletContext;
 
-    private RatelHttpServletRequest request;
+    protected RatelHttpServletRequest request;
 
-    private RatelHttpServletResponse response;
+    protected RatelHttpServletResponse response;
 
-    private RatelConfig ratelConfig;
+    protected RatelConfig ratelConfig;
+
+    /** The HTTP method is POST flag. */
+    protected boolean isPost;
 
     public Context() {
     }
@@ -38,6 +43,7 @@ public class Context {
     public Context(RatelConfig ratelConfig, ServletContext context, RatelHttpServletRequest request, RatelHttpServletResponse response) {
         servletContext = context;
         this.request = request;
+        this.isPost = RatelUtils.isPost(request);
         this.response = response;
         this.ratelConfig = ratelConfig;
     }
@@ -68,6 +74,7 @@ public class Context {
      */
     public void setRequest(RatelHttpServletRequest request) {
         this.request = request;
+        this.isPost = RatelUtils.isPost(request);
     }
 
     /**
@@ -278,5 +285,53 @@ public class Context {
      */
     public boolean hasSession() {
         return (request.getSession(false) != null);
+    }
+
+    public boolean isPost() {
+        return isPost;
+    }
+    
+    /**
+     * Return a rendered Velocity template and model data.
+     * <p/>
+     * Example method usage:
+     * <pre class="codeJava">
+     * <span class="kw">public String</span> toString() {
+     *     Map model = getModel();
+     *     <span class="kw">return</span> getContext().renderTemplate(<span class="st">"/custom-table.htm"</span>, model);
+     * } </pre>
+     *
+     * @param templatePath the path of the Velocity template to render
+     * @param model the model data to merge with the template
+     * @return rendered Velocity template merged with the model data
+     * @throws RuntimeException if an error occurs
+     */
+    public String renderTemplate(String templatePath, Map<String, ?> model) {
+
+        if (templatePath == null) {
+            String msg = "Null templatePath parameter";
+            throw new IllegalArgumentException(msg);
+        }
+
+        if (model == null) {
+            String msg = "Null model parameter";
+            throw new IllegalArgumentException(msg);
+        }
+
+        StringWriter stringWriter = new StringWriter(1024);
+
+        TemplateService templateService = getRatelConfig().getTemplateService();
+
+        try {
+            templateService.renderTemplate(templatePath, model, stringWriter);
+
+        } catch (Exception e) {
+            //String msg = "Error occurred rendering template: " + templatePath + "\n";
+            //getRatelConfig().getLogService().error(msg, e);
+
+            throw new RuntimeException(e);
+        }
+
+        return stringWriter.toString();
     }
 }
