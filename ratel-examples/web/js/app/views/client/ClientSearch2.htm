@@ -1,0 +1,29 @@
+<div class="row">
+    <div class="span12">
+        <h3 class="sectionHeading">Client Search (Handlebars Experiment)</h3>
+
+        <div id="feedback">
+        </div>
+
+        <table id="table" class="table">
+            <tr>
+                <th>Firstbane</th><th>Lastname</th><th>Action</th>
+            </tr>
+
+            {{dateFormat "2016-08-01T12:00:00+01:00" format="MMMM do YYYY"}}
+            
+            {{numFormat "11222.23" format="#,#.00"}}
+
+            <tbody>
+                {{#each customers}}
+                <tr id="row-{{@index}}">
+                    <td>{{firstname}}</td>
+                    <td>{{lastname}}</td>
+                    <td><a href="#" class="edit-link" value="{{id}}">Edit</a> | <a href="#" class="delete-link" value="row-{{@index}}">Delete</a></td>
+                </tr>
+                {{/each}}
+
+            </tbody>
+        </table>
+    </div>
+</div>

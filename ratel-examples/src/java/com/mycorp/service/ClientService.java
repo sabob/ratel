@@ -13,7 +13,7 @@ import javax.persistence.*;
 @RatelService
 public class ClientService {
 
-    private int sleepTime = 400;
+    private int sleepTime = 0;
     
     public List<Client> getClients() {
         try {

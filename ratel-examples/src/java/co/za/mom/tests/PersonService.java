@@ -1,6 +1,7 @@
 package co.za.mom.tests;
 
 import com.google.ratel.Context;
+import com.google.ratel.RatelConfig;
 import com.google.ratel.core.JsonParam;
 import com.google.ratel.core.Param;
 import com.google.ratel.core.RatelService;
@@ -8,6 +9,8 @@ import com.google.ratel.deps.fileupload.FileItem;
 import com.google.ratel.deps.gson.Gson;
 import com.google.ratel.deps.gson.GsonBuilder;
 import com.google.ratel.util.Constants;
+import java.util.HashMap;
+import java.util.Map;
 
 @RatelService
 public class PersonService {
@@ -177,5 +180,42 @@ public class PersonService {
     
     public String getExceptionWithJson() {
         throw new RuntimeException("JSON Exception");
+    }
+
+    public String getTemplate() {
+        Map<String, Object> model = new HashMap<String, Object>();
+        model.put("name", "Steve");
+        model.put("break", this);
+        String result = Context.getContext().renderTemplate("/template/test.htm", model);
+        System.out.println(result);
+        return result;
+    }
+    
+    public String getTemplate2() {
+        Map<String, Object> model = new HashMap<String, Object>();
+        model.put("name", "Steve");
+        model.put("BrokenRenderer", new BrokenRenderer());
+        String result = Context.getContext().renderTemplate("/template/test2.htm", model);
+        System.out.println(result);
+        return result;
+    }
+    
+    public void exception() {
+        throw new RuntimeException("Stop!");
+    }
+
+    public static class BrokenRenderer {
+
+        /**
+         * Guaranteed to fail, or you money back.
+         *
+         * @see Object#toString()
+         */
+        @SuppressWarnings("null")
+        @Override
+        public String toString() {
+            Object object = null;
+            return object.toString();
+        }
     }
 }

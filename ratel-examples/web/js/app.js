@@ -5,13 +5,16 @@
 requirejs.config({
     "baseUrl": "lib",
     "paths": {
-      "app": "../app"
+      "app": "../app",
+        "moment": "moment",
+        "numeral": "numeral"
+               
     },
     "shim": {
         "jquery.alpha": ["jquery"],
         "jquery.beta": ["jquery"],
         "jquery.deserialize": ["jquery"],
-        "handlebars": { exports: "Handlebars"  }
+        "handlebars": { exports: "Handlebars"}
     }
 });
 
