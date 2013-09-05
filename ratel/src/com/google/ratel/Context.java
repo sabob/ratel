@@ -27,7 +27,9 @@ public class Context {
 
     protected RatelConfig ratelConfig;
 
-    /** The HTTP method is POST flag. */
+    /**
+     * The HTTP method is POST flag.
+     */
     protected boolean isPost;
 
     public Context() {
@@ -215,15 +217,13 @@ public class Context {
             setSessionAttribute(LOCALE, locale);
         }
     }
-    
+
     /**
      * Return the named session attribute, or null if not defined.
      * <p/>
-     * If the session is not defined this method will return null, and a
-     * session will not be created.
+     * If the session is not defined this method will return null, and a session will not be created.
      * <p/>
-     * This method supports {@link FlashAttribute} which when accessed are then
-     * removed from the session.
+     * This method supports {@link FlashAttribute} which when accessed are then removed from the session.
      *
      * @param name the name of the session attribute
      * @return the named session attribute, or null if not defined
@@ -257,8 +257,7 @@ public class Context {
     }
 
     /**
-     * Remove the named attribute from the session. If the session does not
-     * exist or the name is null, this method does nothing.
+     * Remove the named attribute from the session. If the session does not exist or the name is null, this method does nothing.
      *
      * @param name of the attribute to remove from the session
      */
@@ -290,16 +289,14 @@ public class Context {
     public boolean isPost() {
         return isPost;
     }
-    
+
     /**
      * Return a rendered Velocity template and model data.
      * <p/>
      * Example method usage:
      * <pre class="codeJava">
-     * <span class="kw">public String</span> toString() {
-     *     Map model = getModel();
-     *     <span class="kw">return</span> getContext().renderTemplate(<span class="st">"/custom-table.htm"</span>, model);
-     * } </pre>
+     * <span class="kw">public String</span> toString() { Map model = getModel();
+     * <span class="kw">return</span> getContext().renderTemplate(<span class="st">"/custom-table.htm"</span>, model); } </pre>
      *
      * @param templatePath the path of the Velocity template to render
      * @param model the model data to merge with the template
