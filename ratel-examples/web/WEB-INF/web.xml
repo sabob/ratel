@@ -22,7 +22,7 @@
     </context-param>
     
     <context-param>
-        <param-name>ratel.packageNames</param-name>
+        <param-name>ratel.package</param-name>
         <param-value>co.za.mom, com.mycorp.service</param-value>
     </context-param>
 
