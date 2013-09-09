@@ -1,13 +1,11 @@
 package co.za.mom.tests;
 
 import com.google.ratel.Context;
-import com.google.ratel.RatelConfig;
 import com.google.ratel.core.JsonParam;
 import com.google.ratel.core.Param;
 import com.google.ratel.core.RatelService;
 import com.google.ratel.deps.fileupload.FileItem;
-import com.google.ratel.deps.gson.Gson;
-import com.google.ratel.deps.gson.GsonBuilder;
+import com.google.ratel.deps.jackson.databind.*;
 import com.google.ratel.util.Constants;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,8 +21,8 @@ public class PersonService {
         System.out.println("getInteger() called: " + i);
         return i;
     }
-    
-    public Integer[] getIntegerArray(@Param(name="id", required = true) Integer[] i) {
+
+    public Integer[] getIntegerArray(@Param(name = "id", required = true) Integer[] i) {
         System.out.println("getIntegerArray() called: " + i);
         return i;
     }
@@ -33,8 +31,8 @@ public class PersonService {
         System.out.println("getPrimitiveLong() called: " + l);
         return l;
     }
-    
-    public long[] getPrimitiveLongArray(@Param(name="id", required = true) long[] l) {
+
+    public long[] getPrimitiveLongArray(@Param(name = "id", required = true) long[] l) {
         System.out.println("getPrimitiveLongArray() called: " + l);
         return l;
     }
@@ -44,15 +42,24 @@ public class PersonService {
         return bool;
     }
 
-    public String getJson(String args) {       
+    public String getJson(String args) {
         System.out.println("json() called: " + args);
         return args;
     }
 
     public Person getPojo(Person person) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson.toJson(person);
-        System.out.println("getPerson() called with: " + json);
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+            String json = mapper.writeValueAsString(person);
+
+            System.out.println("getPerson() called with: " + json);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         Person result = new Person();
         result.setFirstname(person.getFirstname());
         result.setLastname(person.getLastname());
@@ -75,9 +82,18 @@ public class PersonService {
     }
 
     public Object[] getArray(int i, long l, boolean b, Person person) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson.toJson(person);
-        System.out.println("getArray() called with: " + json);
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+            String json = mapper.writeValueAsString(person);
+
+            System.out.println("getArray() called with: " + json);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         Person result = new Person();
         result.setFirstname(person.getFirstname());
         result.setLastname(person.getLastname());
@@ -121,7 +137,7 @@ public class PersonService {
     public String formParam(@Param(name = "name", required = true) String name) {
         System.out.println("formParam() called - name: " + name);
         Context.getContext().getResponse().setContentType(Constants.HTML);
-        
+
         return "<b>" + name + "</b>";
     }
 
@@ -169,15 +185,15 @@ public class PersonService {
         }
         return "Uploaded file(s): " + sb.toString();
     }
-    
+
     public String getExceptionWithArgs(@Param(name = "id", required = true) String args) {
         return args;
     }
-    
+
     public String getExceptionWithRuntime(String args) {
         throw new RuntimeException("Runtime Exception");
     }
-    
+
     public String getExceptionWithJson() {
         throw new RuntimeException("JSON Exception");
     }
@@ -190,7 +206,7 @@ public class PersonService {
         System.out.println(result);
         return result;
     }
-    
+
     public String getTemplate2() {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("name", "Steve");
@@ -199,7 +215,7 @@ public class PersonService {
         System.out.println(result);
         return result;
     }
-    
+
     public void exception() {
         throw new RuntimeException("Stop!");
     }
@@ -218,4 +234,5 @@ public class PersonService {
             return object.toString();
         }
     }
+
 }
