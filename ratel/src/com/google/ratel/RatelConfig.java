@@ -235,7 +235,6 @@ public class RatelConfig {
     }
 
     protected JsonService createJsonService() {
-        //GsonService service = new GsonService();
         JacksonService service = new JacksonService();
 
         if (getMode().isAtleast(Mode.DEBUG)) {
