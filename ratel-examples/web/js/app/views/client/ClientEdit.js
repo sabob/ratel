@@ -3,6 +3,7 @@ define(function(require) {
     var template = require("text!./ClientEdit.htm");
     var utils = require("../../utils/utils");
     var viewManager = require("../../utils/view-manager");
+    var errorUtils = require("../../utils/error-utils");
     require("domReady!");
 
 
@@ -51,6 +52,9 @@ define(function(require) {
 
             request.fail(function(jqXHR, textStatus, errorThrown) {
                 console.log("getClient() failed: " + textStatus);
+                dom.stay();
+                var text = jqXHR.responseText;
+                errorUtils.showError(text);
             });
             request.always(function(arg1, textStatus, arg3) {
                 console.log("getClient() completed: ", textStatus);

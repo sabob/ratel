@@ -10,6 +10,7 @@ define(function(require) {
     var ClientEdit = require("./ClientEdit");
     var utils = require("../../utils/utils");
     var viewManager = require("../../utils/view-manager");
+    var errorUtils = require("../../utils/error-utils");
     require("domReady!");
 
     function ClientSearch() {
@@ -24,7 +25,7 @@ define(function(require) {
             return template;
         };
 
-        this.onInit = function(ready, args) {
+        this.onInit = function(dom, args) {
             var request = $.ajax({
                 url: "/ratel-examples/clientService/getClients",
                 type: "GET",
@@ -39,7 +40,7 @@ define(function(require) {
                 var context = {"customers": data};
                 html = tmpl(context);
 
-                ready.attachWithAnim(html, function() {
+                dom.attachWithAnim(html, function() {
                     that.onAttached(data);
                     //html = tmpl({"customers2": [{"firstname": "MOOO"}]});
                 });
@@ -47,6 +48,9 @@ define(function(require) {
 
             request.fail(function(jqXHR, textStatus, errorThrown) {
                 console.log("Request failed: " + textStatus);
+                dom.stay();
+                var text = jqXHR.responseText;
+                errorUtils.showError(text);
             });
             request.always(function(arg1, textStatus, arg3) {
                 console.log("Request completed: ", textStatus);

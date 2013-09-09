@@ -7,6 +7,7 @@ define(function(require) {
     var ClientEdit = require("./ClientEdit");
     var utils = require("../../utils/utils");
     var viewManager = require("../../utils/view-manager");
+    var errorUtils = require("../../utils/error-utils");
     require("domReady!");
 
     function ClientSearch() {
@@ -37,6 +38,9 @@ define(function(require) {
 
             request.fail(function(jqXHR, textStatus, errorThrown) {
                 console.log("Request failed: " + textStatus);
+                dom.stay();
+                var text = jqXHR.responseText;
+                errorUtils.showError(text);
             });
             request.always(function(arg1, textStatus, arg3) {
                 console.log("Request completed: ", textStatus);

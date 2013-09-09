@@ -37,6 +37,10 @@ define(["jquery", 'domReady!'], function($) {
                 this.attachWithAnim = function(template, done) {
                     attachViewWithAnim(target, view, template, done, notifyViewReady);
                 };
+                
+                this.stay = function() {
+                    callStack.pop();
+                };
 
             };
             view.onInit(dom, args);
@@ -54,6 +58,7 @@ define(["jquery", 'domReady!'], function($) {
             if (notifyViewReady) {
                 notifyViewReady(view);
             }
+
             callStack.pop();
         }
 

@@ -7,6 +7,7 @@ define(function(require) {
     var ClientEdit = require("./ClientEdit");
     var utils = require("../../utils/utils");
     var viewManager = require("../../utils/view-manager");
+    var errorUtils = require("../../utils/error-utils");
     require("domReady!");
 
     function ClientSearch() {
@@ -17,7 +18,7 @@ define(function(require) {
             return template;
         };
 
-        this.onInit = function(ready, args) {
+        this.onInit = function(dom, args) {
             var request = $.ajax({
                 url: "/ratel-examples/clientService/getClients",
                 type: "GET",
@@ -31,14 +32,18 @@ define(function(require) {
                 var context = {one: "Firstname", two: "Lastname", three: "Action"};
                 template = tmpl(context);
 
-                ready.attachWithAnim(template, function() {
+                dom.attachWithAnim(template, function() {
                    that.onAttached(data);
                 });
             });
 
             request.fail(function(jqXHR, textStatus, errorThrown) {
+                dom.stay();
                 console.log("Request failed: " + textStatus);
+                var text = jqXHR.responseText;
+                errorUtils.showError(text);
             });
+
             request.always(function(arg1, textStatus, arg3) {
                 console.log("Request completed: ", textStatus);
                 //attach(template); 

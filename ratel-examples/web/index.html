@@ -7,28 +7,29 @@
         <META HTTP-EQUIV="EXPIRES" CONTENT="0">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="js/lib/jquery.js"></script>
+        <script src="js/app/utils/error-utils.js"></script>
         <script>
             function toJson(formId) {
-            var object = toObject(formId);
-            var json = JSON.stringify(object);
-            return json;
-        }
+                var object = toObject(formId);
+                var json = JSON.stringify(object);
+                return json;
+            }
 
-        function toObject(formId) {
-            var result = {};
-            var array = $('#' + formId).serializeArray();
-            $.each(array, function() {
-                if (result[this.name]) {
-                    if (!result[this.name].push) {
-                        result[this.name] = [result[this.name]];
+            function toObject(formId) {
+                var result = {};
+                var array = $('#' + formId).serializeArray();
+                $.each(array, function() {
+                    if (result[this.name]) {
+                        if (!result[this.name].push) {
+                            result[this.name] = [result[this.name]];
+                        }
+                        result[this.name].push(this.value || '');
+                    } else {
+                        result[this.name] = this.value || '';
                     }
-                    result[this.name].push(this.value || '');
-                } else {
-                    result[this.name] = this.value || '';
-                }
-            });
-            return result;
-        }
+                });
+                return result;
+            }
         </script>
 
         <title>Click Services</title>
@@ -101,19 +102,19 @@
                     var link = e.target;
                     getParams(link.href);
                 });
-                
+
                 $("#getExceptionWithArgs").click(function(e) {
                     e.preventDefault();
                     var link = e.target;
                     getExceptionWithArgs(link.href);
                 });
-                
+
                 $("#getExceptionWithRuntime").click(function(e) {
                     e.preventDefault();
                     var link = e.target;
                     getExceptionWithRuntime(link.href);
                 });
-                
+
                 $("#exceptionWithJsonSubmit").click(function(e) {
                     e.preventDefault();
                     var link = e.target;
@@ -164,15 +165,15 @@
                 var data = '[4, 3000, true, {"firstname": "bob", "lastname":"Smith"}]';
                 makeRequest(url, data);
             }
-            
+
             function getExceptionWithArgs(url) {
                 GET(url);
             }
-            
+
             function getExceptionWithRuntime(url) {
                 GET(url);
             }
-            
+
             function getExceptionWithJson(url) {
                 var data = toJson("getExceptionWithJson");
                 //var data = $('#getExceptionWithJson').serialize();
@@ -274,7 +275,9 @@
                     $("#log").html(msg);
                 });
                 request.fail(function(jqXHR, textStatus) {
-                    alert("Request failed: " + textStatus);
+                    var text = jqXHR.responseText;
+                    $.ratel.showError(text);
+
                 });
             }
 
@@ -335,15 +338,15 @@
         <p>
             <a href="tests/PersonService/getParams?id=789&employed=true&description=Hello" id="getParams">getParams(789, true, "Hello")</a>
         </p>
-        
+
         <p>
             <a href="tests/PersonService/getExceptionWithArgs" id="getExceptionWithArgs">getExceptionWithArgs()</a>
         </p>
-        
+
         <p>
             <a href="tests/PersonService/getExceptionWithRuntime" id="getExceptionWithRuntime">getExceptionWithRuntime()</a>
         </p>
-        
+
         <form action="tests/PersonService/getExceptionWithJson" method="post" id='getExceptionWithJson'>
             <p>
                 Exception while posting JSON
@@ -419,7 +422,7 @@
             <input type="submit" name="submit" value="Submit">
         </form>
 
-</body>
+    </body>
 </html>
 
 
