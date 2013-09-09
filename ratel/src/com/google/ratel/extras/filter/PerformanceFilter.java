@@ -19,6 +19,7 @@
 package com.google.ratel.extras.filter;
 
 import com.google.ratel.RatelConfig;
+import com.google.ratel.core.Mode;
 import com.google.ratel.deps.lang3.StringUtils;
 import com.google.ratel.util.*;
 import java.io.IOException;
@@ -274,9 +275,12 @@ public class PerformanceFilter implements Filter {
      */
     protected List<String> includeRevalidateFiles = new ArrayList<String>();
 
-    private Set<String> excludeGzipExtensions = new HashSet<String>();
+    protected Set<String> excludeGzipExtensions = new HashSet<String>();
+    
+    protected Mode modeOverride;
 
     // --------------------------------------------------------- Public Methods
+
     /**
      * Initialize the filter.
      *
@@ -316,7 +320,7 @@ public class PerformanceFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
         FilterChain chain) throws IOException, ServletException {
 
-         if (getRatelConfig().getMode().isDevelopmentModes()) {
+         if (isDevelopmentModes()) {
             chain.doFilter(servletRequest, servletResponse);
             return;
         }
@@ -403,9 +407,16 @@ public class PerformanceFilter implements Filter {
      * Load the filters configuration and set the configured flat to true.
      */
     protected void loadConfiguration() {
+        
+        // Get mode incase it overrides the default Ratel mode
+        String param = filterConfig.getInitParameter("mode");
+        if (StringUtils.isNotBlank(param)) {
+            modeOverride = Mode.getMode(param);
+            getRatelConfig().getLogService().info("PerformanceFilter started in " + modeOverride + " mode.");
+        }
 
         // Get gzip enabled parameter
-        String param = filterConfig.getInitParameter("compression-enabled");
+        param = filterConfig.getInitParameter("compression-enabled");
         if (StringUtils.isNotBlank(param)) {
             compressionEnabled = Boolean.parseBoolean(param);
         }
@@ -641,7 +652,7 @@ public class PerformanceFilter implements Filter {
         return true;
     }
 
-    private String getExt(String path) {
+    protected String getExt(String path) {
         // remove *
         String ext = StringUtils.removeStart(path, "*");
 
@@ -649,5 +660,13 @@ public class PerformanceFilter implements Filter {
         ext = StringUtils.removeStart(ext, ".");
 
         return ext;
+    }
+    
+    protected boolean isDevelopmentModes() {
+        if (modeOverride == null) {
+            return getRatelConfig().getMode().isDevelopmentModes();            
+        } else {
+            return modeOverride.isDevelopmentModes();
+        }
     }
 }
