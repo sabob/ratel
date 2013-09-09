@@ -16,9 +16,6 @@ public class ClientService {
     private int sleepTime = 0;
     
     public List<Client> getClients() {
-        if (true) {
-            throw new RuntimeException("Mooo");
-        }
         try {
             Thread.sleep(sleepTime);
         } catch (InterruptedException ignore) {
