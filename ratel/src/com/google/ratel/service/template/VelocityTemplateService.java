@@ -515,16 +515,6 @@ public class VelocityTemplateService implements TemplateService {
                 }
             }
 
-            /*ErrorReport errorReport =
-                new ErrorReport(te, serviceClass, method, ratelConfig.getMode(), Context.getContext().getRequest(), ratelConfig);
-
-            if (velocityWriter == null) {
-                velocityWriter =
-                    new VelocityWriter(writer, WRITER_BUFFER_SIZE, true);
-            }
-
-            velocityWriter.write(errorReport.toString());*/
-
             throw te;
 
         } catch (TemplateInitException tie) {
@@ -533,49 +523,10 @@ public class VelocityTemplateService implements TemplateService {
                                                          tie.getLineNumber(),
                                                          tie.getColumnNumber());
 
-            // Exception occurred merging template and model. It is possible
-            // that some output has already been written, so we will append the
-            // error report to the previous output.
-            /*
-             ErrorReport errorReport =
-             new ErrorReport(te,
-             ((page != null) ? page.getClass() : null),
-             configService.isProductionMode(),
-             Context.getThreadLocalContext().getRequest(),
-             configService.getServletContext());
-
-
-             if (velocityWriter == null) {
-             velocityWriter =
-             new VelocityWriter(writer, WRITER_BUFFER_SIZE, true);
-             }
-
-             velocityWriter.write(errorReport.toString());
-             */
-
             throw te;
 
         } catch (Exception error) {
             TemplateException te = new TemplateException(error);
-            /*
-
-             // Exception occurred merging template and model. It is possible
-             // that some output has already been written, so we will append the
-             // error report to the previous output.
-             ErrorReport errorReport =
-             new ErrorReport(te,
-             ((page != null) ? page.getClass() : null),
-             configService.isProductionMode(),
-             Context.getThreadLocalContext().getRequest() ,
-             configService.getServletContext());
-
-             if (velocityWriter == null) {
-             velocityWriter =
-             new VelocityWriter(writer, WRITER_BUFFER_SIZE, true);
-             }
-
-             velocityWriter.write(errorReport.toString());
-             */
 
             throw te;
 
