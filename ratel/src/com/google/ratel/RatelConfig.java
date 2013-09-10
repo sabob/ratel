@@ -244,7 +244,7 @@ public class RatelConfig {
         return service;
     }
 
-    public LogService createLogService() {
+    protected LogService createLogService() {
         ConsoleLogService localLogService = new ConsoleLogService();
 
         // Set log levels
@@ -273,7 +273,7 @@ public class RatelConfig {
         return localLogService;
     }
 
-    public ErrorHandlerService createErrorHandlerService() {
+    protected ErrorHandlerService createErrorHandlerService() {
         ErrorHandlerService localErrorHandlerService = new DefaultErrorHandlerService();
         return localErrorHandlerService;
     }
