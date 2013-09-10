@@ -20,6 +20,7 @@
 <project name="ratel" default="dist" basedir="..">
     
     <property file="ant/build.properties"/>
+    <xmlproperty file="ant/javascript-syntax-highlighter.xml"/>
    <property name="jar.junit" value="junit-${junit.version}.jar"/>
    <property name="jar.log4j" value="log4j-${log4j.version}.jar"/>
    <property name="jar.servlet" value="servlet-api-${servlet-api.version}.jar"/>
@@ -46,54 +47,60 @@
         </sequential>
     </macrodef>
     
-    <macrodef name="rhinoscript">
+     <!--
+     Javadoc macro
+     -->
 
-         <text name="text"/>
+   <macrodef name="javadocMacro">
+      <attribute name="src"/>
+      <attribute name="destdir"/>
+      <attribute name="windowtitle"/>
+      <attribute name="doctitle"/>
+      <attribute name="classpath"/>
+      <attribute name="overview"/>
+      <attribute name="excludes"/>
+      <sequential>
+         <javadoc sourcepath="@{src}"
+               destdir="@{destdir}"
+               author="true"
+               version="true"
+               verbose="false"
+               windowtitle="@{windowtitle}"
+      	       packagenames="com.google.ratel.*"
+         	     overview="@{overview}"
+               doctitle="@{doctitle}"
+               encoding="UTF-8"
+               charset="UTF-8"
+               excludepackagenames="@{excludes}">
+            <classpath refid="@{classpath}"/>
+            <link href="http://download.oracle.com/javase/1,5.0/docs/api/"/>
+            <link href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api/"/>
+         </javadoc>
 
-         <sequential>
-             
-             <script src="C:/dev/os/ratel/ant/handlebars.js" language="javascript">
-                 
-             </script>
+         <!-- Add syntax highlighter to each javadoc page -->
+         <echo>DEST: @{destdir}</echo>
+         <replace dir="@{destdir}" value="${root.properties.highlighter}&lt;/body&gt;">
+            <include name="**/*.html"/>
+            <replacetoken>&lt;/body&gt;</replacetoken>
+         </replace>
 
-             <script language="javascript" >
-                 <classpath>
-                 <!--<fileset dir="c:/jdk6/lib/java/" includes="js.jar"/>
-                 <fileset dir="../../../lib/build-java/" includes="*.jar"></fileset>-->
-                 
-                 </classpath><![CDATA[
-                     importPackage(java.lang, java.util, java.io);
-                     //System.out.println("Hello from JavaScript!!");
-                     //create shell, execute something and grab global
-                     var shell = org.mozilla.javascript.tools.shell.Main;
-                     //var args = ["-e","var a='STRING';"];
-                     //shell.exec(args);
-                     var shellGlobal = shell.global;
-                     //grab functions from shell global and place in current global
-                     var load=shellGlobal.load;
-                     load.load("moo");
-                     //var print=shellGlobal.print;
-                     var defineClass=shellGlobal.defineClass;
-                     var deserialize=shellGlobal.deserialize;
-                     var doctest=shellGlobal.doctest;
-                     var gc=shellGlobal.gc;
-                     var help=shellGlobal.help;
-                     var loadClass=shellGlobal.loadClass;
-                     var quit=shellGlobal.quit;
-                     var readFile=shellGlobal.readFile;
-                     var readUrl=shellGlobal.readUrl;
-                     var runCommand=shellGlobal.runCommand;
-                     var seal=shellGlobal.seal;
-                     var serialize=shellGlobal.serialize;
-                     var spawn=shellGlobal.spawn;
-                     var sync=shellGlobal.sync;
-                     var toint32=shellGlobal.toint32;
-                     var version=shellGlobal.version;
-                     var environment=shellGlobal.environment;     
-                     @{text}
-             ]]></script>
-         </sequential>
-     </macrodef>
+         <!-- Add IE Mark of the Web to each javadoc page -->
+         <replace dir="@{destdir}" value="&lt;!-- saved from url=(0014)about:internet --&gt;">
+            <include name="**/*.html"/>
+            <replacetoken>&lt;!--NewPage--&gt;</replacetoken>
+         </replace>
+
+         <!--
+         IE throws exception when trying to access parent frame and Mark of the Web is active.
+         Disable setting of window title, which needs to access the parent frame.
+         -->
+         <replace dir="@{destdir}" value="">
+            <include name="**/*.html"/>
+            <replacetoken> onload="windowTitle();"</replacetoken>
+         </replace>
+
+      </sequential>
+   </macrodef>
     
     <presetdef name="javac">
         <javac includeantruntime="false" />
@@ -173,11 +180,22 @@
    </target>
    
    <target name="build-handlebars" description="Build handlebars templates">
-         <rhinoscript>
-             print("Hello World!")
-             shellGlobal.load("handlebars.js");
-         </rhinoscript>
 
    </target>
     
+    <target name="javadoc" description="create Javadoc HTML files">
+      <!-- Framework -->
+      <delete quiet="false" failonerror="false">
+         <fileset dir="documentation/javadocs/ratel-api" includes="**/*"/>
+      </delete>
+
+      <javadocMacro src="ratel/src"
+                    destdir="documentation/javadocs/ratel-api"
+                    windowtitle="Ratel API - v${version}"
+                    doctitle="Ratel API - v${version}"
+                    classpath="compile.classpath"
+      	            overview="documentation/javadocs/core-overview.html"
+                    excludes=""/>
+   </target>
+
 </project>
