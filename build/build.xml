@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="sample-require-js" default="" basedir=".">
+    <!-- properties -->
+    <property name="r.js" value="_build/rjs/r.js" />
+    <property name="closure.jar" value="_build/closure/compiler.jar" />
+    <property name="rhino.jar" value="_build/rhino/js.jar" />
+    <property name="js.build" value="js.build.js" />
+    <!-- custom tasks -->
+    <!-- targets -->
+    <target name="-optimize" description="Combine and minify files.">
+        <java classname="org.mozilla.javascript.tools.shell.Main">
+            <classpath>
+                <pathelement location="${rhino.jar}" />
+                <pathelement location="${closure.jar}" />
+            </classpath>
+            <arg value="${r.js}"/>
+            <arg value="-o"/>
+            <arg value="${requirejs.optimizer.settings}"/>
+        </java>
+        <echo message="optimized ${requirejs.optimizer.settings}" />
+    </target>
+    <target name="build-site" description="Build JS and CSS for site">
+        <echo message="Combining and minifying JS files." />
+        <antcall target="-optimize">
+            <param name="requirejs.optimizer.settings" value="${js.build}" />
+        </antcall>
+    </target>
+
+</project>
