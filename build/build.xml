@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="sample-require-js" default="" basedir=".">
     <!-- properties -->
-    <property name="r.js" value="_build/rjs/r.js" />
-    <property name="rhino.jar" value="_build/lib/js.jar" />
+    <property name="r.js" value="r.js" />
+    <property name="rhino.jar" value="lib/js.jar" />
     <property name="js.build" value="js.build.js" />
     <!-- custom tasks -->
-    <!-- targets -->
+    <!-- targets --> 
     <target name="-optimize" description="Combine and minify files.">
-        <java classname="org.mozilla.javascript.tools.shell.Main">
+        <java jvmargs="-Xss2048k" classname="org.mozilla.javascript.tools.shell.Main">
             <classpath>
                 <pathelement location="${rhino.jar}" />
             </classpath>
