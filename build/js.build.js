@@ -2,12 +2,13 @@
     "appDir": "../",
     baseUrl: "javascripts/lib",
     dir: "../deploy",
-        //optimize: 'uglify',
-        optimize: 'none',
-        //optimizeCss: 'standard',
-        "mainConfigFile": "../javascripts/app.js",
-        
-         paths: {
+    optimize: 'uglify',
+    //optimize: 'none',
+    removeCombined: true,
+    skipDirOptimize: true,
+    optimizeCss: 'standard',
+    "mainConfigFile": "../javascripts/app.js",
+    paths: {
         requireLib: "require"
     },
     modules: [

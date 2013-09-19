@@ -4,8 +4,10 @@
     <property name="r.js" value="r.js" />
     <property name="rhino.jar" value="lib/js.jar" />
     <property name="js.build" value="js.build.js" />
+    <property name="dist" value="../deploy" />
     <!-- custom tasks -->
     <!-- targets --> 
+    
     <target name="-optimize" description="Combine and minify files.">
         <java jvmargs="-Xss2048k" classname="org.mozilla.javascript.tools.shell.Main">
             <classpath>
@@ -17,11 +19,14 @@
         </java>
         <echo message="optimized ${requirejs.optimizer.settings}" />
     </target>
+    
     <target name="build-site" description="Build JS and CSS for site">
         <echo message="Combining and minifying JS files." />
         <antcall target="-optimize">
             <param name="requirejs.optimizer.settings" value="${js.build}" />
         </antcall>
+        
+        <move file="${dist}/javascripts/app.js" tofile="${dist}/javascripts/lib/require.js"/>
     </target>
 
 </project>
