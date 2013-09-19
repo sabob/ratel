@@ -1,4 +1,4 @@
 ratel
 =====
 
-A Json RPC layer for Java
+A Json RPC library for Java
