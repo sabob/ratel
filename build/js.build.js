@@ -1,5 +1,5 @@
 ({
-    "appDir": "../",
+    "appDir": "../src",
     baseUrl: "javascripts/lib",
     dir: "../deploy",
     optimize: 'uglify',
@@ -7,7 +7,7 @@
     removeCombined: true,
     skipDirOptimize: true,
     optimizeCss: 'standard',
-    "mainConfigFile": "../javascripts/app.js",
+    "mainConfigFile": "../src/javascripts/app.js",
     paths: {
         requireLib: "require"
     },
