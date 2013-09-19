@@ -4,7 +4,8 @@
     <property name="r.js" value="r.js" />
     <property name="rhino.jar" value="lib/js.jar" />
     <property name="js.build" value="js.build.js" />
-    <property name="dist" value="../deploy" />
+    <property name="root" value=".." />
+    <property name="dist" value="${root}/deploy" />
     <!-- custom tasks -->
     <!-- targets --> 
     
@@ -27,6 +28,16 @@
         </antcall>
         
         <move file="${dist}/javascripts/app.js" tofile="${dist}/javascripts/lib/require.js"/>
+    </target>
+    
+    <target name="remove-old-site" description="Remove old files that will be replaced by new site">
+        <delete includeemptydirs="true">
+            <fileset dir="${root}" includes="images"/>
+            <fileset dir="${root}" includes="javascripts"/>
+            <fileset dir="${root}" includes="stylesheets"/>
+            <fileset dir="${root}" includes="README.md"/>
+            <fileset dir="${root}" includes="index.html"/>
+        </delete>
     </target>
 
 </project>
