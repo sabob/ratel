@@ -21,7 +21,7 @@
         <echo message="optimized ${requirejs.optimizer.settings}" />
     </target>
     
-    <target name="build-site" description="Build JS and CSS for site">
+    <target name="build-site" description="Build JS and CSS for site" depends="remove-old-site">
         <echo message="Combining and minifying JS files." />
         <antcall target="-optimize">
             <param name="requirejs.optimizer.settings" value="${js.build}" />
@@ -29,22 +29,21 @@
         
         <move file="${dist}/javascripts/app.js" tofile="${dist}/javascripts/lib/require.js"/>
         
+        <move todir="${root}">
+            <fileset dir="${dist}">
+                <include name="**/*"/>
+                <exclude name="build.txt"/>
+            </fileset>
+        </move>
     </target>
     
     <target name="remove-old-site" description="Remove old files that will be replaced by new site">
-        <delete includeemptydirs="true">
-            <fileset dir="${root}" includes="images"/>
-            <fileset dir="${root}" includes="javascripts"/>
-            <fileset dir="${root}" includes="stylesheets"/>
-            <fileset dir="${root}" includes="README.md"/>
-            <fileset dir="${root}" includes="index.html"/>
-        </delete>
         
-        <move todir="${root}">
-            <fileset dir="${dist}">
-                <exclude name="**/*"/>
-            </fileset>
-        </move>
+        <delete dir="${root}/images"/>
+        <delete dir="${root}/javascripts"/>
+        <delete dir="${root}/stylesheets"/>
+        <delete file="${root}/README.md"/>
+        <delete file="${root}/index.html"/>
     </target>
 
 </project>
