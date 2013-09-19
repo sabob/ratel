@@ -1,0 +1,48 @@
+<h1>Introduction to Ratel</h1>
+
+<p>1. Add ratel.jar to your classpath.</p>
+
+<p>2. Add <span class="symbol">RatelFilter</span> to your web.xml and map it for all 
+(<span class="symbol">/*</span>) requests:</p>
+
+<pre class="prettyprint programlisting linenums">
+<?xml version="1.0" encoding="UTF-8"?>
+&lt;web-app&gt;
+    &lt;filter&gt;
+        &lt;filter-name&gt;ratelFilter&lt;/filter-name&gt;
+        &lt;filter-class&gt;<span class="symbol">com.google.ratel.RatelFilter</span>&lt;/filter-class&gt;
+        &lt;init-param&gt;
+            &lt;param-name&gt;packageNames&lt;/param-name&gt;
+            &lt;param-value&gt;com.mycorp.service&lt;/param-value&gt;
+        &lt;/init-param&gt;
+    &lt;/filter&gt;
+    
+    &lt;filter-mapping&gt;
+        &lt;filter-name&gt;ratelFilter&lt;/filter-name&gt;
+        &lt;url-pattern&gt;<span class="symbol">/*</span>&lt;/url-pattern&gt;
+    &lt;/filter-mapping&gt;
+&lt;/web-app&gt;
+</pre>
+
+<p>3. Create a Ratel service to handle incoming requests (A Ratel service is a POJO annotated with @RatelService:</p>
+
+<pre class="prettyprint programlisting linenums">
+package com.mycorp.service;
+
+  @RatelService
+  public class MyService {
+
+    public Sting myMethod() {
+  
+      var json = "{\"message\": \"Hello World\"}";
+      return json;
+    }
+
+  }
+</pre>
+
+Ratel maps this service to the URL:
+<pre class="prettyprint programlisting">
+http://localhost/MyService/MyMethod
+</pre>
+

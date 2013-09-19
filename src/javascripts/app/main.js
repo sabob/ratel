@@ -2,6 +2,7 @@ define(function(require) {
     var $ = require("jquery");
     var Intro = require("./views/intro/Intro");
     var Home = require("./views/home/Home");
+    var errorUtils = require("./utils/error-utils");
     var viewManager = require("./utils/view-manager");
     var prettify = require("prettify");
     require("domReady!");
