@@ -1,7 +1,7 @@
 ({
     "appDir": "../",
-    baseUrl: "../javascripts/lib",
-    dir: "../../../deploy/scripts",
+    baseUrl: "javascripts/lib",
+    dir: "../deploy",
     modules: [
         {
             name: "app",
