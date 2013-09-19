@@ -5,7 +5,7 @@
 requirejs.config({
     "baseUrl": "javascripts/lib",
     "paths": {
-      "app": "../app",
+      "app": "../app"
       //"prettify": "../lib/prettify"
     },
     "shim": {
