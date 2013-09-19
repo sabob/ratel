@@ -28,6 +28,7 @@
         </antcall>
         
         <move file="${dist}/javascripts/app.js" tofile="${dist}/javascripts/lib/require.js"/>
+        
     </target>
     
     <target name="remove-old-site" description="Remove old files that will be replaced by new site">
@@ -38,6 +39,12 @@
             <fileset dir="${root}" includes="README.md"/>
             <fileset dir="${root}" includes="index.html"/>
         </delete>
+        
+        <move todir="${root}">
+            <fileset dir="${dist}">
+                <exclude name="**/*"/>
+            </fileset>
+        </move>
     </target>
 
 </project>
