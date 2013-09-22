@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="sample-require-js" default="" basedir=".">
+<project name="build-site" default="" basedir=".">
     <!-- properties -->
     <property name="r.js" value="r.js" />
     <property name="rhino.jar" value="lib/js.jar" />
@@ -33,6 +33,7 @@
             <fileset dir="${dist}">
                 <include name="**/*"/>
                 <exclude name="build.txt"/>
+                <exclude name="**/text.js"/>
             </fileset>
         </move>
     </target>
