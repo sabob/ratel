@@ -2,7 +2,7 @@ define(function(require) {
 
     var $ = require("jquery");
     var Handlebars = require("handlebars");
-    var template = require("text!./Intro.htm");
+    var template = require("hbs!./Intro.htm");
     var utils = require("../../utils/utils");
     var viewManager = require("../../utils/view-manager");
     require("domReady!");

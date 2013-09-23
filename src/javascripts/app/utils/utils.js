@@ -39,6 +39,13 @@ define(function(require) {
         this.fromObject = function(formId, obj) {
              $('#' + formId).deserialize(obj);
         };
+        
+        this.exist = function(val) {
+                if (typeof(val) === 'undefined' || val === null) {
+                    return false;
+                }
+                return true;
+            };
     }
     return new Utils();
 });
