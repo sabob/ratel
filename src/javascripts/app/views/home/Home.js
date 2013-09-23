@@ -1,7 +1,10 @@
 define(function(require) {
     var $ = require("jquery");
-    var template = require("text!./Home.htm");
+    var template = require("hbs!./Home.htm");
+    var bobPartial = require("hbs!./BobPartial.htm");
     var utils = require("../../utils/utils");
+    var Handlebars = require("handlebars");
+        var te = require("../../utils/template-engine");
     var viewManager = require("../../utils/view-manager");
     require("domReady!");
 
@@ -13,8 +16,22 @@ define(function(require) {
         // priviledged methods
 
         this.onInit = function(dom, args) {
+                Handlebars.registerPartial("bobPartial", bobPartial);
             //onReady();
-            dom.attachWithAnim(this.getTemplate(), function() {
+            var context = {'name': 'Bob'};
+            var options = {
+                data : {
+                    testAction: function(e) {
+                        e.preventDefault();
+                        //console.log("Hi Bob!" + Date.now());
+                        console.log("test");
+                    }
+                }
+            };
+            var html = te.render(this.getTemplate(), context, options);
+
+            dom.attachWithAnim(html, function() {
+                te.bind();
                 onAttached(args);
                 });
         };
