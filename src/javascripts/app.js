@@ -6,7 +6,6 @@ requirejs.config({
     "baseUrl": "javascripts/lib",
     "paths": {
       "app": "../app"
-      //"prettify": "../lib/prettify"
     },
     "shim": {
         "handlebars": { exports: "Handlebars"}
