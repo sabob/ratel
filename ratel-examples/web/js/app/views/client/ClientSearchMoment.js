@@ -2,10 +2,8 @@
 define(function(require) {
 
     var $ = require("jquery");
-    var Handlebars = require("handlebars");
-    var moment = require("moment");
-    var numeral = require("numeral");
-    var template = require("text!./ClientSearch2.htm");
+    var templateEngine = require("../../utils/template-engine");
+    var template = require("hbs!./ClientSearchMoment");
     var html = null;
     var ClientEdit = require("./ClientEdit");
     var utils = require("../../utils/utils");
@@ -36,9 +34,8 @@ define(function(require) {
             request.done(function(data, textStatus, jqXHR) {
                 console.log("clients fetched", data);
 
-                var tmpl = Handlebars.compile(template);
                 var context = {"customers": data};
-                html = tmpl(context);
+                html = templateEngine.render(template, context);
 
                 dom.attachWithAnim(html, function() {
                     that.onAttached(data);
@@ -83,49 +80,5 @@ define(function(require) {
         };
     }
 
-    Handlebars.registerHelper('dateFormat', function(context, block) {
-        //console.log("dateFormat", context);
-
-        var f = block.hash.format || "MMM Do, YYYY";
-        //console.log(f, " ", context);
-        //var c = moment(context);
-        //console.log("val", c);
-        //c = moment.utc(c).local();
-        //context = 18376333;
-        //var day = moment.unix(context);
-        //var day = moment(12345678900);
-        //var day = moment("1977-01-01T00:00:00.000+0000");
-        var day = moment(context);
-        return day.format(f);
-    });
-
-    Handlebars.registerHelper('action', function(context, block) {
-        var id = "#" + block.hash.id;
-        id += block.data.index;
-        //console.dir(block);
-        console.log(id);
-        $("body").on("click", id, function(e) {
-            e.preventDefault();
-            alert(context.name);
-        });
-        console.log(context);
-    });
-
-    Handlebars.registerHelper('numFormat', function(context, block) {
-        //console.log("numberFormat ", context);
-
-        var f = block.hash.format || "#";
-        //console.log(f, " ", context);
-        //var c = moment(context);
-        //console.log("val", c);
-        //c = moment.utc(c).local();
-        //context = 18376333;
-        //var day = moment.unix(context);
-        //var day = moment(12345678900);
-        //var day = moment("1977-01-01T00:00:00.000+0000");
-        var str = numeral(context).format(f);
-        return str;
-
-    });
     return ClientSearch;
 });

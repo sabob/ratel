@@ -1,8 +1,17 @@
-define(["jquery", 'domReady!'], function($) {
+define(function(require) {
+    var $ = require("jquery");
+    require("domReady!");
+    var templateEngine = require("./template-engine");
 
     function ViewManager() {
 
         var callStack = [];
+        
+        var globalOnAttached = null;
+        
+        this.setGlobalOnAttached = function(callback) {
+            globalOnAttached = callback;
+        };
 
         this.showView = function(View, args, notifyViewReady, target) {
             target = target || "#container";
@@ -21,6 +30,11 @@ define(["jquery", 'domReady!'], function($) {
             if (callStack.length !== 0) {
                 console.log('We are already busy processing a showView request', callStack);
                 return;
+            }
+            
+            if (templateEngine.hasActions()) {
+                console.log("It's been detected that there are unbounded actions in the TemplateEngine! Resetting to remove memory leaks!")
+                templateEngine.reset(target);
             }
 
             callStack.push(1);
@@ -50,6 +64,9 @@ define(["jquery", 'domReady!'], function($) {
             $(target).empty();
 
             $(target).html(template);
+            if (globalOnAttached) {
+                globalOnAttached();
+            }
 
             if (attachedComplete) {
                 attachedComplete();
@@ -68,6 +85,10 @@ define(["jquery", 'domReady!'], function($) {
                 $(target).empty();
 
                 $(target).html(template);
+                
+                if (globalOnAttached) {
+                globalOnAttached();
+            }
 
                 if (attachedComplete) {
                     attachedComplete();
