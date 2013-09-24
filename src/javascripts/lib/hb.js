@@ -13,7 +13,7 @@ define(['text', 'handlebars'], function(text, handlebars) {
 
     var load = function(moduleName, parentRequire, load, config) {
         // Get the template extension.
-        //var ext = (config.hbs && config.hbs.templateExtension ? config.hbs.templateExtension : templateExtension);
+        //var ext = (config.hb && config.hb.templateExtension ? config.hb.templateExtension : templateExtension);
 
         /*if (endsWith(moduleName, ext)) {
             throw new Error("template '" + moduleName + "' already contains the extension '" + ext + "'! Remove the extension from the path!");

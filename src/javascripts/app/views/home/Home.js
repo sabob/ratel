@@ -1,7 +1,7 @@
 define(function(require) {
     var $ = require("jquery");
-    var template = require("hbs!./Home.htm");
-    var bobPartial = require("hbs!./BobPartial.htm");
+    var template = require("hb!./Home.htm");
+    var bobPartial = require("hb!./BobPartial.htm");
     var utils = require("../../utils/utils");
     var Handlebars = require("handlebars");
         var te = require("../../utils/template-engine");
