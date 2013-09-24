@@ -1,6 +1,7 @@
 define(function(require) {
     var $ = require("jquery");
     require("jquery.deserialize");
+    var Handlebars = require("handlebars");
     require("domReady!");
 
     function Utils() {
@@ -39,6 +40,13 @@ define(function(require) {
         this.fromObject = function(formId, obj) {
              $('#' + formId).deserialize(obj);
         };
+        
+        this.exist = function(val) {
+                if (typeof(val) === 'undefined' || val === null) {
+                    return false;
+                }
+                return true;
+            };
     }
     return new Utils();
 });
