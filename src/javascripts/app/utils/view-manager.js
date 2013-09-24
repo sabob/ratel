@@ -7,10 +7,10 @@ define(function(require) {
 
         var callStack = [];
         
-        var onAttached = null;
+        var globalOnAttached = null;
         
-        this.setOnAttached = function(callback) {
-            onAttached = callback;
+        this.setGlobalOnAttached = function(callback) {
+            globalOnAttached = callback;
         };
 
         this.showView = function(View, args, notifyViewReady, target) {
@@ -64,8 +64,8 @@ define(function(require) {
             $(target).empty();
 
             $(target).html(template);
-            if (onAttached) {
-                onAttached();
+            if (globalOnAttached) {
+                globalOnAttached();
             }
 
             if (attachedComplete) {
@@ -86,8 +86,8 @@ define(function(require) {
 
                 $(target).html(template);
                 
-                if (onAttached) {
-                onAttached();
+                if (globalOnAttached) {
+                globalOnAttached();
             }
 
                 if (attachedComplete) {

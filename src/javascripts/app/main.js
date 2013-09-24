@@ -7,7 +7,7 @@ define(function(require) {
     var prettify = require("prettify");
     require("domReady!");
     
-    viewManager.setOnAttached(function() {
+    viewManager.setGlobalOnAttached(function() {
        prettify.prettyPrint(); 
     });
 
