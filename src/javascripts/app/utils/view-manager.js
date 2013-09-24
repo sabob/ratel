@@ -32,7 +32,10 @@ define(function(require) {
                 return;
             }
             
-            templateEngine.reset(target);
+            if (templateEngine.hasActions()) {
+                console.log("It's been detected that there are unbounded actions in the TemplateEngine! Resetting to remove memory leaks!")
+                templateEngine.reset(target);
+            }
 
             callStack.push(1);
 

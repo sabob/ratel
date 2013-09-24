@@ -22,17 +22,18 @@ define(function(require) {
             var options = {
                 bindtarget: "#container",
                 data : {
-                    testAction: function(e) {
+                    one: "two",
+                    testAction: function(e, context, options) {
                         e.preventDefault();
                         //console.log("Hi Bob!" + Date.now());
-                        console.log("test");
+                        console.log("context:", context, "options:", options);
                     }
                 }
             };
             var html = te.render(this.getTemplate(), context, options);
 
             dom.attachWithAnim(html, function() {
-                //te.bind();
+               te.bind("#cont");
                 //te.bind();
                 //te.bind();
                 onAttached(args);

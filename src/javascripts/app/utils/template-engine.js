@@ -11,43 +11,46 @@ define(function(require) {
         var registered = false;
 
         var actionRegistry = [];
-        var actionRegistryTypes = {};
-        var mostRecentTarget = null;
+        this.hasActions = function() {
+            return actionRegistry.length > 0;
+        };
+        //var actionRegistryTypes = {};
+        //var mostRecentTarget = null;
 
-        this.reset = function(target) {
-            target = target || "#container";
+        this.reset = function() {
+            //target = target || "#container";
 
             //for (var container in actionRegistryTypes) {
+            /*
             var container = actionRegistryTypes[target];
                 for (var type in container.types) {
                     $(container).off(type, "[data-ratel-action]");
-                }
+                }*/
             //}
             actionRegistry = [];
-            delete actionRegistryTypes[target];
+            //delete actionRegistryTypes[target];
             console.log("TemplateEngine was reset!");
         };
 
         this.render = function(template, context, options) {
             //var tmpl = Handlebars.compile(template);
-            var target = options.bindtarget;
-            target = target || "#container";
-            mostRecentTarget = target;
+            //var target = options.bindtarget;
+            //target = target || "#container";
+            //mostRecentTarget = target;
 
             var html = template(context, options);
 
-            mostRecentTarget=null;
+            //mostRecentTarget=null;
 
             //if (options.bind === false) {
               //  return html;
             //}
 
-            autobind(target);
+            //autobind(target);
             return html;
         };
-
+/*
         function autobind(target) {
-            //console.log("target", target);
 
             var container = actionRegistryTypes[target];
             console.log("container:", container, "target:", target);
@@ -64,20 +67,28 @@ define(function(require) {
                     currentAction.action(e, currentAction.objectRef);
                 });
             }
-        }
+        }*/
 
-        this.bind = function() {
-
-            $("[data-ratel-action]").each(function() {
+        this.bind = function(target) {
+            target = target || "body";
+            console.log("binding target:", target);
+            
+            // Select target with data-ratel-attributge and all children with data-ratel-attributge, hence the ',' in the selector below
+            $(target + "[data-ratel-action], " + target + " [data-ratel-action]").each(function() {
                 var currentID = this.attributes["data-ratel-action"].value;
                 // TODO remove data-ratel-acion
                 var currentAction = actionRegistry[currentID];
                 
-                $(this).off(currentAction.type);
+                //$(this).off(currentAction.type);
                 $(this).on(currentAction.type, function(e) {
-                    currentAction.action(e, currentAction.objectRef);
+                    currentAction.action(e, currentAction.objectRef, currentAction.options);
                 });
+                // remove the action attribute
+                $(this).removeAttr("data-ratel-action");
             });
+            
+            this.reset();
+            
         };
 
         this.registerHelpers = function() {
@@ -88,7 +99,6 @@ define(function(require) {
 
             checkHelper('action');
             Handlebars.registerHelper('action', function(action, options) {
-                //var id = incrementID();
                 var type = options.hash.type || "click";
 
                 var actionRef = action;
@@ -105,9 +115,10 @@ define(function(require) {
                 var actionData = {
                     type: type,
                     action: actionRef,
-                    opions: options,
+                    options: options,
                     objectRef: this
                 };
+                /*
                 var target = mostRecentTarget;
                 console.log("target", target);
                 var container = actionRegistryTypes[target];
@@ -116,6 +127,7 @@ define(function(require) {
                     actionRegistryTypes[target] = container;
                 }
                 container[type] = null;
+                */
                 
                 var length = actionRegistry.push(actionData);
                 var id = length - 1;
