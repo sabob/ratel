@@ -3,7 +3,7 @@ define(function(require) {
 
     var $ = require("jquery");
     var templateEngine = require("../../utils/template-engine");
-    var template = require("hbs!./ClientSearchMoment");
+    var template = require("hbs!./ClientSearchMoment.htm");
     var html = null;
     var ClientEdit = require("./ClientEdit");
     var utils = require("../../utils/utils");

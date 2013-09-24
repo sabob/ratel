@@ -5,7 +5,7 @@ define(function(require) {
     var Handlebars = require("handlebars");
     var moment = require("moment");
     var numeral = require("numeral");
-    var template = require("hbs!./ClientSearchAction");
+    var template = require("hbs!./ClientSearchAction.htm");
     var html = null;
 
     var ClientEdit = require("./ClientEdit");

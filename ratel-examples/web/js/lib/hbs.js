@@ -7,18 +7,19 @@ define(['text', 'handlebars'], function(text, handlebars) {
     }
 
     var buildCache = {};
-    var templateExtension = ".htm";
+    //var templateExtension = ".htm";
     var buildCompileTemplate = 'define("{{pluginName}}!{{moduleName}}", ["handlebars"], function(handlebars) {return handlebars.template({{{fn}}})});';
     var buildTemplate;
 
     var load = function(moduleName, parentRequire, load, config) {
         // Get the template extension.
-        var ext = (config.hbs && config.hbs.templateExtension ? config.hbs.templateExtension : templateExtension);
+        //var ext = (config.hbs && config.hbs.templateExtension ? config.hbs.templateExtension : templateExtension);
 
-        if (endsWith(moduleName, ext)) {
+        /*if (endsWith(moduleName, ext)) {
             throw new Error("template '" + moduleName + "' already contains the extension '" + ext + "'! Remove the extension from the path!");
-        }
-        var fullName = moduleName + ext;
+        }*/
+        //var fullName = moduleName + ext;
+        var fullName = moduleName;
 
         text.get(parentRequire.toUrl(fullName), function(data) {
             if (config.isBuild) {
