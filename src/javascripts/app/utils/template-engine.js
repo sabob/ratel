@@ -11,25 +11,70 @@ define(function(require) {
         var registered = false;
 
         var actionRegistry = [];
+        var actionRegistryTypes = {};
+        var mostRecentTarget = null;
 
-        this.reset = function() {
+        this.reset = function(target) {
+            target = target || "#container";
+
+            //for (var container in actionRegistryTypes) {
+            var container = actionRegistryTypes[target];
+                for (var type in container.types) {
+                    $(container).off(type, "[data-ratel-action]");
+                }
+            //}
             actionRegistry = [];
-            console.log("TemplatEngine was reset!");
+            delete actionRegistryTypes[target];
+            console.log("TemplateEngine was reset!");
         };
 
         this.render = function(template, context, options) {
             //var tmpl = Handlebars.compile(template);
+            var target = options.bindtarget;
+            target = target || "#container";
+            mostRecentTarget = target;
+
             var html = template(context, options);
+
+            mostRecentTarget=null;
+
+            //if (options.bind === false) {
+              //  return html;
+            //}
+
+            autobind(target);
             return html;
         };
 
-        // TODO pass in a selector and use LIVE
+        function autobind(target) {
+            //console.log("target", target);
+
+            var container = actionRegistryTypes[target];
+            console.log("container:", container, "target:", target);
+            for (var type in container) {
+                console.log("type:", type);
+                $(target).off(type, "[data-ratel-action]");
+                $(target).on(type, "[data-ratel-action]", function(e) {
+                    var currentID = this.attributes["data-ratel-action"].value;
+                    //console.log(currentID);
+                    var currentAction = actionRegistry[currentID];
+                    if (type !== currentAction.type) {
+                        return;
+                    }
+                    currentAction.action(e, currentAction.objectRef);
+                });
+            }
+        }
+
         this.bind = function() {
+
             $("[data-ratel-action]").each(function() {
                 var currentID = this.attributes["data-ratel-action"].value;
+                // TODO remove data-ratel-acion
                 var currentAction = actionRegistry[currentID];
-
-                $(this).bind(currentAction.type, function(e) {
+                
+                $(this).off(currentAction.type);
+                $(this).on(currentAction.type, function(e) {
                     currentAction.action(e, currentAction.objectRef);
                 });
             });
@@ -63,12 +108,21 @@ define(function(require) {
                     opions: options,
                     objectRef: this
                 };
+                var target = mostRecentTarget;
+                console.log("target", target);
+                var container = actionRegistryTypes[target];
+                if (!container) {
+                    container = {};
+                    actionRegistryTypes[target] = container;
+                }
+                container[type] = null;
+                
                 var length = actionRegistry.push(actionData);
                 var id = length - 1;
 
                 return new Handlebars.SafeString("data-ratel-action=\"" + id + "\"");
             });
-            
+
             checkHelper('formatDate');
             Handlebars.registerHelper('formatDate', function(context, block) {
                 //console.log("dateFormat", context);
@@ -85,7 +139,7 @@ define(function(require) {
                 var day = moment(context);
                 return day.format(f);
             });
-            
+
             checkHelper('formatNumber');
             Handlebars.registerHelper('formatNumber', function(context, block) {
                 //console.log("numberFormat ", context);
@@ -103,11 +157,11 @@ define(function(require) {
                 return str;
 
             });
-            
+
             function checkHelper(name) {
                 if (name in Handlebars.helpers) {
-                throw new Error('Helper, "' + name + '" is already registered as a Handlebars helper!');
-            }
+                    throw new Error('Helper, "' + name + '" is already registered as a Handlebars helper!');
+                }
             }
 
         };

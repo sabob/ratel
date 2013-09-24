@@ -1,4 +1,7 @@
-define(["jquery", 'domReady!'], function($) {
+define(function(require) {
+    var $ = require("jquery");
+    require("domReady!");
+    var templateEngine = require("./template-engine");
 
     function ViewManager() {
 
@@ -28,6 +31,8 @@ define(["jquery", 'domReady!'], function($) {
                 console.log('We are already busy processing a showView request', callStack);
                 return;
             }
+            
+            templateEngine.reset(target);
 
             callStack.push(1);
 

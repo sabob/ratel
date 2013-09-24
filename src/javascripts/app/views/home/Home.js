@@ -20,6 +20,7 @@ define(function(require) {
             //onReady();
             var context = {'name': 'Bob'};
             var options = {
+                bindtarget: "#container",
                 data : {
                     testAction: function(e) {
                         e.preventDefault();
@@ -31,7 +32,9 @@ define(function(require) {
             var html = te.render(this.getTemplate(), context, options);
 
             dom.attachWithAnim(html, function() {
-                te.bind();
+                //te.bind();
+                //te.bind();
+                //te.bind();
                 onAttached(args);
                 });
         };
