@@ -7,14 +7,23 @@ define(['text', 'handlebars'], function(text, handlebars) {
     }
 
     var buildCache = {};
+    //var templateExtension = ".htm";
     var buildCompileTemplate = 'define("{{pluginName}}!{{moduleName}}", ["handlebars"], function(handlebars) {return handlebars.template({{{fn}}})});';
     var buildTemplate;
 
     var load = function(moduleName, parentRequire, load, config) {
+        // Get the template extension.
+        //var ext = (config.hbs && config.hbs.templateExtension ? config.hbs.templateExtension : templateExtension);
 
-        text.get(parentRequire.toUrl(moduleName), function(data) {
+        /*if (endsWith(moduleName, ext)) {
+            throw new Error("template '" + moduleName + "' already contains the extension '" + ext + "'! Remove the extension from the path!");
+        }*/
+        //var fullName = moduleName + ext;
+        var fullName = moduleName;
+
+        text.get(parentRequire.toUrl(fullName), function(data) {
             if (config.isBuild) {
-                buildCache[moduleName] = data;
+                buildCache[fullName] = data;
                 load();
             } else {
                 var tmpl = handlebars.compile(data);
@@ -40,6 +49,10 @@ define(['text', 'handlebars'], function(text, handlebars) {
             write(tmpl);
         }
     };
+
+    function endsWith(str, suffix) {
+        return str.indexOf(suffix, str.length - suffix.length) !== -1;
+    }
 
     return {
         load: load,
