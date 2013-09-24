@@ -2,7 +2,9 @@ define(function(require) {
     var $ = require("jquery");
     var ClientSearch = require("./views/client/ClientSearch");
     var ClientSearchNoAnim = require("./views/clientNoAnim/ClientSearch");
-    var ClientSearchExp = require("./views/client/ClientSearch2");
+    var ClientSearchMoment = require("./views/client/ClientSearchMoment");
+    var ClientSearchAction = require("./views/client/ClientSearchAction");
+    var ClientSearch = require("./views/client/ClientSearch");
     var Home = require("./views/home/Home");
     var viewManager = require("./utils/view-manager");
     require("jquery.alpha");
@@ -24,9 +26,14 @@ define(function(require) {
         viewManager.showView(ClientSearchNoAnim);
     });
 
-    $("#clientsExp").click(function(e) {
+    $("#clientsMoment").click(function(e) {
         e.preventDefault();
-        viewManager.showView(ClientSearchExp);
+        viewManager.showView(ClientSearchMoment);
+    });
+    
+    $("#clientsAction").click(function(e) {
+        e.preventDefault();
+        viewManager.showView(ClientSearchAction);
     });
 
     viewManager.showView(Home);
