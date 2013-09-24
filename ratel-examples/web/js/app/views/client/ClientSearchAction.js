@@ -5,7 +5,7 @@ define(function(require) {
     var Handlebars = require("handlebars");
     var moment = require("moment");
     var numeral = require("numeral");
-    var template = require("hbs!./ClientSearchAction.htm");
+    var template = require("hb!./ClientSearchAction.htm");
     var html = null;
 
     var ClientEdit = require("./ClientEdit");
@@ -75,9 +75,6 @@ define(function(require) {
             });
             request.always(function(arg1, textStatus, arg3) {
                 console.log("Request completed: ", textStatus);
-                //attach(template); 
-                //that.onAttached();
-                //onReady();
             });
         };
 
@@ -86,78 +83,9 @@ define(function(require) {
         };
 
         this.onAttached = function(data) {
-
-            /*
-             $("#table").on("click", ".edit-link", function(e) {
-             e.preventDefault();
-             var id = $(e.target).attr('value');
-             console.log("ID", id);
-             var args = {id: id, ClientSearch: ClientSearch};
-             viewManager.showView(ClientEdit, args);
-             });
-             
-             $("#table").on("click", ".delete-link", function(e) {
-             e.preventDefault();
-             var index = $(e.target).attr('value');
-             var val = confirm('Are you sure?' + index);
-             if (val) {
-             $("#table #" + index).remove();
-             }
-             });*/
-
             console.log("onAttached done");
         };
     }
-    
-    /*
-    if ('action' in Handlebars.helpers) {
-        throw new Error('Action, "action" is already registered as a Handlebars helper!');
-    }
-
-    Handlebars.registerHelper('action', function(action, options) {
-        var id = incrementID();
-        var type = options.hash.type || "click";
-
-        var actionRef = action;
-        if (typeof actionRef === "string") {
-            var target = options.data.target;
-            actionRef = target[action];
-            if (!utils.exist(actionRef)) {
-                actionRef = window[action];
-                if (utils.exist(actionRef)) {
-                    console.log("The action name, '" + action + "', was found on the window object. It is not advisable to set actions globally!");
-                }
-            }
-        }
-        actionRegistry[id] = {
-            type: type,
-            action: actionRef,
-            opions: options,
-            objectRef: this
-        };
-
-        return new Handlebars.SafeString("data-ratel-action=\"" + id + "\"");
-    });
-
-    var actionRegistry = {
-        id: 0
-    };
-
-    function incrementID() {
-        return ++actionRegistry.id;
-    }
-
-    function bindIDs() {
-        $("[data-ratel-action]").each(function() {
-            var currentID = this.attributes["data-ratel-action"].value;
-            var currentAction = actionRegistry[currentID];
-
-            $(this).bind(currentAction.type, function() {
-                currentAction.action(currentAction.objectRef);
-            });
-        });
-    }*/
-
 
     return ClientSearch;
 });
