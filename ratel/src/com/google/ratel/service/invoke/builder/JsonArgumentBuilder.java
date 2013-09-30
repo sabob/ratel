@@ -48,10 +48,10 @@ public class JsonArgumentBuilder extends ParameterArgumentBuilder {
 
         Reader reader = createLimitedReader(request, maxRequestSize);
 
-        JsonElementWrapper jsonElement = jsonService.parseJson(reader);
+        JsonElement jsonElement = jsonService.parseJson(reader);
 
         if (jsonElement.isJsonArray()) {
-            JsonArrayWrapper array = jsonElement.getAsJsonArray();
+            JsonArray array = jsonElement.getAsJsonArray();
             Object[] args = buildArgumentsFromJsonArray(array, target, methodData);
             return args;
 
@@ -63,7 +63,7 @@ public class JsonArgumentBuilder extends ParameterArgumentBuilder {
         }
     }
 
-    protected Object[] buildArgumentsFromJsonArray(JsonArrayWrapper array, Object target, MethodData methodData) {
+    protected Object[] buildArgumentsFromJsonArray(JsonArray array, Object target, MethodData methodData) {
         List<ParameterData> parameters = methodData.getParameters();
         Object[] args = new Object[parameters.size()];
 
@@ -72,7 +72,7 @@ public class JsonArgumentBuilder extends ParameterArgumentBuilder {
             Class type = parameter.getType();
 
             if (array.size() > i) {
-                JsonElementWrapper element = array.get(i);
+                JsonElement element = array.get(i);
                 args[i] = parseJson(element, type);
             }
         }

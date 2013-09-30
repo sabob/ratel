@@ -1149,7 +1149,7 @@ public class RatelUtils {
     public static String prettyPrintJson(String json) {
         Context context = Context.getContext();
         JsonService jsonService = context.getRatelConfig().getJsonService();
-        JsonElementWrapper wrapper = jsonService.parseJson(json);
+        JsonElement wrapper = jsonService.parseJson(json);
         String result = jsonService.toJson(wrapper);
         return result;
     }

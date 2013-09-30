@@ -21,16 +21,16 @@ public interface JsonService {
     
     public void toJson(Object obj, Writer writer);
     
-    public String toJson(JsonElementWrapper wrapper);
+    public String toJson(JsonElement wrapper);
     
     public <T> T fromJson(String str, Class<T> type);
 
     public <T> T fromJson(Reader reader, Class<T> type);
     
-    public <T> T fromJson(JsonElementWrapper wrapper, Class<T> type);
+    public <T> T fromJson(JsonElement wrapper, Class<T> type);
 
-    public JsonElementWrapper parseJson(String str);
+    public JsonElement parseJson(String str);
     
-    public JsonElementWrapper parseJson(Reader reader);
+    public JsonElement parseJson(Reader reader);
     
 }

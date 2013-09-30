@@ -159,7 +159,7 @@ public class ParameterArgumentBuilder {
         return arg;
     }
 
-    protected Object parseJson(JsonElementWrapper element, Class type) {
+    protected Object parseJson(JsonElement element, Class type) {
         Object arg = jsonService.fromJson(element, type);
         return arg;
     }

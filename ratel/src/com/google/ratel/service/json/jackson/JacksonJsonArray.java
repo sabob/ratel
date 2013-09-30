@@ -12,18 +12,18 @@ import com.google.ratel.service.json.*;
 /**
  *
  */
-public class JacksonArrayWrapper implements JsonArrayWrapper {
+public class JacksonJsonArray implements JsonArray {
 
     protected ArrayNode jsonArray;
     
-    public JacksonArrayWrapper(ArrayNode jsonArray) {
+    public JacksonJsonArray(ArrayNode jsonArray) {
         this.jsonArray = jsonArray;
     }
 
     @Override
-    public JsonElementWrapper get(int index) {
+    public JsonElement get(int index) {
         JsonNode jsonNode = jsonArray.get(index);
-        JsonElementWrapper wrapper = new JacksonElementWrapper(jsonNode);
+        JsonElement wrapper = new JacksonJsonElement(jsonNode);
         return wrapper;
     }
 

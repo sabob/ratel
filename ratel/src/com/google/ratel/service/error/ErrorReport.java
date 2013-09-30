@@ -20,7 +20,7 @@ package com.google.ratel.service.error;
 
 import com.google.ratel.RatelConfig;
 import com.google.ratel.deps.lang3.StringUtils;
-import com.google.ratel.service.json.JsonElementWrapper;
+import com.google.ratel.service.json.JsonElement;
 import com.google.ratel.service.json.JsonService;
 import com.google.ratel.service.template.TemplateException;
 import com.google.ratel.util.HtmlStringBuffer;
@@ -346,7 +346,7 @@ public class ErrorReport {
                 try {
                     // Pretty format the json
                     JsonService jsonService = ratelConfig.getJsonService();
-                     JsonElementWrapper node = jsonService.parseJson(content);
+                     JsonElement node = jsonService.parseJson(content);
                      if (node != null) {
                          json = jsonService.toJson(node);                         
                      }

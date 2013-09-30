@@ -12,11 +12,11 @@ import com.google.ratel.service.json.*;
 /**
  *
  */
-public class JacksonElementWrapper implements JsonElementWrapper {
+public class JacksonJsonElement implements JsonElement {
 
     protected JsonNode jsonNode;
 
-    public JacksonElementWrapper(JsonNode jsonNode) {
+    public JacksonJsonElement(JsonNode jsonNode) {
         this.jsonNode = jsonNode;
     }
 
@@ -27,9 +27,9 @@ public class JacksonElementWrapper implements JsonElementWrapper {
     }
 
     @Override
-    public JsonArrayWrapper getAsJsonArray() {
+    public JsonArray getAsJsonArray() {
         ArrayNode jsonArray = (ArrayNode) jsonNode;
-        JsonArrayWrapper wrapper = new JacksonArrayWrapper(jsonArray);
+        JsonArray wrapper = new JacksonJsonArray(jsonArray);
         return wrapper;
     }
    

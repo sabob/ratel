@@ -58,7 +58,7 @@ public class JacksonService implements JsonService {
     }
     
     @Override
-    public String toJson(JsonElementWrapper wrapper) {
+    public String toJson(JsonElement wrapper) {
 
         try {
             Object obj = wrapper.unwrap();
@@ -100,7 +100,7 @@ public class JacksonService implements JsonService {
     }
 
     @Override
-    public <T> T fromJson(JsonElementWrapper wrapper, Class<T> type) {
+    public <T> T fromJson(JsonElement wrapper, Class<T> type) {
         JsonNode node = (JsonNode) wrapper.unwrap();
         try {
             //T result = reader.readValue(node);
@@ -112,11 +112,11 @@ public class JacksonService implements JsonService {
     }
 
     @Override
-    public JsonElementWrapper parseJson(String str) {
+    public JsonElement parseJson(String str) {
         try {
             //JsonNode node = reader.readTree(str);
             JsonNode node = mapper.readTree(str);
-            JacksonElementWrapper wrapper = new JacksonElementWrapper(node);
+            JacksonJsonElement wrapper = new JacksonJsonElement(node);
             return wrapper;
         } catch (Exception ex) {
             throw new RuntimeException(ex);
@@ -124,10 +124,10 @@ public class JacksonService implements JsonService {
     }
     
     @Override
-    public JsonElementWrapper parseJson(Reader reader) {
+    public JsonElement parseJson(Reader reader) {
         try {
             JsonNode node = mapper.readTree(reader);
-            JacksonElementWrapper wrapper = new JacksonElementWrapper(node);
+            JacksonJsonElement wrapper = new JacksonJsonElement(node);
             return wrapper;
         } catch (Exception ex) {
             throw new RuntimeException(ex);

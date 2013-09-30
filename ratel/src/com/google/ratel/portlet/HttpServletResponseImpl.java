@@ -231,6 +231,7 @@ public class HttpServletResponseImpl implements HttpServletResponse {
    */
   @Override
   public void setCharacterEncoding(String charset) {
+      response.setCharacterEncoding(charset);
   }
 
 
@@ -240,6 +241,7 @@ public class HttpServletResponseImpl implements HttpServletResponse {
    */
   @Override
   public void setContentLength(int len) {
+      response.setContentLength(len);
   }
 
 
@@ -249,6 +251,7 @@ public class HttpServletResponseImpl implements HttpServletResponse {
    */
   @Override
   public void setContentType(String type) {
+      response.setContentType(type);
   }
 
 

@@ -8,11 +8,9 @@ package com.google.ratel.service.json;
 /**
  *
  */
-public interface JsonElementWrapper {
+public interface JsonArray {
 
-    public boolean isJsonArray();
+    public JsonElement get(int index);
     
-    public JsonArrayWrapper getAsJsonArray();
-
-    public Object unwrap();
+    public int size();
 }

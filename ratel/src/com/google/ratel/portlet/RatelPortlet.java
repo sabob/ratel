@@ -6,10 +6,8 @@ package com.google.ratel.portlet;
 
 import com.google.ratel.Context;
 import com.google.ratel.RatelConfig;
-import com.google.ratel.core.*;
 import com.google.ratel.service.handler.RequestHandler;
 import java.io.*;
-import java.util.*;
 import javax.portlet.GenericPortlet;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletContext;
@@ -130,13 +128,24 @@ public class RatelPortlet extends GenericPortlet {
         return localFilterConfig;
     }
 
-    protected HttpServletRequest createServletRequest(ResourceRequest resourceRequest, ServletContext servletContext) {
-        HttpServletRequest localServletContext = new HttpServletRequestImpl(resourceRequest, servletContext);
+    protected HttpServletRequest createServletRequest(final ResourceRequest resourceRequest, final ServletContext servletContext) {
+        HttpServletRequest localServletContext = new HttpServletRequestImpl(resourceRequest, servletContext) {
+
+            @Override
+            public String getServletPath() {
+                return getRequestPath(resourceRequest);
+            }
+        };
+
         return localServletContext;
     }
 
     protected HttpServletResponse createServletResponse(ResourceResponse resourceResponse, ServletContext servletContext) {
         HttpServletResponse servletResponse = new HttpServletResponseImpl(resourceResponse);
         return servletResponse;
+    }
+
+    protected String getRequestPath(ResourceRequest resourceRequest) {
+      return resourceRequest.getResourceID();
     }
 }

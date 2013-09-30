@@ -147,9 +147,8 @@ public class HttpServletRequestImpl implements HttpServletRequest {
    */
   @Override
   public String getPathInfo() {
-    throw new UnsupportedOperationException();
+    return null;
   }
-
 
   /*
    * PORTLETSPEC_20 PLT.19.3.5
@@ -174,7 +173,7 @@ public class HttpServletRequestImpl implements HttpServletRequest {
    */
   @Override
   public String getPathTranslated() {
-    throw new UnsupportedOperationException();
+    throw null;
   }
 
 
@@ -207,7 +206,7 @@ public class HttpServletRequestImpl implements HttpServletRequest {
    */
   @Override
   public String getQueryString() {
-    throw new UnsupportedOperationException();
+    throw null;
   }
 
 
@@ -318,7 +317,7 @@ public class HttpServletRequestImpl implements HttpServletRequest {
    */
   @Override
   public String getServletPath() {
-      return resourceRequest.getResourceID();
+      return null;
   }
 
 
@@ -366,7 +365,7 @@ public class HttpServletRequestImpl implements HttpServletRequest {
    */
   @Override
   public boolean isRequestedSessionIdFromCookie() {
-    throw new UnsupportedOperationException();
+    return false;
   }
 
 
