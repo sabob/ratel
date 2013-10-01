@@ -33,7 +33,7 @@ define(function(require) {
             var html = te.render(this.getTemplate(), context, options);
 
             dom.attachWithAnim(html, function() {
-               te.bind("#cont");
+               //te.bind("#cont");
                 //te.bind();
                 //te.bind();
                 onAttached(args);

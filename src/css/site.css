@@ -9,7 +9,7 @@
 
 
 body {
-    display:none;
+    
     text-shadow: none;    
     margin: 0;
     font-family: "Segoe UI SemiLight","Segoe UI","wf_SegoeUILight","wf_SegoeUI","Segoe UI Light","Segoe WP Light","Segoe","Segoe WP","Tahoma","Verdana","Arial","sans-serif";
@@ -17,11 +17,11 @@ body {
     /*background-color: #F4ED7C;*/
     background-color: #ECECEF;
 }
-
+/*
 .gutter {
-    /*width: 1170px;
-    margin: 0 auto;*/
-}
+    width: 1170px;
+    margin: 0 auto;
+}*/
 
 
 h3{
@@ -172,8 +172,8 @@ span.token, span.token span.pln, span.token span.atv {
 }
 
 #features {
-    background-color: #eee;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1) inset;
+    /*background-color: #eee;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1) inset;*/
 }
 
 #features > li {
@@ -287,4 +287,8 @@ a:visited {
 .footer {
     background-color: #000;
     padding: 20px;
+    border-top: 5px solid #009DDB;
+}
+#footer-holder {
+    
 }

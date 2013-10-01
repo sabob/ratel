@@ -2,6 +2,7 @@ define(function(require) {
     var $ = require("jquery");
     var Intro = require("./views/intro/Intro");
     var Home = require("./views/home/Home");
+    var footer = require("hb!./views/footer/footer.htm");
     var errorUtils = require("./utils/error-utils");
     var viewManager = require("./utils/view-manager");
     var prettify = require("prettify");
@@ -82,11 +83,11 @@ define(function(require) {
     function slideToActive(li) {
         $(li).addClass('active');
         //var offsetTop = $(li).offset().top - $('#navbar').offset().top;
-        var location = getActiveMenuIndLocation(li);
+        var location = getActiveMenuLocation(li);
         $('#nav-ind').animate(location, 'fast', 'linear');
     }
 
-    function getActiveMenuIndLocation(li) {
+    function getActiveMenuLocation(li) {
         var offsetTop = 50;
         var offsetLeft = $(li).offset().left - $('#navbar').offset().left;
         var location = {
@@ -99,10 +100,13 @@ define(function(require) {
     }
 
     viewManager.showView(Home, null, function() {
-        $("body").show();
+        /*$("body").show();*/
         // Set first menu item to active
         var homeItem = $("#navbar li:first");
-        var location = getActiveMenuIndLocation(homeItem);
+        var location = getActiveMenuLocation(homeItem);
         $("#nav-ind").css(location);
     });
+    viewManager.showTemplate(footer, null, "#footer-holder");
+    
+    
 });
