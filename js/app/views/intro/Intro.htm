@@ -6,7 +6,7 @@
 (<span class="symbol">/*</span>) requests:</p>
 
 <pre class="prettyprint programlisting linenums">
-<?xml version="1.0" encoding="UTF-8"?>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;web-app&gt;
     &lt;filter&gt;
         &lt;filter-name&gt;ratelFilter&lt;/filter-name&gt;
@@ -24,12 +24,12 @@
 &lt;/web-app&gt;
 </pre>
 
-<p>3. Create a Ratel service to handle incoming requests (A Ratel service is a POJO annotated with @RatelService:</p>
+<p>3. Create a Ratel service to handle incoming requests (A Ratel service is a POJO annotated with <span class="symbol">@RatelService</span>:</p>
 
 <pre class="prettyprint programlisting linenums">
 package com.mycorp.service;
 
-  @RatelService
+  <span class="symbol">@RatelService</span>
   public class MyService {
 
     public Sting myMethod() {
