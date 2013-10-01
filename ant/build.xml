@@ -27,7 +27,7 @@
             <param name="requirejs.optimizer.settings" value="${js.build}" />
         </antcall>
         
-        <move file="${dist}/javascripts/app.js" tofile="${dist}/javascripts/lib/require.js"/>
+        <move file="${dist}/js/app.js" tofile="${dist}/js/lib/require.js"/>
         
         <move todir="${root}">
             <fileset dir="${dist}">
@@ -41,8 +41,9 @@
     <target name="remove-old-site" description="Remove old files that will be replaced by new site">
         
         <delete dir="${root}/images"/>
-        <delete dir="${root}/javascripts"/>
-        <delete dir="${root}/stylesheets"/>
+        <delete dir="${root}/js"/>
+        <delete dir="${root}/css"/>
+        <delete dir="${root}/font"/>
         <delete file="${root}/README.md"/>
         <delete file="${root}/index.html"/>
     </target>

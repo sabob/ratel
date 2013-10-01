@@ -1,13 +1,13 @@
 ({
     "appDir": "../src",
-   baseUrl: "javascripts/lib",
+   baseUrl: "js/lib",
     dir: "../deploy",
     optimize: 'uglify',
     //optimize: 'none',
     removeCombined: true,
     skipDirOptimize: true,
     optimizeCss: 'standard',
-    "mainConfigFile": "../src/javascripts/app.js",
+    "mainConfigFile": "../src/js/app.js",
     paths: {
         "requireLib": "require",
         "handlebars-runtime": "handlebars.runtime"
