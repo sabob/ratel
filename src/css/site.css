@@ -9,7 +9,7 @@
 
 
 body {
-    
+    overflow-y: scroll;
     text-shadow: none;    
     margin: 0;
     font-family: "Segoe UI SemiLight","Segoe UI","wf_SegoeUILight","wf_SegoeUI","Segoe UI Light","Segoe WP Light","Segoe","Segoe WP","Tahoma","Verdana","Arial","sans-serif";
