@@ -292,3 +292,8 @@ a:visited {
 #footer-holder {
     
 }
+#logo {
+    float: right;
+    margin-top: 40px;
+    margin-right: -40px;
+}
