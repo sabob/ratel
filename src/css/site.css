@@ -77,7 +77,7 @@ h3{
     padding: 16px 15px;
     margin: 0;
 }
-.header a, .header a:visited, a:active {
+.header a, .header a:visited, .header a:active {
     color: #fff;
     font-weight: normal;
 }
