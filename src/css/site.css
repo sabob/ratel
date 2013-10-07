@@ -316,3 +316,6 @@ a:visited {
     margin-top: 40px;
     margin-right: -40px;
 }
+.version {
+    font-size: small;
+}
