@@ -385,7 +385,7 @@ public class ErrorReport {
         buffer.append("</a>");
         buffer.append("</td></tr>");
 
-        buffer.append("<tr><td><b width='12%'>URL</b></td><td>");
+        buffer.append("<tr><td width='12%'><b>URL</b></td><td>");
         buffer.append("<a href='");
         buffer.append(request.getRequestURL());
         buffer.append("'>");
