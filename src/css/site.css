@@ -17,7 +17,7 @@ p {
     font-weight: normal;
 }
 body {
-    font-size: 1em;
+    font-size: 1.2em;
   line-height: 1.5; 
     overflow-y: scroll;
     text-shadow: none;    
@@ -143,6 +143,10 @@ h2 {
     margin-top: 50px;
 }
 
+code, pre {
+    font-size: 100%;
+}
+
 pre.programlisting {
     /*
     font-size:      9pt;
@@ -220,7 +224,7 @@ padding: 0;
     
 
 .feature-list li {
-    font-size: 14px;
+    font-size: 15px;
     list-style-type: none;
 }
 .feature-list .icon {
