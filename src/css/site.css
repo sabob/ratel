@@ -42,9 +42,22 @@ h3{
     color: #eee;
 }
 
-.container {
+.content-header {
+    /*background-color: #005B99;*/
+    background-color: #777;
+    width: 100%;
+    padding: 20px;
+}
+.content-header a, .content-header a:hover, .content-header a:visited, .content-header a:active {
+    color: #fff;
+}
+.content-body {
     margin: 0 auto;
     width: 1170px;
+}
+.gap h2 {
+    margin-top:0px;
+    padding-top: 220px;
 }
 
 .header-wrapper {
@@ -58,7 +71,7 @@ h3{
     width: 100%;
     padding-bottom: 50px;
     padding-top: 30px;
-    margin-bottom: 30px;
+    margin-bottom: 0px;
 }
 
 .header {
@@ -89,7 +102,7 @@ h3{
 #nav-ind {
     background-color: #FFED38;
     position: absolute;
-    top: 50px;
+    top: 57px;
     left: 0;
     
     /*bottom: 80px;*/
@@ -184,6 +197,12 @@ span.token, span.token span.pln, span.token span.atv {
     color: maroon;
 }
 
+#features {
+    margin: 0 auto;
+    color: #fff;
+    width: 1170px;
+}
+
 #features:after {
     clear: both;
     content: ".";
@@ -208,13 +227,13 @@ padding: 0;
 
 #features > li div {
     padding: 10px 20px;
-    color: #000;
+    color: #fff;
 }
 
 #features > li div h4 {
     font-size: 24px;
     font-weight: lighter;
-    color: #777;
+    color: #fff;
     margin: 0 0 12px;
 }
 
@@ -229,7 +248,7 @@ padding: 0;
 }
 .feature-list .icon {
     /*color: #009DDB;*/
-    color: #009DDB;
+    color: #fff;
     font-size: 15px;
     margin-right: 3px;
 }

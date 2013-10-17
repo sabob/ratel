@@ -114,7 +114,7 @@ define(function(require) {
 
             $(target).html(template);
             if (globalOnAttached) {
-                globalOnAttached();
+                globalOnAttached(view);
             }
 
             if (attachedComplete) {
@@ -136,7 +136,7 @@ define(function(require) {
                 $(target).html(template);
                 
                 if (globalOnAttached) {
-                globalOnAttached();
+                globalOnAttached(view);
             }
 
                 if (attachedComplete) {

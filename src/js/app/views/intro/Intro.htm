@@ -1,11 +1,13 @@
-<h1>Introduction to Ratel</h1>
+<div class="content-body">
 
-<p>1. Add ratel.jar to your classpath.</p>
+    <h2>Introduction to Ratel</h2>
 
-<p>2. Add <span class="symbol">RatelFilter</span> to your web.xml and map it for all 
-(<span class="symbol">/*</span>) requests:</p>
+    <p>1. Add ratel.jar to your classpath.</p>
 
-<pre class="prettyprint programlisting linenums">
+    <p>2. Add <span class="symbol">RatelFilter</span> to your web.xml and map it for all 
+        (<span class="symbol">/*</span>) requests:</p>
+
+    <pre class="prettyprint programlisting linenums">
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;web-app&gt;
     &lt;filter&gt;
@@ -22,11 +24,11 @@
         &lt;url-pattern&gt;<span class="symbol">/*</span>&lt;/url-pattern&gt;
     &lt;/filter-mapping&gt;
 &lt;/web-app&gt;
-</pre>
+    </pre>
 
-<p>3. Create a Ratel service to handle incoming requests (A Ratel service is a POJO annotated with <span class="symbol">@RatelService</span>:</p>
+    <p>3. Create a Ratel service to handle incoming requests (A Ratel service is a POJO annotated with <span class="symbol">@RatelService</span>:</p>
 
-<pre class="prettyprint programlisting linenums">
+    <pre class="prettyprint programlisting linenums">
 package com.mycorp.service;
 
   <span class="symbol">@RatelService</span>
@@ -39,10 +41,11 @@ package com.mycorp.service;
     }
 
   }
-</pre>
+    </pre>
 
-Ratel maps this service to the URL:
-<pre class="prettyprint programlisting">
+    Ratel maps this service to the URL:
+    <pre class="prettyprint programlisting">
 http://localhost/MyService/MyMethod
-</pre>
+    </pre>
 
+</div>
