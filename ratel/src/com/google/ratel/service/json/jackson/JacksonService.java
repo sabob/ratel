@@ -14,11 +14,11 @@ import java.io.*;
  */
 public class JacksonService implements JsonService {
 
-    private boolean prettyPrint;
+    protected boolean prettyPrint;
 
-    private boolean serializeNulls;
+    protected boolean serializeNulls;
 
-    ObjectMapper mapper;
+    protected ObjectMapper mapper;
 
     public JacksonService() {
     }
