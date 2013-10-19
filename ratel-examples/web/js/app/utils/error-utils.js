@@ -19,7 +19,7 @@
         var iframe = $('<iframe id="dialogFrame"/>').appendTo('#errorHolder');
         var target = $(iframe).contents()[0];
         target.open();
-        target.write('<!doctype html><html><head></head><body <body></body></html>');
+        target.write('<!doctype html><html><head></head><body></body></html>');
         target.close();
         //$('#dialogFrame').contents().find('body').empty().append(text);
         $('#dialogFrame').contents().find('body').empty().html(text);
