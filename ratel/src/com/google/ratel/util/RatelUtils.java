@@ -404,8 +404,8 @@ public class RatelUtils {
         collectionTypes.add(Vector.class);
         collectionTypes.add(Hashtable.class);
     }
-    
-     /**
+
+    /**
      * Return the Click Framework version string.
      *
      * @return the Click Framework version string
@@ -414,10 +414,9 @@ public class RatelUtils {
         ResourceBundle bundle = getBundle("ratel");
         return bundle.getString("ratel-version");
     }
-    
+
     /**
-     * Return the application configuration service instance from the given
-     * servlet context.
+     * Return the application configuration service instance from the given servlet context.
      *
      * @param servletContext the servlet context to get the config service instance
      * @return the application config service instance
@@ -428,16 +427,14 @@ public class RatelUtils {
     }
 
     /**
-     * Returns the
-     * <code>Class</code> object associated with the class or interface with the given string name, using the current Thread context class
-     * loader.
+     * Returns the <code>Class</code> object associated with the class or interface with the given string name, using the current Thread
+     * context class loader.
      *
      * @param classname the name of the class to load
      * @return the <tt>Class</tt> object
      * @throws ClassNotFoundException if the class cannot be located
      */
-    public static Class classForName(String classname)
-        throws ClassNotFoundException {
+    public static Class classForName(String classname) throws ClassNotFoundException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         return Class.forName(classname, true, classLoader);
     }
@@ -457,7 +454,6 @@ public class RatelUtils {
         // will return the original (wrong) URI requested.  The following
         // special attribute holds the correct path.  See section 8.3 of the
         // Servlet 2.3 specification.
-
         String path = (String) request.getAttribute("javax.servlet.include.servlet_path");
 
         // Also take into account the PathInfo stated on
@@ -491,7 +487,6 @@ public class RatelUtils {
         // will return the original (wrong) URI requested.  The following
         // special attribute holds the correct path.  See section 8.3 of the
         // Servlet 2.3 specification.
-
         String requestURI = (String) request.getAttribute("javax.servlet.include.request_uri");
 
         if (requestURI == null) {
@@ -1153,16 +1148,14 @@ public class RatelUtils {
         String result = jsonService.toJson(wrapper);
         return result;
     }
-    
-    
+
     /**
      * URL encode the specified value using the "UTF-8" encoding scheme.
      * <p/>
      * For example <tt>(http://host?name=value with spaces)</tt> will become
      * <tt>(http://host?name=value+with+spaces)</tt>.
      * <p/>
-     * This method uses {@link URLEncoder#encode(java.lang.String, java.lang.String)}
-     * internally.
+     * This method uses {@link URLEncoder#encode(java.lang.String, java.lang.String)} internally.
      *
      * @param value the value to encode using "UTF-8"
      * @return an encoded URL string
@@ -1185,8 +1178,7 @@ public class RatelUtils {
      * For example <tt>(http://host?name=value+with+spaces)</tt> will become
      * <tt>(http://host?name=value with spaces)</tt>.
      * <p/>
-     * This method uses {@link URLDecoder#decode(java.lang.String, java.lang.String)}
-     * internally.
+     * This method uses {@link URLDecoder#decode(java.lang.String, java.lang.String)} internally.
      *
      * @param value the value to decode using "UTF-8"
      * @return an encoded URL string
@@ -1204,15 +1196,13 @@ public class RatelUtils {
     }
 
     /**
-     * Return an encoded URL value for the given object using the context
-     * request character encoding or "UTF-8" if the request character encoding
-     * is not specified.
+     * Return an encoded URL value for the given object using the context request character encoding or "UTF-8" if the request character
+     * encoding is not specified.
      * <p/>
      * For example <tt>(http://host?name=value with spaces)</tt> will become
      * <tt>(http://host?name=value+with+spaces)</tt>.
      * <p/>
-     * This method uses
-     * {@link URLEncoder#encode(java.lang.String, java.lang.String)} internally.
+     * This method uses {@link URLEncoder#encode(java.lang.String, java.lang.String)} internally.
      *
      * @param object the object value to encode as a URL string
      * @param context the context providing the request character encoding
@@ -1242,8 +1232,7 @@ public class RatelUtils {
     }
 
     /**
-     * Return the value string limited to maxlength characters. If the string
-     * gets curtailed, "..." is appended to it.
+     * Return the value string limited to maxlength characters. If the string gets curtailed, "..." is appended to it.
      * <p/>
      * Adapted from Velocity Tools Formatter.
      *
@@ -1256,8 +1245,7 @@ public class RatelUtils {
     }
 
     /**
-     * Return the value string limited to maxlength characters. If the string
-     * gets curtailed and the suffix parameter is appended to it.
+     * Return the value string limited to maxlength characters. If the string gets curtailed and the suffix parameter is appended to it.
      * <p/>
      * Adapted from Velocity Tools Formatter.
      *
@@ -1273,7 +1261,7 @@ public class RatelUtils {
         }
         return ret;
     }
-    
+
     public static String getExtension(String path) {
         int index = path.lastIndexOf(".");
         if (index != -1) {

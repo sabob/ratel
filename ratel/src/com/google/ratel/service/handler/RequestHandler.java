@@ -84,7 +84,7 @@ public class RequestHandler {
         RatelHttpServletRequest request = context.getRequest();
         RatelHttpServletResponse response = context.getResponse();
 
-        boolean isPost = context.isPost();
+        //boolean isPost = context.isPost();
         //boolean isGet = false;
         //if (!isPost) {
         //isGet = Constants.GET.equals(request.getMethod());
@@ -107,7 +107,7 @@ public class RequestHandler {
                 RatelUtils.writeContent(jsonService, response, result, Constants.HTML);
 
             } else {
-                Object result = invokeHandler.invokeAsGetOrPost(service, methodData, request);
+                Object result = invokeHandler.invokeAsHttpMethod(service, methodData, request);
                 // TODO how should data be written out?
                 RatelUtils.writeContent(jsonService, response, result, responseContentType);
             }
@@ -116,13 +116,13 @@ public class RequestHandler {
             Object result = invokeHandler.invokeAsJson(service, methodData, request);
             RatelUtils.writeContent(jsonService, response, result, responseContentType);
 
-        } else if (isPost && contentType.indexOf(Constants.FORM_ENCODED) >= 0) {
-            Object result = invokeHandler.invokeAsGetOrPost(service, methodData, request);
+        } else if (contentType.indexOf(Constants.FORM_ENCODED) >= 0) {
+            Object result = invokeHandler.invokeAsHttpMethod(service, methodData, request);
             // TODO how should data be written out?
             RatelUtils.writeContent(jsonService, response, result, responseContentType);
 
         } else if (request.isMultipartRequest()) {
-            Object result = invokeHandler.invokeAsGetOrPost(service, methodData, request);
+            Object result = invokeHandler.invokeAsHttpMethod(service, methodData, request);
             // TODO how should data be written out?
             RatelUtils.writeContent(jsonService, response, result, responseContentType);
 
@@ -131,7 +131,7 @@ public class RequestHandler {
             // TODO what type should we return?
             //Object result = Utils.invokeMethod(service, method, request);
             //Utils.writeContent(response, result, Constants.JSON);
-            Object result = invokeHandler.invokeAsGetOrPost(service, methodData, request);
+            Object result = invokeHandler.invokeAsHttpMethod(service, methodData, request);
             // TODO how should data be written out?
             RatelUtils.writeContent(jsonService, response, result, responseContentType);
         }

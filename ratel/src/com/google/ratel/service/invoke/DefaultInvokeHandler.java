@@ -62,7 +62,7 @@ public class DefaultInvokeHandler implements InvokeHandler {
     }
 
     @Override
-    public Object invokeAsGetOrPost(Object target, MethodData methodData, RatelHttpServletRequest request) {
+    public Object invokeAsHttpMethod(Object target, MethodData methodData, RatelHttpServletRequest request) {
 
         try {
             Method method = methodData.getMethod();
@@ -71,7 +71,6 @@ public class DefaultInvokeHandler implements InvokeHandler {
             int argCount = parameters.size();
 
             if (argCount == 0) {
-                // Invoke no-arg method with json
                 Object result = method.invoke(target);
                 return result;
 

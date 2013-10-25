@@ -30,7 +30,19 @@ public class Context {
     /**
      * The HTTP method is POST flag.
      */
-    protected boolean isPost;
+    protected Boolean isPost;
+    
+    protected Boolean isGet;
+    
+    protected Boolean isDelete;
+    
+    protected Boolean isPut;
+    
+    protected Boolean isHead;
+    
+    protected Boolean isTrace;
+    
+    protected Boolean isOptions;
 
     public Context() {
     }
@@ -45,7 +57,6 @@ public class Context {
     public Context(RatelConfig ratelConfig, ServletContext context, RatelHttpServletRequest request, RatelHttpServletResponse response) {
         servletContext = context;
         this.request = request;
-        this.isPost = RatelUtils.isPost(request);
         this.response = response;
         this.ratelConfig = ratelConfig;
     }
@@ -76,7 +87,6 @@ public class Context {
      */
     public void setRequest(RatelHttpServletRequest request) {
         this.request = request;
-        this.isPost = RatelUtils.isPost(request);
     }
 
     /**
@@ -287,7 +297,10 @@ public class Context {
     }
 
     public boolean isPost() {
-        return isPost;
+        if (isPost == null) {
+            this.isPost = RatelUtils.isPost(request);
+        }
+        return isPost.booleanValue();
     }
 
     /**

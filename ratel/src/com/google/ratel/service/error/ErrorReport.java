@@ -238,28 +238,28 @@ public class ErrorReport {
         buffer.append("<div id='errorReport' class='errorReport'>\n");
 
         // Exception table
-        buffer.append("<table border='1' cellspacing='1' cellpadding='4' width='100%' style='background-color: white;'><tbody>");
+        buffer.append("<table class=\"flat-table flat-table-1\"><tbody>");
         if (isParseError()) {
-            buffer.append("<tr><td colspan='2' class='header'>Service Parsing Error</td></tr>");
-            buffer.append("<tr><td width='12%'><b>Source</b></td><td>");
+            buffer.append("<tr><th colspan='2' class='header'>Service Parsing Error</th></tr>");
+            buffer.append("<tr><th width='12%'>Source</th><td>");
             buffer.append(getSourceName());
             buffer.append("</td></tr>");
         } else {
-            buffer.append("<tr><td colspan='2' class='header'>Exception</td></tr>");
-            buffer.append("<tr><td width='12%'><b>Class</b></td><td>");
+            buffer.append("<tr><th colspan='2' class='header'>Exception</th></tr>");
+            buffer.append("<tr><th width='12%'>Class</th><td>");
             buffer.append(cause.getClass().getName());
             buffer.append("</td></tr>");
         }
-        buffer.append("<tr><td valign='top' width='12%'><b>Message</b></td><td>");
+        buffer.append("<tr><th valign='top' width='12%'>Message</th><td>");
         buffer.append(getMessage());
         buffer.append("</td></tr>");
         if (getSourceReader() != null) {
-            buffer.append("<tr><td valign='top' colspan='2'>\n");
+            buffer.append("<tr><td class='pre' valign='top' colspan='2'>\n");
             buffer.append(getRenderedSource());
             buffer.append("</td></tr>");
         }
         if (!isParseError()) {
-            buffer.append("<tr><td valign='top' colspan='2'>\n");
+            buffer.append("<tr><td valign='top' colspan='2' class='pre'>\n");
             buffer.append(getStackTrace());
             buffer.append("</td></tr>");
         }
@@ -267,24 +267,24 @@ public class ErrorReport {
         buffer.append("<br/>");
 
         // Service table
-        buffer.append("<table border='1' cellspacing='1' cellpadding='4' width='100%' style='background-color: white;'><tbody>");
-        buffer.append("<tr><td colspan='2' class='header'>Service</td></tr>");
-        buffer.append("<tr><td width='12%'><b>Service</b></td><td>");
+        buffer.append("<table class=\"flat-table flat-table-1\"><tbody>");
+        buffer.append("<tr><th colspan='2' class='header'>Service</th></tr>");
+        buffer.append("<tr><th width='12%'>Service</th><td>");
 
         if (serviceClass != null) {
             String location = RatelUtils.buildLocation(serviceClass, method);
             buffer.append(location);
         }
         buffer.append("</td></tr>");
-        buffer.append("<tr><td width='12%'><b>Path</b></td><td>");
+        buffer.append("<tr><th width='12%'>Path</th><td>");
         buffer.append(RatelUtils.getResourcePath(request));
         buffer.append("</td></tr>");
         buffer.append("</tbody></table>");
         buffer.append("<br/>");
 
         // Request table
-        buffer.append("<table border='1' cellspacing='1' cellpadding='4' width='100%' style='background-color: white;'>");
-        buffer.append("<tr><td colspan='2' class='header'>Request</td></tr>");
+        buffer.append("<table class=\"flat-table flat-table-1\"><tbody>");
+        buffer.append("<tr><th colspan='2' class='header'>Request</th></tr>");
 
         Map<String, Object> requestAttributes = new TreeMap<String, Object>();
         Enumeration attributeNames = request.getAttributeNames();
@@ -292,15 +292,15 @@ public class ErrorReport {
             String name = attributeNames.nextElement().toString();
             requestAttributes.put(name, request.getAttribute(name));
         }
-        buffer.append("<tr><td width='12%' valign='top'><b>Attributes</b></td><td>");
+        buffer.append("<tr><th width='12%' valign='top'>Attributes</th><td>");
         writeMap(requestAttributes, buffer);
         buffer.append("</td></tr>");
 
-        buffer.append("<tr><td width='12%'><b>Auth Type</b></td><td>");
+        buffer.append("<tr><th width='12%'>Auth Type</th><td>");
         buffer.append(request.getAuthType());
         buffer.append("</td></tr>");
 
-        buffer.append("<tr><td width='12%'><b>Context Path</b></td><td>");
+        buffer.append("<tr><th width='12%'>Context Path</th><td>");
         buffer.append("<a href='");
         buffer.append(request.getContextPath());
         buffer.append("'>");
@@ -314,16 +314,16 @@ public class ErrorReport {
             String name = headerNames.nextElement().toString();
             requestHeaders.put(name, request.getHeader(name));
         }
-        buffer.append("<tr><td width='12%' valign='top'><b>Headers</b></td><td>");
+        buffer.append("<tr><th width='12%' valign='top'>Headers</th><td>");
         writeMap(requestHeaders, buffer);
         buffer.append("</td></tr>");
 
-        buffer.append("<tr><td width='12%'><b>Query</b></td><td>");
+        buffer.append("<tr><th width='12%'>Query</th><td>");
         String escapedQueryString = RatelUtils.escape(request.getQueryString());
         buffer.append(escapedQueryString);
         buffer.append("</td></tr>");
 
-        buffer.append("<tr><td width='12%'><b>Method</b></td><td>");
+        buffer.append("<tr><th width='12%'>Method</th><td>");
         buffer.append(request.getMethod());
         buffer.append("</td></tr>");
 
@@ -334,13 +334,13 @@ public class ErrorReport {
             } catch (Exception ignore) {
             }
 
-            buffer.append("<tr><td width='12%' valign='top'><b>Json Request Content</b></td>");
-            buffer.append("<td>");
+            buffer.append("<tr><th width='12%' valign='top'>Json Request Content></th>");
+            buffer.append("<td class='pre'>");
             if (StringUtils.isBlank(content)) {
                 buffer.append(
                     "Could not retrieve HttpServletRequest content from Reader, most likely because the content was already read before the exception occurred.");
             } else {
-                buffer.append("<pre style='font-family: Courier New, courier;' class='prettyprint'>");
+                buffer.append("<pre class='prettyprint'>");
 
                 String json = content;
                 try {
@@ -367,16 +367,16 @@ public class ErrorReport {
                 String name = paramNames.nextElement().toString();
                 requestParams.put(name, request.getParameter(name));
             }
-            buffer.append("<tr><td width='12%' valign='top'><b>Parameters</b></td><td>");
+            buffer.append("<tr><th width='12%' valign='top'>Parameters</th><td>");
             writeMap(requestParams, buffer);
             buffer.append("</td></tr>");
         }
 
-        buffer.append("<tr><td width='12%'><b>Remote User</b></td><td>");
+        buffer.append("<tr><th width='12%'>Remote User</th><td>");
         buffer.append(request.getRemoteUser());
         buffer.append("</td></tr>");
 
-        buffer.append("<tr><td width='12%' valign='top'><b>URI</b></td><td>");
+        buffer.append("<tr><th width='12%' valign='top'URI</th><td>");
         buffer.append("<a href='");
         String requestURI = RatelUtils.getRequestURI(request);
         buffer.append(requestURI);
@@ -385,7 +385,7 @@ public class ErrorReport {
         buffer.append("</a>");
         buffer.append("</td></tr>");
 
-        buffer.append("<tr><td width='12%'><b>URL</b></td><td>");
+        buffer.append("<tr><th width='12%'>URL</th><td>");
         buffer.append("<a href='");
         buffer.append(request.getRequestURL());
         buffer.append("'>");
@@ -402,10 +402,10 @@ public class ErrorReport {
                 sessionAttributes.put(name, session.getAttribute(name));
             }
         }
-        buffer.append("<tr><td width='12%' valign='top'><b>Session</b></td><td>");
+        buffer.append("<tr><th width='12%' valign='top'>Session</th><td>");
         writeMap(sessionAttributes, buffer);
         buffer.append("</td></tr>");
-        buffer.append("</table>\n");
+        buffer.append("</tbody></table>\n");
 
         buffer.append("</div>\n");
 
@@ -589,7 +589,7 @@ public class ErrorReport {
 
         HtmlStringBuffer buffer = new HtmlStringBuffer(5 * 1024);
 
-        buffer.append("<pre style='font-family: Courier New, courier;' class='prettyprint'>");
+        buffer.append("<pre class='prettyprint'>");
 
         if (sourceReader == null) {
             buffer.append("Source is not available.</span>");
@@ -701,9 +701,9 @@ public class ErrorReport {
         getCause().printStackTrace(pw);
 
         HtmlStringBuffer buffer = new HtmlStringBuffer(sw.toString().length() + 80);
-        buffer.append("<pre><tt style='font-size:10pt;'>");
+        buffer.append("<pre>");
         buffer.append(RatelUtils.escapeHtml(sw.toString().trim()));
-        buffer.append("</tt></pre>");
+        buffer.append("</pre>");
 
         return buffer.toString();
     }

@@ -12,5 +12,5 @@ public interface InvokeHandler {
     
     public Object invokeAsJson(Object target, MethodData methodData, RatelHttpServletRequest request);
 
-    public Object invokeAsGetOrPost(Object target, MethodData methodData, RatelHttpServletRequest request);
+    public Object invokeAsHttpMethod(Object target, MethodData methodData, RatelHttpServletRequest request);
 }
