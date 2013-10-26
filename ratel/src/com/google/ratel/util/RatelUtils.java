@@ -19,6 +19,7 @@
 package com.google.ratel.util;
 
 import com.google.ratel.*;
+import com.google.ratel.ant.*;
 import com.google.ratel.deps.io.IOUtils;
 import java.io.*;
 import static java.lang.String.format;
@@ -37,6 +38,7 @@ import com.google.ratel.service.classdata.ClassData;
 import com.google.ratel.service.classdata.MethodData;
 import com.google.ratel.service.json.*;
 import com.google.ratel.service.json.JsonService;
+import com.google.ratel.service.log.*;
 import java.net.*;
 
 /**
@@ -439,6 +441,30 @@ public class RatelUtils {
         return Class.forName(classname, true, classLoader);
     }
 
+    public static Class classForName(String classname, LogService logService) {
+        try {
+            Class cls = classForName(classname);
+            return cls;
+
+        } catch (Exception e) {
+            // Perhaps try again?
+            /*
+            try {
+                ClassLoader classLoader = ClassDataService.class.getClassLoader();
+                Class<?> cls = Class.forName(classname, true, classLoader);
+            } catch (Exception ignore) {
+            if (logService != null) {
+                logService.error("Could not load class " + classname, e);
+            }
+            }*/
+
+            if (logService != null) {
+                logService.error("Could not load class " + classname, e);
+            }
+        }
+        return null;
+    }
+
     /**
      * Return the page resource path from the request. For example:
      * <pre class="codeHtml">
@@ -518,6 +544,28 @@ public class RatelUtils {
     public static ResourceBundle getBundle(String baseName, Locale locale) {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         return ResourceBundle.getBundle(baseName, locale, classLoader);
+    }
+
+    public static ClassData createClassData(Class serviceClass, List<String> packageNames) {
+        String serviceName = serviceClass.getName();
+
+        for (String packageName : packageNames) {
+            int origLength = serviceName.length();
+            serviceName = StringUtils.remove(serviceName, packageName);
+            if (serviceName.length() != origLength) {
+                break;
+            }
+        }
+
+        String servicePath = serviceName.replace(".", "/");
+        if (!servicePath.startsWith("/")) {
+            servicePath = "/" + servicePath;
+        }
+        ClassData classData = new ClassData();
+        classData.setServiceClass(serviceClass);
+        classData.setServicePath(servicePath);
+
+        return classData;
     }
 
     public static void populateMethods(ClassData classData) {

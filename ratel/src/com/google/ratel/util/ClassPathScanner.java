@@ -17,6 +17,7 @@
 package com.google.ratel.util;
 
 import com.google.ratel.*;
+import com.google.ratel.service.classdata.*;
 import com.google.ratel.service.log.*;
 import java.io.File;
 import java.util.*;
@@ -169,7 +170,7 @@ public class ClassPathScanner {
 
         if (accept) {
 
-            Class<?> cls = classForName(className);
+            Class<?> cls = RatelUtils.classForName(className, getLogService());
 
             if (cls == null) {
                 return;
@@ -275,21 +276,6 @@ public class ClassPathScanner {
                 addClass(getClassName(child.getName()));
             }
         }
-    }
-
-    protected Class classForName(String classname) {
-        try {
-            ClassLoader classLoader = this.getClass().getClassLoader();
-            Class<?> cls = Class.forName(classname, true, classLoader);
-            return cls;
-
-        } catch (Exception e) {
-            LogService log = getLogService();
-            if (log != null) {
-                log.error("Could not load class " + classname, e);
-            }
-        }
-        return null;
     }
 
     protected LogService getLogService() {

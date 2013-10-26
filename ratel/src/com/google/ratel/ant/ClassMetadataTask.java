@@ -4,14 +4,17 @@
  */
 package com.google.ratel.ant;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.jar.JarFile;
+import com.google.ratel.core.*;
+import com.google.ratel.deps.io.*;
+import com.google.ratel.deps.jackson.databind.*;
+import com.google.ratel.deps.lang3.*;
+import com.google.ratel.service.classdata.*;
+import com.google.ratel.util.*;
+import java.io.*;
+import java.lang.annotation.*;
+import java.lang.reflect.*;
+import java.util.*;
+import java.util.jar.*;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Task;
@@ -29,12 +32,12 @@ public class ClassMetadataTask extends Task {
     private File dir;
 
     /**
-     * Directory where filenames should be deployed to.
+     * File where class data be written to.
      */
-    private File toDir;
-    
-    protected Class annotationClass = null;
+    private File output;
 
+    protected Class annotationClass = com.google.ratel.core.RatelService.class;
+    
     /**
      * The include filter to use when scanning {@link #dir}.
      */
@@ -117,12 +120,12 @@ public class ClassMetadataTask extends Task {
     }
 
     /**
-     * Set the target directory where filenames are deployed to.
+     * Set the output file where classdata are written to.
      *
-     * @param toDir the target directory where filenames are deployed to.
+     * @param output Set the output file where classdata are written to.
      */
-    public void setToDir(File toDir) {
-        this.toDir = toDir;
+    public void setOutput(File output) {
+        this.output = output;
     }
 
     /**
@@ -163,17 +166,8 @@ public class ClassMetadataTask extends Task {
     @Override
     public void execute() throws BuildException {
 
-        if (toDir == null) {
-            throw new BuildException("todir attribute must be set!");
-        }
-        if (!toDir.exists()) {
-            if (!toDir.mkdirs()) {
-                throw new BuildException("Could not create todir '" + toDir + "'!");
-            }
-            System.out.println("todir '" + toDir + "' created.");
-        }
-        if (!toDir.isDirectory()) {
-            throw new BuildException("todir is not a directory!");
+        if (output == null) {
+            throw new BuildException("output attribute must be set!");
         }
 
         if (!isDir(dir) && getFileSets().isEmpty()) {
@@ -189,182 +183,171 @@ public class ClassMetadataTask extends Task {
                 defaultFileSet.setIncludes("**/*.jar, classes");
             }
         }
+        
+        Set<Class> classes = new HashSet<Class>();
 
         for (FileSet fileSet : getFileSets()) {
-            DirectoryScanner directoryScanner = fileSet.getDirectoryScanner(
-                getProject());
+            DirectoryScanner directoryScanner = fileSet.getDirectoryScanner(getProject());
             String files[] = directoryScanner.getIncludedFiles();
             String dirs[] = directoryScanner.getIncludedDirectories();
             String resources[] = (String[]) TaskUtils.addAll(files, dirs);
-            
-            System.out.println("Resources[]" + resources.length + " fileset.getDir(): " + fileSet.getDir());
-            deployResources(fileSet.getDir(), resources);
+
+            System.out.println("Files[" + resources.length + "] in fileset.getDir(): " + fileSet.getDir());
+            //deployResources(fileSet.getDir(), resources);
+
+             addClasses(fileSet.getDir(), resources, classes);
+
         }
 
-        writeReport();
+        writeMetadata(classes, output);
+    }
+
+    protected void addClasses(File dir, String filenames[], Set<Class> classes) {
+        System.out.println("Find RatelServices in : " + dir.getAbsolutePath());
+
+        try {
+            for (String filename : filenames) {
+                File file = new File(dir, filename);
+
+                if (filename.indexOf(".jar") >= 0) {
+                    addClassesInJar(file, classes);
+                } else {
+                    addClassesInDir(file, classes);
+                }
+            }
+
+        } catch (IOException ioe) {
+            throw new BuildException(ioe.getClass().getName() + ":" + ioe.getMessage(), ioe);
+        }
+    }
+
+    protected void addClassesInDir(File dir, Set<Class> classes) throws IOException {
+
+        List<File> files = TaskUtils.listFiles(dir, new FilenameFilter() {
+
+            @Override
+            public boolean accept(File file, String name) {
+                //System.out.println("accept:" + file + "   " + name + " " + file.isDirectory());
+                if (file.isDirectory()) {
+                    return false;
+                }
+                return file.getName().endsWith(".class");
+            }
+        });
+
+        for (File file : files) {
+            String path = file.getPath();
+            path = path.replace("\\", "/");
+            int start = path.indexOf("WEB-INF/classes/");
+            if (start >= 0) {
+
+                String className = file.getPath().substring(start + "WEB-INF/classes/".length());
+                className = className.replace("\\", ".");
+
+                // remove .class extension
+                className = className.substring(0, className.length() - 6);
+
+                addClass(className, classes, dir.getCanonicalPath());
+            } else {
+                System.out.println("Skipping class '" + file.getPath()
+                    + "'. Only classes under the 'WEB-INF/classes' folder will be checked.");
+            }
+        }
+    }
+
+    protected void addClassesInJar(File jar, Set<Class> classes) throws IOException {
+
+        System.out.println("Find RatelServices in jar: " + jar.getName());
+        JarFile jarFile = null;
+
+        try {
+            jarFile = new JarFile(jar);
+
+            Enumeration<JarEntry> en = jarFile.entries();
+
+            while (en.hasMoreElements()) {
+                JarEntry jarEntry = en.nextElement();
+
+                if (jarEntry.isDirectory() || !jarEntry.getName().endsWith(".class")) {
+                    continue;
+                }
+
+                // remove .class
+                String className = jarEntry.getName().substring(0, jarEntry.getName().length() - 6);
+                addClass(className, classes, jar.getCanonicalPath());
+
+            }
+        } finally {
+            TaskUtils.close(jarFile);
+        }
+    }
+
+    protected void addClass(String className, Set<Class> classes, String location) {
+
+        className = className.replace('/', '.');
+
+        Class c = loadClass(className);
+        if (c == null) {
+            return;
+        }
+
+        if (accept(c)) {
+            if (classes.add(c)) {
+                System.out.println("    Found RatelService, '" + c.getName() + "', in -> " + location);
+            }
+        }
+    }
+
+    protected boolean accept(Class cls) {
+        if (cls == null) {
+            return false;
+        }
+
+        if (annotationClass != cls) {
+            if (cls.isAnnotationPresent(annotationClass)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected Class loadClass(String className) {
+        try {
+
+            Class cls = Class.forName(className, false, getClass().getClassLoader());
+            //Class cls2 = Class.forName(className, false, getClass().getClassLoader());
+            //System.out.println("HUH: " + (cls == cls2));
+
+            return cls;
+        } catch (ClassNotFoundException ignore) {
+            //ignore.printStackTrace();
+        } catch (NoClassDefFoundError ignore) {
+            //ignore.printStackTrace();
+        }
+
+        return null;
+    }
+
+    protected void writeMetadata(Set<Class> classes, File outputFile) {
+        Set<Class> classSet = new HashSet<Class>();
+        
+        for (Class serviceClass : classes) {
+            classSet.add(serviceClass);
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+        try {
+
+            String json = mapper.writeValueAsString(classSet);
+            FileUtils.write(outputFile, json);
+
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     // -------------------------------------------------------- Private Methods
-    /**
-     * Deploy the resources specified by the given filenames.
-     *
-     * @param filenames the filenames for the resources to deploy.
-     */
-    private void deployResources(File dir, String filenames[]) {
-        try {
-            //DeployReport report = new DeployReport();
-
-            for (int i = 0; i < filenames.length; i++) {
-                String filename = filenames[i];
-                String path = getCanonicalPath(dir);
-                File file = new File(dir, filename);
-
-                Deploy deploy = new Deploy(this.annotationClass);
-
-                boolean deployed = false;
-                
-                //System.out.println("filename: " + filename);
-
-                if (filename.indexOf(".jar") >= 0) {
-                    deployed = deploy.deployResourcesInJar(file, toDir);
-                } else {
-                    deployed = deploy.deployResourcesInDir(file, toDir);
-                }
-
-                //if (deployed) {
-                //  report.writeReport(path + filename, toDir.getCanonicalPath(),
-//                        deploy.getDeployed(), deploy.getOutdated(), reportContent);
-                //              }
-            }
-
-            appendResourceListing(dir, filenames);
-
-        } catch (IOException ioe) {
-            throw new BuildException(ioe.getClass().getName() + ":" + ioe.getMessage(), ioe);
-        }
-    }
-
-    /**
-     * Write the deploy report to a report file.
-     *
-     * @throws BuildException if the build fails
-     */
-    private void writeReport() {
-        Writer reportWriter = null;
-        try {
-            //InputStream is = TaskUtils.getResourceAsStream("/report-template.html", DeployTask.class);
-            String template = null;
-
-            /*if (is == null) {
-                System.out.println(
-                    "The report template 'report-template.html' could not be found on the classpath. No report will be generated.");
-            } else {
-                template = TaskUtils.toString(is);
-            }*/
-
-            if (template != null) {
-                String reportContent = template;
-                reportContent = reportContent.replace("{0}", toDir.getCanonicalPath());
-                reportContent = reportContent.replace("{1}", getDeployableSourceListingAsHtml());
-                reportContent = reportContent.replace("{2}", getReportContentAsHtml());
-
-                File reportFile = getUniqueReportFile();
-                reportWriter = new FileWriter(reportFile);
-                reportWriter.append(reportContent);
-                System.out.println("See report: " + reportFile.getCanonicalPath());
-            }
-        } catch (IOException ioe) {
-            throw new BuildException(ioe.getClass().getName() + ":" + ioe.getMessage(), ioe);
-
-        } finally {
-            TaskUtils.close(reportWriter);
-        }
-    }
-
-    /**
-     * Return a unique file where the report can be written to.
-     *
-     * @return the file the report can be written to
-     */
-    private File getUniqueReportFile() {
-        String reportName = "deployed";
-        File reportFile = new File(reportName + ".html");
-
-        // Find unique report name
-        int count = 0;
-        while (reportFile.exists()) {
-            count++;
-            reportFile = new File(reportName + "-" + count + ".html");
-        }
-        return reportFile;
-    }
-
-    /**
-     * Returns the canonical path of the given dir.
-     *
-     * @param dir the dir from which to return the canonical path of
-     * @return the canonical path of the given dir
-     * @throws IOException if the canonical path cannot be looked up
-     */
-    private String getCanonicalPath(File dir) throws IOException {
-        String path = dir.getCanonicalPath();
-        return path.endsWith(File.separator) ? path : path + File.separator;
-    }
-
-    /**
-     * Return the HTML representation of the given filenames.
-     *
-     * @param filenames the filenames to represent as HTML
-     *
-     * @param filenames the filenames to represent as HTML
-     * @return return HTML representation of the given filenames
-     * @throws IOException if an IO exception occurs
-     */
-    private void appendResourceListing(File dir, String[] filenames) throws IOException {
-        StringBuilder buffer = new StringBuilder();
-
-        if (filenames != null && filenames.length > 0) {
-            String path = getCanonicalPath(dir);
-
-            for (String filename : filenames) {
-                if (filename.endsWith(".jar")) {
-                    JarFile jarFile = new JarFile(new File(path, filename));
-                    if (jarFile.getEntry("META-INF/resources") != null) {
-                        render(buffer, filename);
-                    } else if (jarFile.getEntry("META-INF/web") != null) {
-                        render(buffer, filename);
-                    }
-                } else {
-                    File file = new File(path, filename);
-                    File resourceFile = new File(file, "META-INF/resources");
-                    if (resourceFile.exists()) {
-                        render(buffer, filename);
-                    } else {
-                        resourceFile = new File(file, "META-INF/web");
-                        if (resourceFile.exists()) {
-                            render(buffer, filename);
-                        }
-                    }
-                }
-            }
-        }
-
-        deployableSourceListing.append(buffer.toString());
-    }
-
-    /**
-     * Render the HTML represenation of the given filename.
-     *
-     * @param buffer the buffer to render the HTML representation to
-     * @param filename the filename to render
-     */
-    private void render(StringBuilder buffer, String filename) {
-        buffer.append("<li><a href='#");
-        buffer.append(TaskUtils.getFilename(filename));
-        buffer.append("'>");
-        buffer.append(filename);
-        buffer.append("</a></li>");
-    }
 
     /**
      * Return true if the given file is a directory, false otherwise.
@@ -379,40 +362,25 @@ public class ClassMetadataTask extends Task {
         return true;
     }
 
-    /**
-     * Return the HTML representation of the report content generated by the deployed resources.
-     *
-     * @return the HTML representation of the report content generated by the deployed resources
-     */
-    private String getReportContentAsHtml() {
-        String result = reportContent.toString();
+    public static ClassData createClassData(Class serviceClass, List<String> packageNames) {
+        String serviceName = serviceClass.getName();
 
-        // If no report entries were made, print a feedback message
-        if (TaskUtils.isBlank(result)) {
-
-            if (deployableSourceListing.length() == 0) {
-                // If no deployable sources were found, print a warning message
-                result = "<h3 class='warning'>No deployable resources were found</h3>";
-            } else {
-                // Otherwise we assume that all resources are already deployed
-                // in the target folder
-                result = "<h3 class='success'>All resources are successfully deployed</h3>";
+        for (String packageName : packageNames) {
+            int origLength = serviceName.length();
+            serviceName = StringUtils.remove(serviceName, packageName);
+            if (serviceName.length() != origLength) {
+                break;
             }
         }
-        return result;
-    }
 
-    /**
-     * Return the HTML representation of the list of deployable sources.
-     *
-     * @return the HTML representation of the list of deployable sources
-     */
-    private String getDeployableSourceListingAsHtml() {
-        String listingAsString = deployableSourceListing.toString();
-        if (listingAsString.length() == 0) {
-            listingAsString = "<li><span style=\"color:blue\">No jars or folders were found with deployable resources.</span></li>";
+        String servicePath = serviceName.replace(".", "/");
+        if (!servicePath.startsWith("/")) {
+            servicePath = "/" + servicePath;
         }
-        return listingAsString;
+        ClassData classData = new ClassData();
+        classData.setServiceClass(serviceClass);
+        classData.setServicePath(servicePath);
 
+        return classData;
     }
 }

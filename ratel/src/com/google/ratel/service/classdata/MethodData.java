@@ -1,6 +1,5 @@
 package com.google.ratel.service.classdata;
 
-import java.lang.annotation.*;
 import java.lang.reflect.*;
 import java.util.*;
 

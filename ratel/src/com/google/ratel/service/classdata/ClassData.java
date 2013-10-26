@@ -1,5 +1,6 @@
 package com.google.ratel.service.classdata;
 
+import com.google.ratel.deps.jackson.annotation.*;
 import java.util.*;
 import java.util.concurrent.*;
 
