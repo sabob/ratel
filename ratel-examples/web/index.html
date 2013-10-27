@@ -102,6 +102,12 @@
                     var link = e.target;
                     getParams(link.href);
                 });
+                
+                $("#fail").click(function(e) {
+                    e.preventDefault();
+                    var link = e.target;
+                    getExceptionWithArgs("report.html");
+                });
 
                 $("#getExceptionWithArgs").click(function(e) {
                     e.preventDefault();
@@ -164,6 +170,10 @@
             function getArray(url) {
                 var data = '[4, 3000, true, {"firstname": "bob", "lastname":"Smith"}]';
                 makeRequest(url, data);
+            }
+            
+            function fail(url) {
+                GET(url);
             }
 
             function getExceptionWithArgs(url) {
@@ -291,6 +301,10 @@
         <h3>
             <a href="js/spa.html">Javascript Single Page App Demo</a>
         </h3>
+        
+        <div id="log">
+            &nbsp;
+        </div>
 
         <h3>Tests</h3>
 
@@ -337,6 +351,10 @@
 
         <p>
             <a href="tests/PersonService/getParams?id=789&employed=true&description=Hello" id="getParams">getParams(789, true, "Hello")</a>
+        </p>
+        
+        <p>
+            <a href="report.html" id="fail">FAIL()</a>
         </p>
 
         <p>
@@ -422,6 +440,7 @@
             <input type="submit" name="submit" value="Submit">
         </form>
 
+        <div style='width: 20000px'>moo</div>
     </body>
 </html>
 

@@ -23,7 +23,9 @@
         target.close();
         //$('#dialogFrame').contents().find('body').empty().append(text);
         $('#dialogFrame').contents().find('body').empty().html(text);
-        prettyPrint(null, $('#dialogFrame')[0].contentDocument.body);
+        if (typeof prettyPrint !== "undefined") {
+            prettyPrint(null, $('#dialogFrame')[0].contentDocument.body);
+        }
 
         applyStyling();
 

@@ -103,9 +103,11 @@ define(function(require) {
         };
         
         function popCallStack(target) {
-            callStack[target].pop();
-            if (callStack[target].length === 0) {
-                delete callStack[target];
+            if (callStack[target]) {
+                callStack[target].pop();
+                if (callStack[target].length === 0) {
+                    delete callStack[target];
+                }
             }
         }
 

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Error Page</title>
+        <style  type='text/css'>
+            body {
+                font-size: 16px;
+            }
+            h1 {
+                font-size: 40px;
+            }
+            .table {
+                margin-bottom: 20px;
+                width: 100%;
+            }
+            table {
+                /*table-layout: fixed;*/
+            }
+            table {
+                border-collapse: collapse;
+                border-spacing: 0;
+            }
+            table {
+                background-color: rgba(0, 0, 0, 0);
+                border-collapse: collapse;
+                border-spacing: 0;
+                max-width: 100%;
+            }
+
+
+            .table th {
+                font-weight: bold;
+            }
+            .table th, .table td {
+                border-top: 1px solid #DDDDDD;
+                line-height: 20px;
+                padding: 8px;
+                text-align: left;
+                vertical-align: top;
+            }
+
+            .table tbody + tbody {
+                border-top: 2px solid #DDDDDD;
+            }
+
+
+            .table th, .table td {
+                border-top: 1px solid #DDDDDD;
+                line-height: 20px;
+                padding: 8px;
+                text-align: left;
+                vertical-align: top;
+            }
+
+            .flat-table {
+                width: 100%;
+                margin-bottom: 20px;
+                border-collapse:collapse;
+                font-family: 'Lato', Calibri, Arial, sans-serif;
+                border: none;
+                border-radius: 3px;
+                -webkit-border-radius: 3px;
+                -moz-border-radius: 3px;
+            }
+            
+            .flat-table th, .flat-table td {
+                box-shadow: inset 0 -1px rgba(0,0,0,0.25), 
+                    inset 0 1px rgba(0,0,0,0.25);
+            }
+            
+            .flat-table th.header {
+                font-size: 30px;
+                color: #fff;
+                font-weight: bolder;
+                background: rgba(0,0,0,0.38);
+            }
+
+            .flat-table th {
+                font-weight: normal;
+                -webkit-font-smoothing: antialiased;
+                padding: 1em;
+                color: rgba(255,255,255,0.65);
+
+                text-shadow: 0 0 1px rgba(0,0,0,0.1);
+                font-size: 1.2em;
+            }
+            
+            .flat-table td {
+                color: #f7f7f7;
+
+                padding: 0.7em 1em 0.7em 1.15em;
+                text-shadow: 0 0 1px rgba(255,255,255,0.1);
+                /*font-size: 1.4em;*/
+            }
+            
+            .flat-table td.pre {
+                padding: 0;
+            }
+            
+            .flat-table tr {
+                -webkit-transition: background 0.3s, box-shadow 0.3s;
+                -moz-transition: background 0.3s, box-shadow 0.3s;
+                transition: background 0.3s, box-shadow 0.3s;
+            }
+            
+            .flat-table-1 {
+                background: #005B99;
+                font-size: 1.2em;
+            }
+            
+            .table-break {
+                margin-top: 120px;
+            }
+
+            /*
+            .flat-table-1 tr:hover {
+              background: rgba(0,0,0,0.19);
+            }*/
+
+            pre {
+                font-size: 15px;
+                background-color: #fff;
+                color: #000;
+                padding:20px;
+                margin:0;
+                border: 1px solid #999;
+            }
+            td pre.code {
+                border-top: none;
+                padding:20px;
+                margin:0;
+
+            }
+
+            a{ 
+                color: #C4D8E2;
+            }
+
+
+        </style>
+
+    </head>
+
+    <body>
+        <h1>Error Report</h1>
+        <p>
+            The application encountered an unexpected error.
+        </p>
+
+        <p></p>
+        <div id='errorReport' class='errorReport'>
+            <table class="flat-table flat-table-1">
+                <!--<table class="flat-table flat-table-1">-->
+                <tbody>
+                    <tr>
+                        <th colspan='2' class='header'>Exception</th>
+                    </tr>
+                    <tr>
+                        <th width='12%'>Class</th>
+                        <td>java.lang.IllegalArgumentException</td>
+                    </tr>
+                    <tr>
+                        <th valign='top' width='12%'>Message</th>
+                        <td>Service: co.za.mom.tests.PersonService.getExceptionWithArgs(String): the parameter, id, is required!</td>
+                    </tr>
+                    <tr>
+                        <td valign='top' colspan='2' class="pre">
+                            <pre  class='prettyprint'><div > 79:  </div><div > 80:      protected Object buildArgument(Param param, Object target, Class parameterClass, MethodData methodData, RatelHttpServletRequest request) {</div><div > 81:          String name = param.name();</div><div > 82:          boolean required = param.required();</div><div > 83:  </div><div > 84:          if (ParamUtils.isSupportedParameter(parameterClass)) {</div><div > 85:              String value = request.getParameter(name);</div><div > 86:  </div><div > 87:              if (required &amp;&amp; value == null) {</div><div > 88:                  String location = RatelUtils.buildLocation(target, methodData.getMethod(), parameterClass);</div><div style='background-color:yellow;'> <b>89</b>:                  throw new IllegalArgumentException(location + &quot;: the parameter, &quot; + name + &quot;, is required!&quot;);</div><div > 90:              }</div><div > 91:  </div><div > 92:              Object arg = ParamUtils.toType(parameterClass, value);</div><div > 93:              return arg;</div><div > 94:  </div><div > 95:          } else if (parameterClass.isArray()) {</div><div > 96:              Class arrayType = parameterClass.getComponentType();</div><div > 97:  </div><div > 98:              if (ParamUtils.isSupportedParameter(arrayType)) {</div><div > 99:                  String[] values = request.getParameterValues(name);</div>
+                            </pre>
+                        </td></tr>
+                    <tr><td valign='top' colspan='2' class="pre">
+                            <pre class="code"><tt>java.lang.IllegalArgumentException: Service: co.za.mom.tests.PersonService.getExceptionWithArgs(String): the parameter, id, is required!
+	at com.google.ratel.service.invoke.builder.ParameterArgumentBuilder.buildArgument(ParameterArgumentBuilder.java:89)
+	at com.google.ratel.service.invoke.builder.ParameterArgumentBuilder.buildArgument(ParameterArgumentBuilder.java:67)
+	at com.google.ratel.service.invoke.builder.ParameterArgumentBuilder.buildArgument(ParameterArgumentBuilder.java:37)
+	at com.google.ratel.service.invoke.DefaultInvokeHandler.invokeAsGetOrPost(DefaultInvokeHandler.java:80)
+	at com.google.ratel.service.handler.RequestHandler.invokeMethod(RequestHandler.java:110)
+	at com.google.ratel.service.handler.RequestHandler.handle(RequestHandler.java:68)
+	at com.google.ratel.RatelFilter.doFilter(RatelFilter.java:57)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:243)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:210)
+	at com.google.ratel.extras.filter.PerformanceFilter.doFilter(PerformanceFilter.java:374)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:243)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:210)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:222)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:123)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:472)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:171)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:99)
+	at org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:936)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:118)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:407)
+	at org.apache.coyote.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:1004)
+	at org.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:589)
+
+	at org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor.run(JIoEndpoint.java:310)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:722)</tt></pre></td></tr></tbody>
+            </table>
+
+            <div class="table-break"></div>
+
+            <table class="flat-table flat-table-1"><tbody>
+                    <tr><th colspan='2' class='header'>Service</th></tr>
+
+                    <tr>
+                        <th width='12%'><b>Service</b></th>
+                        <td>co.za.mom.tests.PersonService.getExceptionWithArgs(String)</td>
+                    </tr>
+
+                    <tr><th width='12%'>Path</th>
+                        <td>/tests/PersonService/getExceptionWithArgs</td></tr>
+                </tbody>
+            </table>
+
+            <div class="table-break"></div>
+
+            <table class="flat-table flat-table-1">
+                <tr>
+                    <th colspan='2' class='header'>Request</th>
+                </tr>
+                <tr><th width='12%' valign='top'>Attributes</th>
+
+                    <td>&#160;</td></tr>
+
+                <tr><th width='12%'>Auth Type</th>
+                    <td>null</td></tr>
+
+                <tr><th width='12%'>Context Path</th>
+                    <td><a href='/ratel-examples'>/ratel-examples</a></td></tr>
+
+                <tr><th width='12%' valign='top'>Headers</th>
+                    <td>accept=*/*<br/>accept-encoding=gzip, deflate<br/>accept-language=en-za,en;q=0.5<br/>connection=keep-alive<br/>host=localhost:8080<br/>referer=http://localhost:8080/ratel-examples/<br/>user-agent=Mozilla/5.0 (Windows NT 6.1; WOW64; rv:24.0) Gecko/20100101 Firefox/24.0<br/>x-requested-with=XMLHttpRequest<br/></td></tr>
+
+                <tr>
+                    <th width='12%'>Query</th><td>null</td></tr>
+
+                <tr><th width='12%'Method</th><td>GET</td></tr>
+
+                <tr><th width='12%' valign='top'>Parameters</th><td>&#160;</td></tr>
+
+                <tr><th width='12%'>Remote User</th><td>null</td></tr>
+
+                <tr><th width='12%' valign='top'>URI</th>
+                    <td><a href='/ratel-examples/tests/PersonService/getExceptionWithArgs'>/ratel-examples/tests/PersonService/getExceptionWithArgs</a></td></tr>
+
+                <tr><th width='12%'>URL</th>
+                    <td><a href='http://localhost:8080/ratel-examples/tests/PersonService/getExceptionWithArgs'>http://localhost:8080/ratel-examples/tests/PersonService/getExceptionWithArgs</a></td></tr>
+
+                <tr><th width='12%' valign='top'>Session</th><td>&#160;</td>
+                </tr>
+            </table>
+        </div>
+
+        <p></p>
+
+        <style type='text/css'>
+            .pln{color:#000}@media screen{.str{color:#080}.kwd{color:#008}.com{color:#800}.typ{color:#606}.lit{color:#066}.pun,.opn,.clo{color:#660}.tag{color:#008}.atn{color:#606}.atv{color:#080}.dec,.var{color:#606}.fun{color:red}}@media print,projection{.str{color:#060}.kwd{color:#006;font-weight:bold}.com{color:#600;font-style:italic}.typ{color:#404;font-weight:bold}.lit{color:#044}.pun,.opn,.clo{color:#440}.tag{color:#006;font-weight:bold}.atn{color:#404}.atv{color:#060}}pre.prettyprint{padding:2px;border:1px solid #888}ol.linenums{margin-top:0;margin-bottom:0}li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8{list-style-type:none}li.L1,li.L3,li.L5,li.L7,li.L9{background:#eee}
+        </style>
+
+                <script type='text/javascript'>
+var IN_GLOBAL_SCOPE=true;window["PR_SHOULD_USE_CONTINUATION"]=true;var prettyPrintOne;var prettyPrint;(function(){function O(e){function a(e){var t=e.charCodeAt(0);if(t!==92){return t}var n=e.charAt(1);t=u[n];if(t){return t}else if("0"<=n&&n<="7"){return parseInt(e.substring(1),8)}else if(n==="u"||n==="x"){return parseInt(e.substring(2),16)}else{return e.charCodeAt(1)}}function f(e){if(e<32){return(e<16?"\\x0":"\\x")+e.toString(16)}var t=String.fromCharCode(e);return t==="\\"||t==="-"||t==="]"||t==="^"?"\\"+t:t}function l(e){var t=e.substring(1,e.length-1).match(new RegExp("\\\\u[0-9A-Fa-f]{4}"+"|\\\\x[0-9A-Fa-f]{2}"+"|\\\\[0-3][0-7]{0,2}"+"|\\\\[0-7]{1,2}"+"|\\\\[\\s\\S]"+"|-"+"|[^-\\\\]","g"));var n=[];var r=t[0]==="^";var i=["["];if(r){i.push("^")}for(var s=r?1:0,o=t.length;s<o;++s){var u=t[s];if(/\\[bdsw]/i.test(u)){i.push(u)}else{var l=a(u);var c;if(s+2<o&&"-"===t[s+1]){c=a(t[s+2]);s+=2}else{c=l}n.push([l,c]);if(!(c<65||l>122)){if(!(c<65||l>90)){n.push([Math.max(65,l)|32,Math.min(c,90)|32])}if(!(c<97||l>122)){n.push([Math.max(97,l)&~32,Math.min(c,122)&~32])}}}}n.sort(function(e,t){return e[0]-t[0]||t[1]-e[1]});var h=[];var p=[];for(var s=0;s<n.length;++s){var d=n[s];if(d[0]<=p[1]+1){p[1]=Math.max(p[1],d[1])}else{h.push(p=d)}}for(var s=0;s<h.length;++s){var d=h[s];i.push(f(d[0]));if(d[1]>d[0]){if(d[1]+1>d[0]){i.push("-")}i.push(f(d[1]))}}i.push("]");return i.join("")}function c(e){var r=e.source.match(new RegExp("(?:"+"\\[(?:[^\\x5C\\x5D]|\\\\[\\s\\S])*\\]"+"|\\\\u[A-Fa-f0-9]{4}"+"|\\\\x[A-Fa-f0-9]{2}"+"|\\\\[0-9]+"+"|\\\\[^ux0-9]"+"|\\(\\?[:!=]"+"|[\\(\\)\\^]"+"|[^\\x5B\\x5C\\(\\)\\^]+"+")","g"));var i=r.length;var s=[];for(var o=0,u=0;o<i;++o){var a=r[o];if(a==="("){++u}else if("\\"===a.charAt(0)){var c=+a.substring(1);if(c){if(c<=u){s[c]=-1}else{r[o]=f(c)}}}}for(var o=1;o<s.length;++o){if(-1===s[o]){s[o]=++t}}for(var o=0,u=0;o<i;++o){var a=r[o];if(a==="("){++u;if(!s[u]){r[o]="(?:"}}else if("\\"===a.charAt(0)){var c=+a.substring(1);if(c&&c<=u){r[o]="\\"+s[c]}}}for(var o=0;o<i;++o){if("^"===r[o]&&"^"!==r[o+1]){r[o]=""}}if(e.ignoreCase&&n){for(var o=0;o<i;++o){var a=r[o];var h=a.charAt(0);if(a.length>=2&&h==="["){r[o]=l(a)}else if(h!=="\\"){r[o]=a.replace(/[a-zA-Z]/g,function(e){var t=e.charCodeAt(0);return"["+String.fromCharCode(t&~32,t|32)+"]"})}}}return r.join("")}var t=0;var n=false;var r=false;for(var i=0,s=e.length;i<s;++i){var o=e[i];if(o.ignoreCase){r=true}else if(/[a-z]/i.test(o.source.replace(/\\u[0-9a-f]{4}|\\x[0-9a-f]{2}|\\[^ux]/gi,""))){n=true;r=false;break}}var u={b:8,t:9,n:10,v:11,f:12,r:13};var h=[];for(var i=0,s=e.length;i<s;++i){var o=e[i];if(o.global||o.multiline){throw new Error(""+o)}h.push("(?:"+c(o)+")")}return new RegExp(h.join("|"),r?"gi":"g")}function M(e,t){function u(e){var a=e.nodeType;if(a==1){if(n.test(e.className)){return}for(var f=e.firstChild;f;f=f.nextSibling){u(f)}var l=e.nodeName.toLowerCase();if("br"===l||"li"===l){r[o]="\n";s[o<<1]=i++;s[o++<<1|1]=e}}else if(a==3||a==4){var c=e.nodeValue;if(c.length){if(!t){c=c.replace(/[ \t\r\n]+/g," ")}else{c=c.replace(/\r\n?/g,"\n")}r[o]=c;s[o<<1]=i;i+=c.length;s[o++<<1|1]=e}}}var n=/(?:^|\s)nocode(?:\s|$)/;var r=[];var i=0;var s=[];var o=0;u(e);return{sourceCode:r.join("").replace(/\n$/,""),spans:s}}function _(e,t,n,r){if(!t){return}var i={sourceCode:t,basePos:e};n(i);r.push.apply(r,i.decorations)}function P(e){var t=undefined;for(var n=e.firstChild;n;n=n.nextSibling){var r=n.nodeType;t=r===1?t?e:n:r===3?D.test(n.nodeValue)?e:t:t}return t===e?undefined:t}function H(e,t){var n={};var r;(function(){var i=e.concat(t);var s=[];var o={};for(var u=0,a=i.length;u<a;++u){var f=i[u];var l=f[3];if(l){for(var c=l.length;--c>=0;){n[l.charAt(c)]=f}}var h=f[1];var p=""+h;if(!o.hasOwnProperty(p)){s.push(h);o[p]=null}}s.push(/[\0-\uffff]/);r=O(s)})();var i=t.length;var s=function(e){var o=e.sourceCode,u=e.basePos;var a=[u,S];var f=0;var l=o.match(r)||[];var c={};for(var h=0,p=l.length;h<p;++h){var d=l[h];var v=c[d];var m=void 0;var g;if(typeof v==="string"){g=false}else{var y=n[d.charAt(0)];if(y){m=d.match(y[1]);v=y[0]}else{for(var b=0;b<i;++b){y=t[b];m=d.match(y[1]);if(m){v=y[0];break}}if(!m){v=S}}g=v.length>=5&&"lang-"===v.substring(0,5);if(g&&!(m&&typeof m[1]==="string")){g=false;v=N}if(!g){c[d]=v}}var w=f;f+=d.length;if(!g){a.push(u+w,v)}else{var E=m[1];var x=d.indexOf(E);var T=x+E.length;if(m[2]){T=d.length-m[2].length;x=T-E.length}var C=v.substring(5);_(u+w,d.substring(0,x),s,a);_(u+w+x,E,U(C,E),a);_(u+w+T,d.substring(T),s,a)}}e.decorations=a};return s}function B(e){var t=[],n=[];if(e["tripleQuotedStrings"]){t.push([m,/^(?:\'\'\'(?:[^\'\\]|\\[\s\S]|\'{1,2}(?=[^\']))*(?:\'\'\'|$)|\"\"\"(?:[^\"\\]|\\[\s\S]|\"{1,2}(?=[^\"]))*(?:\"\"\"|$)|\'(?:[^\\\']|\\[\s\S])*(?:\'|$)|\"(?:[^\\\"]|\\[\s\S])*(?:\"|$))/,null,"'\""])}else if(e["multiLineStrings"]){t.push([m,/^(?:\'(?:[^\\\']|\\[\s\S])*(?:\'|$)|\"(?:[^\\\"]|\\[\s\S])*(?:\"|$)|\`(?:[^\\\`]|\\[\s\S])*(?:\`|$))/,null,"'\"`"])}else{t.push([m,/^(?:\'(?:[^\\\'\r\n]|\\.)*(?:\'|$)|\"(?:[^\\\"\r\n]|\\.)*(?:\"|$))/,null,"\"'"])}if(e["verbatimStrings"]){n.push([m,/^@\"(?:[^\"]|\"\")*(?:\"|$)/,null])}var r=e["hashComments"];if(r){if(e["cStyleComments"]){if(r>1){t.push([y,/^#(?:##(?:[^#]|#(?!##))*(?:###|$)|.*)/,null,"#"])}else{t.push([y,/^#(?:(?:define|e(?:l|nd)if|else|error|ifn?def|include|line|pragma|undef|warning)\b|[^\r\n]*)/,null,"#"])}n.push([m,/^<(?:(?:(?:\.\.\/)*|\/?)(?:[\w-]+(?:\/[\w-]+)+)?[\w-]+\.h(?:h|pp|\+\+)?|[a-z]\w*)>/,null])}else{t.push([y,/^#[^\r\n]*/,null,"#"])}}if(e["cStyleComments"]){n.push([y,/^\/\/[^\r\n]*/,null]);n.push([y,/^\/\*[\s\S]*?(?:\*\/|$)/,null])}var i=e["regexLiterals"];if(i){var s=i>1?"":"\n\r";var o=s?".":"[\\S\\s]";var u="/(?=[^/*"+s+"])"+"(?:[^/\\x5B\\x5C"+s+"]"+"|\\x5C"+o+"|\\x5B(?:[^\\x5C\\x5D"+s+"]"+"|\\x5C"+o+")*(?:\\x5D|$))+"+"/";n.push(["lang-regex",RegExp("^"+A+"("+u+")")])}var a=e["types"];if(a){n.push([b,a])}var f=(""+e["keywords"]).replace(/^ | $/g,"");if(f.length){n.push([g,new RegExp("^(?:"+f.replace(/[\s,]+/g,"|")+")\\b"),null])}t.push([S,/^\s+/,null," \r\n	 "]);var l="^.[^\\s\\w.$@'\"`/\\\\]*";if(e["regexLiterals"]){l+="(?!s*/)"}n.push([w,/^@[a-z_$][a-z_$@0-9]*/i,null],[b,/^(?:[@_]?[A-Z]+[a-z][A-Za-z_$@0-9]*|\w+_t\b)/,null],[S,/^[a-z_$][a-z_$@0-9]*/i,null],[w,new RegExp("^(?:"+"0x[a-f0-9]+"+"|(?:\\d(?:_\\d+)*\\d*(?:\\.\\d*)?|\\.\\d\\+)"+"(?:e[+\\-]?\\d+)?"+")"+"[a-z]*","i"),null,"0123456789"],[S,/^\\[\s\S]?/,null],[E,new RegExp(l),null]);return H(t,n)}function F(e,t,n){function a(e){var t=e.nodeType;if(t==1&&!r.test(e.className)){if("br"===e.nodeName){f(e);if(e.parentNode){e.parentNode.removeChild(e)}}else{for(var o=e.firstChild;o;o=o.nextSibling){a(o)}}}else if((t==3||t==4)&&n){var u=e.nodeValue;var l=u.match(i);if(l){var c=u.substring(0,l.index);e.nodeValue=c;var h=u.substring(l.index+l[0].length);if(h){var p=e.parentNode;p.insertBefore(s.createTextNode(h),e.nextSibling)}f(e);if(!c){e.parentNode.removeChild(e)}}}}function f(e){function t(e,n){var r=n?e.cloneNode(false):e;var i=e.parentNode;if(i){var s=t(i,1);var o=e.nextSibling;s.appendChild(r);for(var u=o;u;u=o){o=u.nextSibling;s.appendChild(u)}}return r}while(!e.nextSibling){e=e.parentNode;if(!e){return}}var n=t(e.nextSibling,0);for(var r;(r=n.parentNode)&&r.nodeType===1;){n=r}u.push(n)}var r=/(?:^|\s)nocode(?:\s|$)/;var i=/\r\n?|\n/;var s=e.ownerDocument;var o=s.createElement("li");while(e.firstChild){o.appendChild(e.firstChild)}var u=[o];for(var l=0;l<u.length;++l){a(u[l])}if(t===(t|0)){u[0].setAttribute("value",t)}var c=s.createElement("ol");c.className="linenums";var h=Math.max(0,t-1|0)||0;for(var l=0,p=u.length;l<p;++l){o=u[l];o.className="L"+(l+h)%10;if(!o.firstChild){o.appendChild(s.createTextNode(" "))}c.appendChild(o)}e.appendChild(c)}function I(e){var t=/\bMSIE\s(\d+)/.exec(navigator.userAgent);t=t&&+t[1]<=8;var n=/\n/g;var r=e.sourceCode;var i=r.length;var s=0;var o=e.spans;var u=o.length;var a=0;var f=e.decorations;var l=f.length;var c=0;f[l]=i;var h,p;for(p=h=0;p<l;){if(f[p]!==f[p+2]){f[h++]=f[p++];f[h++]=f[p++]}else{p+=2}}l=h;for(p=h=0;p<l;){var d=f[p];var v=f[p+1];var m=p+2;while(m+2<=l&&f[m+1]===v){m+=2}f[h++]=d;f[h++]=v;p=m}l=f.length=h;var g=e.sourceNode;var y;if(g){y=g.style.display;g.style.display="none"}try{var b=null;while(a<u){var w=o[a];var E=o[a+2]||i;var S=f[c+2]||i;var m=Math.min(E,S);var x=o[a+1];var T;if(x.nodeType!==1&&(T=r.substring(s,m))){if(t){T=T.replace(n,"\r")}x.nodeValue=T;var N=x.ownerDocument;var C=N.createElement("span");C.className=f[c+1];var k=x.parentNode;k.replaceChild(C,x);C.appendChild(x);if(s<E){o[a+1]=x=N.createTextNode(r.substring(m,E));k.insertBefore(x,C.nextSibling)}}s=m;if(s>=E){a+=2}if(s>=S){c+=2}}}finally{if(g){g.style.display=y}}}function R(t,n){for(var r=n.length;--r>=0;){var i=n[r];if(!q.hasOwnProperty(i)){q[i]=t}else if(e["console"]){console["warn"]("cannot override language handler %s",i)}}}function U(e,t){if(!(e&&q.hasOwnProperty(e))){e=/^\s*</.test(t)?"default-markup":"default-code"}return q[e]}function z(t){var n=t.langExtension;try{var r=M(t.sourceNode,t.pre);var i=r.sourceCode;t.sourceCode=i;t.spans=r.spans;t.basePos=0;U(n,i)(t);I(t)}catch(s){if(e["console"]){console["log"](s&&s["stack"]||s)}}}function W(e,t,n){var r=document.createElement("div");r.innerHTML="<pre>"+e+"</pre>";r=r.firstChild;if(n){F(r,n,true)}var i={langExtension:t,numberLines:n,sourceNode:r,pre:1};z(i);return r.innerHTML}function X(t,n){function s(e){return r.getElementsByTagName(e)}function E(){var n=e["PR_SHOULD_USE_CONTINUATION"]?c["now"]()+250:Infinity;for(;h<u.length&&c["now"]()<n;h++){var r=u[h];var s=w;{for(var o=r;o=o.previousSibling;){var a=o.nodeType;var f=(a===7||a===8)&&o.nodeValue;if(f?!/^\??prettify\b/.test(f):a!==3||/\S/.test(o.nodeValue)){break}if(f){s={};f.replace(/\b(\w+)=([\w:.%+-]+)/g,function(e,t,n){s[t]=n});break}}}var l=r.className;if((s!==w||v.test(l))&&!m.test(l)){var S=false;for(var x=r.parentNode;x;x=x.parentNode){var T=x.tagName;if(b.test(T)&&x.className&&v.test(x.className)){S=true;break}}if(!S){r.className+=" prettyprinted";var N=s["lang"];if(!N){N=l.match(d);var C;if(!N&&(C=P(r))&&y.test(C.tagName)){N=C.className.match(d)}if(N){N=N[1]}}var k;if(g.test(r.tagName)){k=1}else{var L=r["currentStyle"];var A=i.defaultView;var O=L?L["whiteSpace"]:A&&A.getComputedStyle?A.getComputedStyle(r,null).getPropertyValue("white-space"):0;k=O&&"pre"===O.substring(0,3)}var M=s["linenums"];if(!(M=M==="true"||+M)){M=l.match(/\blinenums\b(?::(\d+))?/);M=M?M[1]&&M[1].length?+M[1]:true:false}if(M){F(r,M,k)}p={langExtension:N,sourceNode:r,numberLines:M,pre:k};z(p)}}}if(h<u.length){setTimeout(E,250)}else if("function"===typeof t){t()}}var r=n||document.body;var i=r.ownerDocument||document;var o=[s("pre"),s("code"),s("xmp")];var u=[];for(var a=0;a<o.length;++a){for(var f=0,l=o[a].length;f<l;++f){u.push(o[a][f])}}o=null;var c=Date;if(!c["now"]){c={now:function(){return+(new Date)}}}var h=0;var p;var d=/\blang(?:uage)?-([\w.]+)(?!\S)/;var v=/\bprettyprint\b/;var m=/\bprettyprinted\b/;var g=/pre|xmp/i;var y=/^code$/i;var b=/^(?:pre|code|xmp)$/i;var w={};E()}var e=window;var t=["break,continue,do,else,for,if,return,while"];var n=[t,"auto,case,char,const,default,"+"double,enum,extern,float,goto,inline,int,long,register,short,signed,"+"sizeof,static,struct,switch,typedef,union,unsigned,void,volatile"];var r=[n,"catch,class,delete,false,import,"+"new,operator,private,protected,public,this,throw,true,try,typeof"];var i=[r,"alignof,align_union,asm,axiom,bool,"+"concept,concept_map,const_cast,constexpr,decltype,delegate,"+"dynamic_cast,explicit,export,friend,generic,late_check,"+"mutable,namespace,nullptr,property,reinterpret_cast,static_assert,"+"static_cast,template,typeid,typename,using,virtual,where"];var s=[r,"abstract,assert,boolean,byte,extends,final,finally,implements,import,"+"instanceof,interface,null,native,package,strictfp,super,synchronized,"+"throws,transient"];var o=[r,"abstract,as,base,bool,by,byte,checked,decimal,delegate,descending,"+"dynamic,event,finally,fixed,foreach,from,group,implicit,in,interface,"+"internal,into,is,let,lock,null,object,out,override,orderby,params,"+"partial,readonly,ref,sbyte,sealed,stackalloc,string,select,uint,ulong,"+"unchecked,unsafe,ushort,var,virtual,where"];var u="all,and,by,catch,class,else,extends,false,finally,"+"for,if,in,is,isnt,loop,new,no,not,null,of,off,on,or,return,super,then,"+"throw,true,try,unless,until,when,while,yes";var a=[r,"debugger,eval,export,function,get,null,set,undefined,var,with,"+"Infinity,NaN"];var f="caller,delete,die,do,dump,elsif,eval,exit,foreach,for,"+"goto,if,import,last,local,my,next,no,our,print,package,redo,require,"+"sub,undef,unless,until,use,wantarray,while,BEGIN,END";var l=[t,"and,as,assert,class,def,del,"+"elif,except,exec,finally,from,global,import,in,is,lambda,"+"nonlocal,not,or,pass,print,raise,try,with,yield,"+"False,True,None"];var c=[t,"alias,and,begin,case,class,"+"def,defined,elsif,end,ensure,false,in,module,next,nil,not,or,redo,"+"rescue,retry,self,super,then,true,undef,unless,until,when,yield,"+"BEGIN,END"];var h=[t,"as,assert,const,copy,drop,"+"enum,extern,fail,false,fn,impl,let,log,loop,match,mod,move,mut,priv,"+"pub,pure,ref,self,static,struct,true,trait,type,unsafe,use"];var p=[t,"case,done,elif,esac,eval,fi,"+"function,in,local,set,then,until"];var d=[i,o,a,f,l,c,p];var v=/^(DIR|FILE|vector|(de|priority_)?queue|list|stack|(const_)?iterator|(multi)?(set|map)|bitset|u?(int|float)\d*)\b/;var m="str";var g="kwd";var y="com";var b="typ";var w="lit";var E="pun";var S="pln";var x="tag";var T="dec";var N="src";var C="atn";var k="atv";var L="nocode";var A="(?:^^\\.?|[+-]|[!=]=?=?|\\#|%=?|&&?=?|\\(|\\*=?|[+\\-]=|->|\\/=?|::?|<<?=?|>>?>?=?|,|;|\\?|@|\\[|~|{|\\^\\^?=?|\\|\\|?=?|break|case|continue|delete|do|else|finally|instanceof|return|throw|try|typeof)\\s*";var D=/\S/;var j=B({keywords:d,hashComments:true,cStyleComments:true,multiLineStrings:true,regexLiterals:true});var q={};R(j,["default-code"]);R(H([],[[S,/^[^<?]+/],[T,/^<!\w[^>]*(?:>|$)/],[y,/^<\!--[\s\S]*?(?:-\->|$)/],["lang-",/^<\?([\s\S]+?)(?:\?>|$)/],["lang-",/^<%([\s\S]+?)(?:%>|$)/],[E,/^(?:<[%?]|[%?]>)/],["lang-",/^<xmp\b[^>]*>([\s\S]+?)<\/xmp\b[^>]*>/i],["lang-js",/^<script\b[^>]*>([\s\S]*?)(<\/script\b[^>]*>)/i],["lang-css",/^<style\b[^>]*>([\s\S]*?)(<\/style\b[^>]*>)/i],["lang-in.tag",/^(<\/?[a-z][^<>]*>)/i]]),["default-markup","htm","html","mxml","xhtml","xml","xsl"]);R(H([[S,/^[\s]+/,null," 	\r\n"],[k,/^(?:\"[^\"]*\"?|\'[^\']*\'?)/,null,"\"'"]],[[x,/^^<\/?[a-z](?:[\w.:-]*\w)?|\/?>$/i],[C,/^(?!style[\s=]|on)[a-z](?:[\w:-]*\w)?/i],["lang-uq.val",/^=\s*([^>\'\"\s]*(?:[^>\'\"\s\/]|\/(?=\s)))/],[E,/^[=<>\/]+/],["lang-js",/^on\w+\s*=\s*\"([^\"]+)\"/i],["lang-js",/^on\w+\s*=\s*\'([^\']+)\'/i],["lang-js",/^on\w+\s*=\s*([^\"\'>\s]+)/i],["lang-css",/^style\s*=\s*\"([^\"]+)\"/i],["lang-css",/^style\s*=\s*\'([^\']+)\'/i],["lang-css",/^style\s*=\s*([^\"\'>\s]+)/i]]),["in.tag"]);R(H([],[[k,/^[\s\S]+/]]),["uq.val"]);R(B({keywords:i,hashComments:true,cStyleComments:true,types:v}),["c","cc","cpp","cxx","cyc","m"]);R(B({keywords:"null,true,false"}),["json"]);R(B({keywords:o,hashComments:true,cStyleComments:true,verbatimStrings:true,types:v}),["cs"]);R(B({keywords:s,cStyleComments:true}),["java"]);R(B({keywords:p,hashComments:true,multiLineStrings:true}),["bash","bsh","csh","sh"]);R(B({keywords:l,hashComments:true,multiLineStrings:true,tripleQuotedStrings:true}),["cv","py","python"]);R(B({keywords:f,hashComments:true,multiLineStrings:true,regexLiterals:2}),["perl","pl","pm"]);R(B({keywords:c,hashComments:true,multiLineStrings:true,regexLiterals:true}),["rb","ruby"]);R(B({keywords:a,cStyleComments:true,regexLiterals:true}),["javascript","js"]);R(B({keywords:u,hashComments:3,cStyleComments:true,multilineStrings:true,tripleQuotedStrings:true,regexLiterals:true}),["coffee"]);R(B({keywords:h,cStyleComments:true,multilineStrings:true}),["rc","rs","rust"]);R(H([],[[m,/^[\s\S]+/]]),["regex"]);var V=e["PR"]={createSimpleLexer:H,registerLangHandler:R,sourceDecorator:B,PR_ATTRIB_NAME:C,PR_ATTRIB_VALUE:k,PR_COMMENT:y,PR_DECLARATION:T,PR_KEYWORD:g,PR_LITERAL:w,PR_NOCODE:L,PR_PLAIN:S,PR_PUNCTUATION:E,PR_SOURCE:N,PR_STRING:m,PR_TAG:x,PR_TYPE:b,prettyPrintOne:IN_GLOBAL_SCOPE?e["prettyPrintOne"]=W:prettyPrintOne=W,prettyPrint:prettyPrint=IN_GLOBAL_SCOPE?e["prettyPrint"]=X:prettyPrint=X};if(typeof define==="function"&&define["amd"]){define("google-code-prettify",[],function(){return V})}})()
+                    </script>
+                    <script type='text/javascript'>prettyPrint();</script>
+    </body>    
+</html>
