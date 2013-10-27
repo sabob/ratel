@@ -6,6 +6,7 @@
     <path id="classpath">
         <pathelement location="ratel/build/classes"/>
         <pathelement location="ratel-examples/build/web/WEB-INF/classes"/>
+
         <fileset dir="ratel-examples/build/web/WEB-INF/lib">
             <include name="**/*.jar"/>
         </fileset>
@@ -18,7 +19,7 @@
             
         </taskdef>
 
-        <classMetadata todir="antOutput" annotation="com.google.ratel.core.RatelService">
+        <classMetadata output="ratel-examples/build/web/META-INF/resources/classdata.json">
             <fileset dir="ratel-examples/build/web/WEB-INF/lib">
                 <include name="**/*.jar"/>
             </fileset>
