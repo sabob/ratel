@@ -6,7 +6,7 @@
 package co.za.mom.tests;
 
 import com.google.ratel.core.RatelService;
-import com.google.ratel.util.ClassFinder;
+import com.google.ratel.util.ClassPathScanner;
 import java.util.Set;
 
 /**
@@ -15,8 +15,8 @@ import java.util.Set;
 public class ClassFinderTest {
 
     public static void main(String args[]) {
-             ClassFinder classFinder = new ClassFinder(null, RatelService.class, "co.za.mom");
-             Set<Class> subTypes = classFinder.getClasses();
+             ClassPathScanner classFinder = new ClassPathScanner(null, RatelService.class, "co.za.mom");
+             Set<Class> subTypes = classFinder.scan();
 
     
      System.out.println("annotated types: " + subTypes);
