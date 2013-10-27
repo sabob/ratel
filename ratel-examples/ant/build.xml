@@ -134,17 +134,4 @@
         <webDownloadMacro name="${jar.velocity}" path="org/apache/velocity/velocity/${velocity.version}"/>
     </target>
     
-    <target name="precompile-templates" description="compile templates">
-  <java dir="${basedir}" jar="ant/lib/js.jar" fork="true" failonerror="true">
-    <arg value="ant/rhino-handlebars-compiler.js"/>
-    <arg value="--handlebars"/>
-    <arg value="web/js/lib/handlebars.js"/>
-    <arg value="--templates"/>
-    <arg value="web/js/app/views"/>
-    <arg value="--output"/>
-    <arg value="web/js/compiled-templates.js"/>
-  </java>
-  <echo>Template Precompiled to web/js/compiled-templates.js</echo>
-</target>
-
 </project>
