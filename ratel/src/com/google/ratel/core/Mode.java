@@ -48,11 +48,6 @@ public enum Mode {
         return this.level >= DEVELOPMENT.level;
     }
 
-    @Deprecated
-    public boolean isAtleast(Mode mode) {
-        return this.level >= mode.level;
-    }
-    
     public int getLevel() {
         return level;
     }

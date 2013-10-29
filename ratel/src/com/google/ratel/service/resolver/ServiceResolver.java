@@ -3,7 +3,6 @@ package com.google.ratel.service.resolver;
 import java.util.*;
 import javax.servlet.*;
 import com.google.ratel.service.classdata.ClassData;
-import com.google.ratel.service.classdata.MethodData;
 import com.google.ratel.service.classdata.RequestTargetData;
 import javax.servlet.http.*;
 

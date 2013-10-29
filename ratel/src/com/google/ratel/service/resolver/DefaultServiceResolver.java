@@ -145,7 +145,7 @@ public class DefaultServiceResolver implements ServiceResolver {
 
     protected boolean isHelpRequest(HttpServletRequest request, String path) {
         // Ratel doesn't render help in prod modes
-        if (getMode().isAtleast(Mode.DEVELOPMENT)) {
+        if (getMode().isDevelopmentModes()) {
             if (path.endsWith(Constants.HELP)) {
                 return true;
             }

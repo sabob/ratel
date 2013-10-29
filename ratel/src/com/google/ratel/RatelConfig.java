@@ -237,7 +237,7 @@ public class RatelConfig {
     protected JsonService createJsonService() {
         JacksonService service = new JacksonService();
 
-        if (getMode().isAtleast(Mode.DEBUG)) {
+        if (getMode().isDevelopmentModes()) {
             service.setPrettyPrint(true);
             service.setSerializeNulls(true);
         }
