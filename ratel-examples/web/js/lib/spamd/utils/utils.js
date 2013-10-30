@@ -1,7 +1,6 @@
 define(function(require) {
     var $ = require("jquery");
     require("jquery.deserialize");
-    var Handlebars = require("handlebars");
     require("domReady!");
 
     function Utils() {
@@ -47,6 +46,16 @@ define(function(require) {
                 }
                 return true;
             };
+            
+            this.getViewName = function(view) {
+            if (typeof  view === 'string') {
+                return view;
+            }
+            var funcNameRegex = /function (.{1,})\(/;
+            var results = (funcNameRegex).exec((view).constructor.toString());
+            return (results && results.length > 1) ? results[1] : "";
+        };
     }
+    
     return new Utils();
 });

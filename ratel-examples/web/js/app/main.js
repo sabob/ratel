@@ -6,35 +6,33 @@ define(function(require) {
     var ClientSearchAction = require("./views/client/ClientSearchAction");
     var ClientSearch = require("./views/client/ClientSearch");
     var Home = require("./views/home/Home");
-    var viewManager = require("./utils/view-manager");
-    require("jquery.alpha");
-    require("jquery.beta");
+    var viewManager = require("spamd/view/view-manager");
     require("domReady!");
 
     $("#home").click(function(e) {
         e.preventDefault();
-        viewManager.showView(Home);
+        viewManager.showView({view:Home});
     });
 
     $("#clients").click(function(e) {
         e.preventDefault();
-        viewManager.showView(ClientSearch);
+        viewManager.showView({view:ClientSearch});
     });
 
     $("#clientsNoAnim").click(function(e) {
         e.preventDefault();
-        viewManager.showView(ClientSearchNoAnim);
+        viewManager.showView({view:ClientSearchNoAnim});
     });
 
     $("#clientsMoment").click(function(e) {
         e.preventDefault();
-        viewManager.showView(ClientSearchMoment);
+        viewManager.showView({view:ClientSearchMoment});
     });
     
     $("#clientsAction").click(function(e) {
         e.preventDefault();
-        viewManager.showView(ClientSearchAction);
+        viewManager.showView({view:ClientSearchAction});
     });
 
-    viewManager.showView(Home);
+    viewManager.showView({view:Home});
 });

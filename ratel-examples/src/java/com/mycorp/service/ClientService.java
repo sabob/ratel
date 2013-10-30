@@ -1,8 +1,7 @@
 package com.mycorp.service;
 
 import com.google.ratel.Context;
-import com.google.ratel.core.RatelService;
-import com.google.ratel.core.Param;
+import com.google.ratel.core.*;
 import com.mycorp.dao.ClientDao;
 import com.mycorp.domain.Client;
 import com.mycorp.util.EMF;
@@ -11,10 +10,12 @@ import java.util.List;
 import javax.persistence.*;
 
 @RatelService
+@Path("/clientservice/")
 public class ClientService {
 
     private int sleepTime = 0;
     
+    @Path("/clients")
     public List<Client> getClients() {
         try {
             Thread.sleep(sleepTime);
@@ -25,6 +26,7 @@ public class ClientService {
         return dao.getClients();
     }
 
+    @Path("/client")
     public Client getClient(@Param(name = "id", required = true) Long id) {
         try {
             Thread.sleep(sleepTime);
@@ -37,7 +39,8 @@ public class ClientService {
         ClientDao dao = new ClientDao();
         return dao.getClient(id);
     }
-
+    
+    @Path("/save")
     public Client saveClient(Client client) {
         try {
             Thread.sleep(1000);

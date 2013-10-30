@@ -1,9 +1,9 @@
 define(function(require) {
     var $ = require("jquery");
     var template = require("text!./ClientEdit.htm");
-    var utils = require("../../utils/utils");
-    var viewManager = require("../../utils/view-manager");
-    var errorUtils = require("../../utils/error-utils");
+    var utils = require("spamd/utils/utils");
+    var viewManager = require("spamd/view/view-manager");
+    var errorUtils = require("spamd/utils/error-utils");
     require("domReady!");
 
 
@@ -42,7 +42,7 @@ define(function(require) {
             });
 
             request.done(function(data, textStatus, jqXHR) {
-                dom.attachWithAnim(that.getTemplate(), function() {
+                dom.attach(that.getTemplate()).then(function() {
                     //copy data to form
                     utils.fromObject("form", data);
                     onAttached();

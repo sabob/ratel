@@ -2,8 +2,8 @@ define(function(require) {
     var $ = require("jquery");
     var template = require("text!./Home.htm");
     var ClientSearch = require("../client/ClientSearch");
-    var utils = require("../../utils/utils");
-    var viewManager = require("../../utils/view-manager");
+    var utils = require("spamd/utils/utils");
+    var viewManager = require("spamd/view/view-manager");
     require("domReady!");
 
     function Home() {
@@ -15,7 +15,7 @@ define(function(require) {
 
         this.onInit = function(dom, args) {
             //onReady();
-            dom.attachWithAnim(this.getTemplate(), function() {
+            dom.attach(this.getTemplate(), function() {
                 onAttached(args);
                 });
         };

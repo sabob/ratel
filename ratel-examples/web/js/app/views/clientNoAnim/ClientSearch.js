@@ -1,13 +1,12 @@
-//define(["require", "jquery", "text!./ClientSearch.htm", "../../utils/utils", "domReady!"], function(require, $, template, utils) {
 define(function(require) {
 
     var $ = require("jquery");
     var Handlebars = require("handlebars");
     var template = require("text!./ClientSearch.htm");
     var ClientEdit = require("./ClientEdit");
-    var utils = require("../../utils/utils");
-    var viewManager = require("../../utils/view-manager");
-    var errorUtils = require("../../utils/error-utils");
+    var utils = require("spamd/utils/utils");
+    var viewManager = require("spamd/view/view-manager");
+    var errorUtils = require("spamd/utils/error-utils");
     require("domReady!");
 
     function ClientSearch() {
@@ -20,7 +19,7 @@ define(function(require) {
 
         this.onInit = function(dom, args) {
             var request = $.ajax({
-                url: "/ratel-examples/clientService/getClients",
+                url: "/ratel-examples/clientservice/clients",
                 type: "GET",
                 dataType: "json"
                         //contentType: "application/json"
@@ -32,8 +31,9 @@ define(function(require) {
                 var context = {one: "Firstname", two: "Lastname", three: "Action"};
                 template = tmpl(context);
 
-                dom.attach(template);
-                that.onAttached(data);
+                dom.attach(template, {anim: false}).then(function() {
+                    that.onAttached(data);                    
+                });
             });
 
             request.fail(function(jqXHR, textStatus, errorThrown) {

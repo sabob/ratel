@@ -5,9 +5,9 @@ define(function(require) {
     var Handlebars = require("handlebars");
     var template = require("text!./ClientSearch.htm");
     var ClientEdit = require("./ClientEdit");
-    var utils = require("../../utils/utils");
-    var viewManager = require("../../utils/view-manager");
-    var errorUtils = require("../../utils/error-utils");
+    var utils = require("spamd/utils/utils");
+    var viewManager = require("spamd/view/view-manager");
+    var errorUtils = require("spamd/utils/error-utils");
     require("domReady!");
 
     function ClientSearch() {
@@ -20,7 +20,7 @@ define(function(require) {
 
         this.onInit = function(dom, args) {
             var request = $.ajax({
-                url: "/ratel-examples/clientService/getClients",
+                url: "/ratel-examples/clientservice/clients",
                 type: "GET",
                 dataType: "json"
                         //contentType: "application/json"
@@ -32,7 +32,7 @@ define(function(require) {
                 var context = {one: "Firstname", two: "Lastname", three: "Action"};
                 template = tmpl(context);
 
-                dom.attachWithAnim(template, function() {
+                dom.attach(template).then( function() {
                    that.onAttached(data);
                 });
             });

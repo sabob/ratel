@@ -6,6 +6,7 @@ requirejs.config({
     "baseUrl": "lib",
     "paths": {
       "app": "../app",
+      "hb": "spamd/hb",
         "moment": "moment",
         "numeral": "numeral"
                

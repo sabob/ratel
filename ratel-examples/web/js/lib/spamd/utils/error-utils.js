@@ -9,20 +9,20 @@
 }(function($) {
 // use $ safely, it's provided either by AMD or module pattern
 
-    var ratel = {};
-    if (!$.ratel) {
-        $.ratel = ratel;
+    var kv = {};
+    if (!$.kv) {
+        $.kv = kv;
     }
-    $.ratel.showError = function(text) {
-        var tmpl = '<div id="ratel-overlay" class="overlay"></div><div id="errorDialog"><div id="errorHolder"></div><div class="close bl-close"><a href="#">Close</a></div><div class="close br-close"><a href="#">Close</a></div></div>';
+    $.kv.showError = function(text) {
+        var tmpl = '<div id="kv-overlay" class="overlay"></div><div id="errorDialog"><div id="errorHolder"></div><div class="close bl-close"><a href="#">Close</a></div><div class="close br-close"><a href="#">Close</a></div></div>';
         $(tmpl).appendTo('body');
         var iframe = $('<iframe id="dialogFrame"/>').appendTo('#errorHolder');
         var target = $(iframe).contents()[0];
         target.open();
         target.write('<!doctype html><html><head></head><body></body></html>');
         target.close();
-        //$('#dialogFrame').contents().find('body').empty().append(text);
         $('#dialogFrame').contents().find('body').empty().html(text);
+
         if (typeof prettyPrint !== "undefined") {
             prettyPrint(null, $('#dialogFrame')[0].contentDocument.body);
         }
@@ -56,7 +56,7 @@
             $("#errorDialog").hide();
             $('.overlay').off('click');
             $(document).off('keydown');
-            $("#ratel-overlay").remove();
+            $("#kv-overlay").remove();
             $("#errorDialog").remove();
         }
 
@@ -75,12 +75,10 @@
             var ow = element.outerWidth();
             var wh = $(window).height();
             var ww = $(window).width();
-            //var st = $(window).scrollTop();
-            //var sl = $(window).scrollLeft();
             var t = ((wh - oh) / 2);
             var l = ((ww - ow) / 2);
-            t+= $(document).scrollTop();
-            l+= $(document).scrollLeft();
+            t += $(document).scrollTop();
+            l += $(document).scrollLeft();
 
             element.css("top", Math.max(0, t) + "px");
             element.css("left", Math.max(0, l) + "px");
@@ -88,7 +86,7 @@
 
         function applyStyling() {
 
-            $('#ratel-overlay').css({
+            $('#kv-overlay').css({
                 width: '100%',
                 height: '100%',
                 position: 'fixed',
@@ -145,5 +143,5 @@
             });
         }
     };
-    return ratel;
+    return kv;
 }));

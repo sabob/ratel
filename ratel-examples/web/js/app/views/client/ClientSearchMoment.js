@@ -2,13 +2,13 @@
 define(function(require) {
 
     var $ = require("jquery");
-    var templateEngine = require("../../utils/template-engine");
+    var templateEngine = require("spamd/template/template-engine");
     var template = require("hb!./ClientSearchMoment.htm");
     var html = null;
     var ClientEdit = require("./ClientEdit");
-    var utils = require("../../utils/utils");
-    var viewManager = require("../../utils/view-manager");
-    var errorUtils = require("../../utils/error-utils");
+    var utils = require("spamd/utils/utils");
+    var viewManager = require("spamd/view/view-manager");
+    var errorUtils = require("spamd/utils/error-utils");
     require("domReady!");
 
     function ClientSearch() {
@@ -25,7 +25,7 @@ define(function(require) {
 
         this.onInit = function(dom, args) {
             var request = $.ajax({
-                url: "/ratel-examples/clientService/getClients",
+                url: "/ratel-examples/clientservice/clients",
                 type: "GET",
                 dataType: "json"
                         //contentType: "application/json"
@@ -37,7 +37,7 @@ define(function(require) {
                 var context = {"customers": data};
                 html = templateEngine.render(template, context);
 
-                dom.attachWithAnim(html, function() {
+                dom.attach(html).then(function() {
                     that.onAttached(data);
                     //html = tmpl({"customers2": [{"firstname": "MOOO"}]});
                 });
