@@ -159,9 +159,6 @@ public class DefaultServiceResolver implements ServiceResolver {
         if (urlPrefix != null) {
             // strip prefix from path
             realPath = path.substring(urlPrefix.length());
-            if (ratelConfig.getMode().isDevelopmentModes()) {
-                ratelConfig.getLogService().info("urlPrefix removed from path '" + path + "'. New path -> " + realPath);
-            }
         }
 
         int index = realPath.lastIndexOf("/");
