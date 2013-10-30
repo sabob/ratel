@@ -25,6 +25,11 @@
         <param-name>ratel.package</param-name>
         <param-value>co.za.mom, com.mycorp.service</param-value>
     </context-param>
+    
+    <context-param>
+        <param-name>ratel.urlPrefix</param-name>
+        <param-value>/service</param-value>
+    </context-param>
 
     <filter>
         <filter-name>performanceFilter</filter-name>
@@ -55,7 +60,7 @@
 
     <filter-mapping>
         <filter-name>ratelFilter</filter-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/service/*</url-pattern>
     </filter-mapping>
     
     

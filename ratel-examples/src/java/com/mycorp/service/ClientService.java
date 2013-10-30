@@ -10,7 +10,7 @@ import java.util.List;
 import javax.persistence.*;
 
 @RatelService
-@Path("/clientservice/")
+@Path("/clientservice")
 public class ClientService {
 
     private int sleepTime = 0;
