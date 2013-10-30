@@ -3,7 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group name="apache click">
-            <file>file:/C:/dev/os/ratel/ratel/src/com/google/ratel/service/resolver/ServiceResolver.java</file>
+            <file>file:/C:/dev/os/ratel/ratel/src/com/google/ratel/core/RatelService.java</file>
+            <file>file:/C:/dev/os/ratel/ratel/src/com/google/ratel/core/Path.java</file>
+            <file>file:/C:/dev/os/ratel/ratel/src/com/google/ratel/service/classdata/ClassDataService.java</file>
             <file>file:/C:/dev/os/ratel/ratel/src/com/google/ratel/service/resolver/DefaultServiceResolver.java</file>
         </group>
     </open-files>

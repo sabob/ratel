@@ -1,6 +1,7 @@
 package com.google.ratel.service.resolver;
 
 import com.google.ratel.RatelConfig;
+import com.google.ratel.core.*;
 import java.util.*;
 import java.util.concurrent.*;
 import javax.servlet.*;
@@ -9,10 +10,8 @@ import com.google.ratel.service.classdata.MethodData;
 import com.google.ratel.util.RatelUtils;
 import com.google.ratel.service.classdata.ClassDataService;
 import com.google.ratel.deps.lang3.StringUtils;
-import com.google.ratel.core.RatelService;
 import com.google.ratel.service.classdata.*;
 import com.google.ratel.util.Constants;
-import com.google.ratel.core.Mode;
 import javax.servlet.http.*;
 
 /**
@@ -40,7 +39,7 @@ public class DefaultServiceResolver implements ServiceResolver {
     protected List<String> packageNames = new ArrayList<String>();
 
     protected Mode mode;
-    
+
     protected RatelConfig ratelConfig;
 
     public DefaultServiceResolver() {
@@ -75,25 +74,25 @@ public class DefaultServiceResolver implements ServiceResolver {
             return target;
         }
 
-        String serviceName = resolveServiceName(path);
-        ClassData serviceData = resolveService(serviceName);
+        String servicePath = resolveServicePath(path);
+        ClassData serviceData = resolveService(servicePath);
 
         if (serviceData == null) {
             return null;
         }
 
-        String methodName = resolveMethodName(path);
-        if (methodName == null) {
+        String methodPath = resolveMethodPath(path);
+        if (methodPath == null) {
             // TODO use constructor or a default method?
             throw new RuntimeException("No service method found for request path: '" + path + "'");
         }
 
-        MethodData methodData = resolveMethod(serviceData, methodName);
+        MethodData methodData = resolveMethod(serviceData, methodPath);
 
         if (methodData == null) {
             Class serviceClass = serviceData.getServiceClass();
             // TODO use constructor or a default method???
-            throw new RuntimeException("Method " + methodName + " not found on " + serviceClass.getName());
+            throw new RuntimeException("Method " + methodPath + " not found on " + serviceClass.getName());
         }
 
         RequestTargetData target = new RequestTargetData(serviceData, methodData);
@@ -153,14 +152,14 @@ public class DefaultServiceResolver implements ServiceResolver {
         return false;
     }
 
-    protected String resolveServiceName(String path) {
+    protected String resolveServicePath(String path) {
         int index = path.lastIndexOf("/");
         if (index == -1) {
             return null;
         }
 
-        String serviceName = path.substring(0, index);
-        return serviceName;
+        String servicePath = path.substring(0, index);
+        return servicePath;
     }
 
     protected ClassData resolveService(String path) {
@@ -171,18 +170,18 @@ public class DefaultServiceResolver implements ServiceResolver {
         return null;
     }
 
-    protected String resolveMethodName(String path) {
+    protected String resolveMethodPath(String path) {
         int index = path.lastIndexOf("/");
         if (index == -1) {
             return null;
         }
 
-        String methodName = path.substring(index + 1);
-        return methodName;
+        String methodPath = path.substring(index);
+        return methodPath;
     }
 
-    protected MethodData resolveMethod(ClassData classData, String methodName) {
-        MethodData methodData = classData.getMethods().get(methodName);
+    protected MethodData resolveMethod(ClassData classData, String methodPath) {
+        MethodData methodData = classData.getMethods().get(methodPath);
         return methodData;
     }
 
@@ -204,7 +203,6 @@ public class DefaultServiceResolver implements ServiceResolver {
         //try {
         //URL resource = servletContext.getResource(path);
         //if (resource != null) {
-
         if (getPackageNames().isEmpty()) {
             String emptyPackageName = null;
             serviceData = getService(path, emptyPackageName);
@@ -226,22 +224,38 @@ public class DefaultServiceResolver implements ServiceResolver {
         //}
         return serviceData;
     }
-    
+
     protected ClassData getService(String path, String packageName) {
 
         ClassData serviceData = null;
-        Class serviceClass = getServiceClass(path, packageName);
+        Class<?> serviceClass = getServiceClass(path, packageName);
 
         if (serviceClass != null) {
             serviceData = new ClassData();
             serviceData.setServiceClass(serviceClass);
+            Path pathAnnot = serviceClass.getAnnotation(Path.class);
+            if (pathAnnot != null) {
+                String newPath = pathAnnot.value();
+                if (newPath.endsWith("/")) {
+                path = newPath.substring(0, newPath.length() - 1);
+            }
+                if (!path.equals(newPath)) {
+                    throw new IllegalStateException("The service, '" + serviceClass.getName() + "', must be accessed through the path, '"
+                        + newPath + "'!");
+                }
+            }
+
             serviceData.setServicePath(path);
 
             RatelUtils.populateMethods(serviceData);
 
-            serviceByPathMap.put(path, serviceData);
-            //addToClassMap(page);
+            if (serviceByPathMap.containsKey(path)) {
+                throw new IllegalStateException("A service with the path, '" + path + "', already exists! Ensure paths are unique.");
+            }
 
+            serviceByPathMap.put(path, serviceData);
+
+            //addToClassMap(page);
             if (ratelConfig.getLogService().isDebugEnabled()) {
                 String msg = path + " -> " + serviceClass.getName();
                 ratelConfig.getLogService().debug(msg);
@@ -251,7 +265,7 @@ public class DefaultServiceResolver implements ServiceResolver {
         return serviceData;
     }
 
-    protected Class getServiceClass(String servicePath, String servicesPackage) {
+    protected Class<?> getServiceClass(String servicePath, String servicesPackage) {
         // To understand this method lets walk through an example as the
         // code plays out. Imagine this method is called with the arguments:
         // pagePath='/pages/edit-customer.htm'
@@ -272,7 +286,6 @@ public class DefaultServiceResolver implements ServiceResolver {
         // Strip off extension.
         // path = '/pages/edit-customer'
         //String path = servicePath.substring(0, servicePath.lastIndexOf("."));
-
         // Build complete packageName.
         // packageName = 'com.google.ratel.pages.'
         // className = 'edit-customer'
@@ -307,6 +320,12 @@ public class DefaultServiceResolver implements ServiceResolver {
         try {
             // Attempt to load class.
             serviceClass = RatelUtils.classForName(className);
+            RatelService anno = serviceClass.getAnnotation(RatelService.class);
+            if (anno == null) {
+
+                String msg = "Automapped class " + className + " is not annotated with @RatelService";
+                throw new RuntimeException(msg);
+            }
 
         } catch (ClassNotFoundException cnfe) {
 
@@ -321,11 +340,9 @@ public class DefaultServiceResolver implements ServiceResolver {
                     serviceClass = RatelUtils.classForName(classNameWithService);
 
                     RatelService anno = serviceClass.getAnnotation(RatelService.class);
-                    if (anno != null) {
+                    if (anno == null) {
 
-                        //if (!Service.class.isAssignableFrom(serviceClass)) {
-                        String msg = "Automapped page class " + className
-                            + " is not a subclass of com.google.ratel.service.Service";
+                        String msg = "Automapped class " + className + " is not annotated with @RatelService";
                         throw new RuntimeException(msg);
                     }
 

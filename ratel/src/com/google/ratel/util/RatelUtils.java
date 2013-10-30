@@ -19,7 +19,8 @@
 package com.google.ratel.util;
 
 import com.google.ratel.*;
-import com.google.ratel.ant.*;
+import com.google.ratel.core.*;
+import com.google.ratel.deps.fileupload.servlet.*;
 import com.google.ratel.deps.io.IOUtils;
 import java.io.*;
 import static java.lang.String.format;
@@ -28,16 +29,9 @@ import java.lang.reflect.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import com.google.ratel.deps.fileupload.servlet.ServletFileUpload;
-import com.google.ratel.core.JsonParam;
-import com.google.ratel.core.Param;
-import com.google.ratel.core.RatelHttpServletResponse;
 import com.google.ratel.deps.lang3.StringUtils;
 import com.google.ratel.service.classdata.*;
-import com.google.ratel.service.classdata.ClassData;
-import com.google.ratel.service.classdata.MethodData;
 import com.google.ratel.service.json.*;
-import com.google.ratel.service.json.JsonService;
 import com.google.ratel.service.log.*;
 import java.net.*;
 
@@ -449,14 +443,14 @@ public class RatelUtils {
         } catch (Exception e) {
             // Perhaps try again?
             /*
-            try {
-                ClassLoader classLoader = ClassDataService.class.getClassLoader();
-                Class<?> cls = Class.forName(classname, true, classLoader);
-            } catch (Exception ignore) {
-            if (logService != null) {
-                logService.error("Could not load class " + classname, e);
-            }
-            }*/
+             try {
+             ClassLoader classLoader = ClassDataService.class.getClassLoader();
+             Class<?> cls = Class.forName(classname, true, classLoader);
+             } catch (Exception ignore) {
+             if (logService != null) {
+             logService.error("Could not load class " + classname, e);
+             }
+             }*/
 
             if (logService != null) {
                 logService.error("Could not load class " + classname, e);
@@ -546,24 +540,37 @@ public class RatelUtils {
         return ResourceBundle.getBundle(baseName, locale, classLoader);
     }
 
-    public static ClassData createClassData(Class serviceClass, List<String> packageNames) {
-        String serviceName = serviceClass.getName();
-
-        for (String packageName : packageNames) {
-            int origLength = serviceName.length();
-            serviceName = StringUtils.remove(serviceName, packageName);
-            if (serviceName.length() != origLength) {
-                break;
-            }
-        }
-
-        String servicePath = serviceName.replace(".", "/");
-        if (!servicePath.startsWith("/")) {
-            servicePath = "/" + servicePath;
-        }
+    public static ClassData createClassData(Class<?> serviceClass, List<String> packageNames) {
         ClassData classData = new ClassData();
         classData.setServiceClass(serviceClass);
-        classData.setServicePath(servicePath);
+
+        Path pathAnnot = serviceClass.getAnnotation(Path.class);
+        if (pathAnnot != null) {
+            String path = pathAnnot.value().trim();
+            if (path.endsWith("/")) {
+                path = path.substring(0, path.length() - 1);
+            }
+            classData.setServicePath(path);
+
+        } else {
+            String serviceName = serviceClass.getName();
+
+            for (String packageName : packageNames) {
+                int origLength = serviceName.length();
+                serviceName = StringUtils.remove(serviceName, packageName);
+                if (serviceName.length() != origLength) {
+                    break;
+                }
+            }
+
+            String servicePath = serviceName.replace(".", "/");
+            if (!servicePath.startsWith("/")) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("/").append(servicePath);
+                servicePath = sb.toString();
+            }
+            classData.setServicePath(servicePath);
+        }
 
         return classData;
     }
@@ -580,7 +587,24 @@ public class RatelUtils {
             MethodData methodData = new MethodData();
             methodData.setMethod(method);
             populateParameterTypes(methodData);
-            methodsMap.put(method.getName(), methodData);
+            
+            String methodPath = method.getName();
+
+            Path pathAnnot = method.getAnnotation(Path.class);
+            if (pathAnnot != null) {
+                methodPath = pathAnnot.value().trim();
+                if (methodPath.endsWith("/")) {
+                    methodPath = methodPath.substring(0, methodPath.length() - 1);
+                }
+            }
+            if (!methodPath.startsWith("/")) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("/").append(methodPath);
+                methodPath = sb.toString();
+            }
+
+            methodData.setMethodPath(methodPath);
+            methodsMap.put(methodPath, methodData);
         }
     }
 

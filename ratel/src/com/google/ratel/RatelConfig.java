@@ -183,9 +183,9 @@ public class RatelConfig {
             getJsonService().onInit(servletContext);
             getInvokeHandler().onInit(servletContext);
 
-            if (getMode() == Mode.PROFILE || getMode() == Mode.PRODUCTION) {
-                getServiceResolver().resolveServices();
-            }
+            //if (getMode() == Mode.PROFILE || getMode() == Mode.PRODUCTION) {
+            getServiceResolver().resolveServices();
+            //}
 
             long time = System.currentTimeMillis() - start;
             if (getLogService().isInfoEnabled()) {

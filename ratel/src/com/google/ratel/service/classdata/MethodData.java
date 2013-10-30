@@ -10,6 +10,8 @@ public class MethodData {
 
     private Method method;
     
+    private String methodPath;
+    
     private List<ParameterData> parameters = new ArrayList<ParameterData>();
     
     /**
@@ -39,5 +41,19 @@ public class MethodData {
     public void setParameters(
         List<ParameterData> parameters) {
         this.parameters = parameters;
+    }
+
+    /**
+     * @return the methodPath
+     */
+    public String getMethodPath() {
+        return methodPath;
+    }
+
+    /**
+     * @param methodPath the methodPath to set
+     */
+    public void setMethodPath(String methodPath) {
+        this.methodPath = methodPath;
     }
 }

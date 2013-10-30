@@ -11,7 +11,6 @@ import com.google.ratel.deps.io.*;
 import com.google.ratel.service.json.*;
 import com.google.ratel.service.log.*;
 import java.io.*;
-import java.util.logging.*;
 
 public class ClassDataService {
 

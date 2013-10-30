@@ -9,10 +9,7 @@ import com.google.ratel.deps.io.*;
 import com.google.ratel.deps.jackson.databind.*;
 import com.google.ratel.deps.lang3.*;
 import com.google.ratel.service.classdata.*;
-import com.google.ratel.util.*;
 import java.io.*;
-import java.lang.annotation.*;
-import java.lang.reflect.*;
 import java.util.*;
 import java.util.jar.*;
 import org.apache.tools.ant.BuildException;
@@ -37,7 +34,7 @@ public class ClassMetadataTask extends Task {
     private File output;
 
     protected Class annotationClass = com.google.ratel.core.RatelService.class;
-    
+
     /**
      * The include filter to use when scanning {@link #dir}.
      */
@@ -105,7 +102,7 @@ public class ClassMetadataTask extends Task {
     public void setDir(File dir) {
         this.dir = dir;
     }
-    
+
     public void setAnnotation(String annotationStr) {
         System.out.println("Annotation set to : " + annotationStr);
 
@@ -183,7 +180,7 @@ public class ClassMetadataTask extends Task {
                 defaultFileSet.setIncludes("**/*.jar, classes");
             }
         }
-        
+
         Set<Class> classes = new HashSet<Class>();
 
         for (FileSet fileSet : getFileSets()) {
@@ -195,7 +192,7 @@ public class ClassMetadataTask extends Task {
             System.out.println("Files[" + resources.length + "] in fileset.getDir(): " + fileSet.getDir());
             //deployResources(fileSet.getDir(), resources);
 
-             addClasses(fileSet.getDir(), resources, classes);
+            addClasses(fileSet.getDir(), resources, classes);
 
         }
 
@@ -330,7 +327,7 @@ public class ClassMetadataTask extends Task {
 
     protected void writeMetadata(Set<Class> classes, File outputFile) {
         Set<Class> classSet = new HashSet<Class>();
-        
+
         for (Class serviceClass : classes) {
             classSet.add(serviceClass);
         }
@@ -348,7 +345,6 @@ public class ClassMetadataTask extends Task {
     }
 
     // -------------------------------------------------------- Private Methods
-
     /**
      * Return true if the given file is a directory, false otherwise.
      *
@@ -362,24 +358,35 @@ public class ClassMetadataTask extends Task {
         return true;
     }
 
-    public static ClassData createClassData(Class serviceClass, List<String> packageNames) {
-        String serviceName = serviceClass.getName();
+    public static ClassData createClassData(Class<?> serviceClass, List<String> packageNames) {
 
-        for (String packageName : packageNames) {
-            int origLength = serviceName.length();
-            serviceName = StringUtils.remove(serviceName, packageName);
-            if (serviceName.length() != origLength) {
-                break;
-            }
-        }
-
-        String servicePath = serviceName.replace(".", "/");
-        if (!servicePath.startsWith("/")) {
-            servicePath = "/" + servicePath;
-        }
         ClassData classData = new ClassData();
         classData.setServiceClass(serviceClass);
-        classData.setServicePath(servicePath);
+        Path pathAnnot = serviceClass.getAnnotation(Path.class);
+
+        if (pathAnnot != null) {
+            String path = pathAnnot.value().trim();
+            classData.setServicePath(path);
+
+        } else {
+            String serviceName = serviceClass.getName();
+            for (String packageName : packageNames) {
+                int origLength = serviceName.length();
+                serviceName = StringUtils.remove(serviceName, packageName);
+                if (serviceName.length() != origLength) {
+                    break;
+                }
+            }
+
+            String servicePath = serviceName.replace(".", "/");
+            if (!servicePath.startsWith("/")) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("/").append(servicePath);
+                servicePath = sb.toString();
+            }
+
+            classData.setServicePath(servicePath);
+        }
 
         return classData;
     }

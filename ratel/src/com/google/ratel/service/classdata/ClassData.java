@@ -1,6 +1,5 @@
 package com.google.ratel.service.classdata;
 
-import com.google.ratel.deps.jackson.annotation.*;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -14,6 +13,10 @@ public class ClassData {
     private String servicePath;
     
     private Map<String, MethodData> methods = new ConcurrentHashMap<String, MethodData>();
+    
+    public ClassData() {
+        
+    }
     
     public String getServicePath() {
         return servicePath;

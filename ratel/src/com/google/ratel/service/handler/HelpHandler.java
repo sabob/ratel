@@ -292,17 +292,12 @@ public class HelpHandler {
             StringBuilder val = new StringBuilder();
             val.append(servletContext.getContextPath());
             val.append(serviceClassData.getServicePath());
-            val.append("/");
-            val.append(methodData.getMethod().getName());
+            val.append(methodData.getMethodPath());
             val.append("?ping=true");
             html.appendAttribute("href", val);
             html.closeTag();
             html.append(serviceClassData.getServicePath());
-            html.append("/");
-            html.append(methodData.getMethod().getName());
-            //html.append(" ( ");
-            //renderArguments(html, methodData);
-            //html.append(" )");
+            html.append(methodData.getMethodPath());
             html.elementEnd("a");
 
             html.elementEnd("td");
