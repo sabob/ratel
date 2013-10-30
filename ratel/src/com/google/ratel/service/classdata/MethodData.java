@@ -11,6 +11,8 @@ public class MethodData {
     private Method method;
     
     private String methodPath;
+
+    private String methodName;
     
     private List<ParameterData> parameters = new ArrayList<ParameterData>();
     
@@ -55,5 +57,19 @@ public class MethodData {
      */
     public void setMethodPath(String methodPath) {
         this.methodPath = methodPath;
+    }
+
+    /**
+     * @return the methodName
+     */
+    public String getMethodName() {
+        return methodName;
+    }
+
+    /**
+     * @param methodName the methodName to set
+     */
+    public void setMethodName(String methodName) {
+        this.methodName = methodName;
     }
 }

@@ -604,6 +604,7 @@ public class RatelUtils {
             }
 
             methodData.setMethodPath(methodPath);
+            methodData.setMethodName(method.getName());
             methodsMap.put(methodPath, methodData);
         }
     }

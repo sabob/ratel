@@ -12,6 +12,7 @@ import com.google.ratel.service.classdata.ClassDataService;
 import com.google.ratel.deps.lang3.StringUtils;
 import com.google.ratel.service.classdata.*;
 import com.google.ratel.util.Constants;
+import java.util.Map.Entry;
 import javax.servlet.http.*;
 
 /**
@@ -181,7 +182,7 @@ public class DefaultServiceResolver implements ServiceResolver {
     }
 
     protected MethodData resolveMethod(ClassData classData, String methodPath) {
-        MethodData methodData = classData.getMethods().get(methodPath);
+        MethodData methodData = getMethod(classData, methodPath);
         return methodData;
     }
 
@@ -225,6 +226,31 @@ public class DefaultServiceResolver implements ServiceResolver {
         return serviceData;
     }
 
+    protected MethodData getMethod(ClassData classData, String methodPath) {
+        // If in production or profile mode.
+        if (mode.isProductionModes()) {
+            MethodData methodData = classData.getMethods().get(methodPath);
+            return methodData;
+        }
+
+        // Else in development, debug or trace mode
+        MethodData methodData = classData.getMethods().get(methodPath);
+        if (methodData != null) {
+            return methodData;
+        }
+
+        // Inform user if they access method through it's name but have also mapped it to a different path through the @Path annotation
+        for (Entry<String, MethodData> entry : classData.getMethods().entrySet()) {
+            MethodData val = entry.getValue();
+            String methodName = "/" + val.getMethodName();
+            if (methodName.equals(methodPath)) {
+                throw new IllegalArgumentException("The service method, '" + methodName + "', has been mapped with the @Path annotation to "
+                    + " -> '" + val.getMethodPath() + "'.");
+            }
+        }
+        return null;
+    }
+
     protected ClassData getService(String path, String packageName) {
 
         ClassData serviceData = null;
@@ -237,11 +263,11 @@ public class DefaultServiceResolver implements ServiceResolver {
             if (pathAnnot != null) {
                 String newPath = pathAnnot.value();
                 if (newPath.endsWith("/")) {
-                path = newPath.substring(0, newPath.length() - 1);
-            }
+                    newPath = newPath.substring(0, newPath.length() - 1);
+                }
                 if (!path.equals(newPath)) {
-                    throw new IllegalStateException("The service, '" + serviceClass.getName() + "', must be accessed through the path, '"
-                        + newPath + "'!");
+                    throw new IllegalArgumentException("The service, '" + serviceClass.getName() + "', has been mapped with the @Path "
+                        + "annotation to -> '" + newPath + "'.");
                 }
             }
 
