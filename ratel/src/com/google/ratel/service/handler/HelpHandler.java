@@ -151,15 +151,24 @@ public class HelpHandler {
 
     private void renderServiceList(HtmlStringBuffer html, Map<String, ClassData> serviceData, Context context) {
 
-        String prefix = getMappingPrefix(context);
-        if (StringUtils.isNotBlank(prefix)) {
-            String packagePart = prefix.replace('/', '.');
+        String mappingPrefix = getMappingPrefix(context);
+        String urlPrefix = getUrlPrefix(context);
+
+        if (StringUtils.isNotBlank(mappingPrefix)) {
+
+            if (!urlPrefix.equals(mappingPrefix)) {
+                String packagePart = mappingPrefix.replace('/', '.');
             html.append("<div>");
             html.append("<span class='required-text'>**</span> Ratel is mapped in <span class='str'>web.xml</span> with <span class='str'>&lt;url-mapping&gt;</span> : ");
-            html.append("<span style='color:red'>'").append(prefix).append("</span>");
-            html.append("'. Ensure your Service class packages include this path eg: 'com.mycorp<span style='color:red'>").append(packagePart);
-            html.append("</span>.services.MyService</td></tr>");
+            html.append("<span style='color:red'>'").append(mappingPrefix).append("</span>");
+            html.append("'. Either specify the &lt;context-param&gt; <span style='color:red'>ratel.urlPrefix</span>");
+            html.append("");
+                html.append(" (easiest) or ensure your Services are packaged under the package <span style='color:red'> '");
+            html.append(packagePart);
+            html.append("'</span> eg: 'com.mycorp<span style='color:red'>").append(packagePart);
+            html.append("</span>.services.MyService. Also ensure your @Path annotations includes the path <span style='color:red'>").append(mappingPrefix).append("</span>.</td></tr>");
             html.append("</div>");
+            }
         }
 
         Iterator<Map.Entry<String, ClassData>> it = serviceData.entrySet().iterator();
@@ -289,13 +298,23 @@ public class HelpHandler {
             html.closeTag();
             html.elementStart("a");
 
+            String mappingPrefix = getMappingPrefix(context);
+            String urlPrefix = getUrlPrefix(context);
+            boolean urlPrefixCorrect = true;
+
+            if (StringUtils.isNotBlank(mappingPrefix)) {
+                urlPrefixCorrect = urlPrefix.equals(mappingPrefix);
+            }
+
             StringBuilder val = new StringBuilder();
             val.append(servletContext.getContextPath());
+            val.append(urlPrefix);
             val.append(serviceClassData.getServicePath());
             val.append(methodData.getMethodPath());
             val.append("?ping=true");
             html.appendAttribute("href", val);
             html.closeTag();
+            html.append(urlPrefix);
             html.append(serviceClassData.getServicePath());
             html.append(methodData.getMethodPath());
             html.elementEnd("a");
@@ -305,12 +324,11 @@ public class HelpHandler {
             html.elementStart("td");
             html.closeTag();
 
-            String prefix = getMappingPrefix(context);
             String servicePath = serviceClassData.getServicePath();
 
             boolean goodPathMapping = true;
-            if (StringUtils.isNotBlank(prefix)) {
-                if (!servicePath.startsWith(prefix)) {
+            if (!urlPrefixCorrect) {
+                if (!servicePath.startsWith(mappingPrefix)) {
                     goodPathMapping = false;
                 }
             }
@@ -322,7 +340,7 @@ public class HelpHandler {
                 html.append("<span style='color:green'>OK</span>");
 
             } else {
-                html.append("<span style='color:red'>ERROR: </span> Service path should be mapped as: <span style='color:red'>" + prefix
+                html.append("<span style='color:red'>ERROR: </span> Service path should be mapped as: <span style='color:red'>" + mappingPrefix
                     + "</span>" + servicePath + ". <span class='required-ind'>**</span>");
             }
             html.elementEnd("td");
@@ -448,7 +466,7 @@ public class HelpHandler {
 
     protected String createJson(JsonService jsonService, Class type) {
 
-        try {            
+        try {
             Object input = RatelUtils.createInstance(type);
             String json = jsonService.toJson(input);
             return json;
@@ -456,5 +474,13 @@ public class HelpHandler {
         } catch (Exception e) {
             return "Could not instantiate instance!";
         }
+    }
+
+    protected String getUrlPrefix(Context context) {
+        String urlPrefix = context.getRatelConfig().getUrlPrefix();
+        if (urlPrefix == null) {
+            urlPrefix = "";
+        }
+        return urlPrefix;
     }
 }

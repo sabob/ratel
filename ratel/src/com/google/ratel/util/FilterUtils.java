@@ -25,6 +25,8 @@ public class FilterUtils {
 
     public static final String CONTEXT_PARAM_CHARSET = "ratel.charset";
     
+    public static final String CONTEXT_PARAM_URL_PREFIX = "ratel.urlPrefix";
+    
     public static RatelConfig globalInit(FilterConfig filterConfig) {
         ServletContext servletContext = filterConfig.getServletContext();
         
@@ -50,6 +52,9 @@ public class FilterUtils {
 
         int maxRequestSize = getMaxRequestSize(filterConfig);
        ratelConfig.setMaxRequestSize(maxRequestSize);
+
+        String urlPrefix = getUrlPrefix(filterConfig);
+       ratelConfig.setUrlPrefix(urlPrefix);
 
         ratelConfig.onInit(servletContext);
 
@@ -132,6 +137,22 @@ public class FilterUtils {
 
         warnIfInitParamUsed(filterConfig, CONTEXT_PARAM_MAX_REQUEST_SIZE);
         return RatelConfig.DEFAULT_MAX_REQUEST_SIZE;
+    }
+
+    public static String getUrlPrefix(FilterConfig filterConfig) {
+
+        ServletContext servletContext = filterConfig.getServletContext();
+
+        String str = servletContext.getInitParameter(CONTEXT_PARAM_URL_PREFIX);
+        if (StringUtils.isNotBlank(str)) {
+            if (!StringUtils.startsWith(str, "/")) {
+                str = str + "/";
+            }
+            return str;
+        }
+
+        warnIfInitParamUsed(filterConfig, CONTEXT_PARAM_URL_PREFIX);
+        return null;
     }
 
     public static Mode getMode(FilterConfig filterConfig) {

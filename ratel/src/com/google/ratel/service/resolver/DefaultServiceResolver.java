@@ -154,12 +154,22 @@ public class DefaultServiceResolver implements ServiceResolver {
     }
 
     protected String resolveServicePath(String path) {
-        int index = path.lastIndexOf("/");
+        String realPath = path;
+        String urlPrefix = ratelConfig.getUrlPrefix();
+        if (urlPrefix != null) {
+            // strip prefix from path
+            realPath = path.substring(urlPrefix.length());
+            if (ratelConfig.getMode().isDevelopmentModes()) {
+                ratelConfig.getLogService().info("urlPrefix removed from path '" + path + "'. New path -> " + realPath);
+            }
+        }
+
+        int index = realPath.lastIndexOf("/");
         if (index == -1) {
             return null;
         }
 
-        String servicePath = path.substring(0, index);
+        String servicePath = realPath.substring(0, index);
         return servicePath;
     }
 

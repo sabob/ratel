@@ -76,6 +76,8 @@ public class RatelConfig {
 
     protected int maxRequestSize = DEFAULT_MAX_REQUEST_SIZE;
 
+    private String urlPrefix;
+
     /** The format class. */
     private Class<? extends Format> formatClass;
 
@@ -350,6 +352,20 @@ public class RatelConfig {
      */
     public void setMaxRequestSize(int maxRequestSize) {
         this.maxRequestSize = maxRequestSize;
+    }
+
+    /**
+     * @return the urlPrefix
+     */
+    public String getUrlPrefix() {
+        return urlPrefix;
+    }
+
+    /**
+     * @param urlPrefix the urlPrefix to set
+     */
+    public void setUrlPrefix(String urlPrefix) {
+        this.urlPrefix = urlPrefix;
     }
 
     /**
