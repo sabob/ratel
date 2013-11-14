@@ -76,7 +76,7 @@ define(function(require) {
             
             // Select target with data-kv-attribute and all children with data-kv-attribute, hence the ',' in the selector below. Note the
             // space between the target and data-attribute.
-            $(target + "[data-kv-action], " + target + " [data-kv-action]").each(function() {
+            $("[data-kv-action]", target).addBack("[data-kv-action]").each(function(i, item) {
                 var currentID = this.attributes["data-kv-action"].value;
                 // TODO remove data-kv-acion
                 var currentAction = actionRegistry[currentID];
@@ -100,7 +100,7 @@ define(function(require) {
                     */
                 });
                 // remove the action attribute
-                $(this).removeAttr("data-kv-action");
+                node.removeAttr("data-kv-action");
             });
             
             this.reset();
