@@ -74,17 +74,17 @@ define(function(require) {
             console.log("binding target:", target);
             
             // Select target with data-ratel-attributge and all children with data-ratel-attributge, hence the ',' in the selector below
-            $(target + "[data-ratel-action], " + target + " [data-ratel-action]").each(function() {
+            $("[data-kv-action]", target).addBack("[data-kv-action]").each(function(i, item) {
                 var currentID = this.attributes["data-ratel-action"].value;
                 // TODO remove data-ratel-acion
                 var currentAction = actionRegistry[currentID];
                 
-                //$(this).off(currentAction.type);
-                $(this).on(currentAction.type, function(e) {
+                var node = $(this);
+                node.on(currentAction.type, function(e) {
                     currentAction.action(e, currentAction.objectRef, currentAction.options);
                 });
                 // remove the action attribute
-                $(this).removeAttr("data-ratel-action");
+                node.removeAttr("data-ratel-action");
             });
             
             this.reset();
