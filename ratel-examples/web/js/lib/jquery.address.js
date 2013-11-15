@@ -134,6 +134,7 @@ define(function(require) {
                 _value = _href();
             },
             _load = function() {
+                if ($.address == null) return;
                 if (!_loaded) {
                     _loaded = TRUE;
                     _options();
