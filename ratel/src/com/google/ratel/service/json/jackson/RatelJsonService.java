@@ -10,9 +10,10 @@ import com.google.ratel.service.json.*;
 import java.io.*;
 
 /**
- *
+ * Based on Jackson v2.2.2
+ * Jackson core, databind and annotation is required
  */
-public class JacksonService implements JsonService {
+public class RatelJsonService implements JsonService {
 
     protected boolean prettyPrint;
 
@@ -20,7 +21,7 @@ public class JacksonService implements JsonService {
 
     protected ObjectMapper mapper;
 
-    public JacksonService() {
+    public RatelJsonService() {
     }
 
     @Override

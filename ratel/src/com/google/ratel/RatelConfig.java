@@ -14,7 +14,7 @@ import com.google.ratel.service.handler.HelpHandler;
 import com.google.ratel.service.invoke.DefaultInvokeHandler;
 import com.google.ratel.service.invoke.InvokeHandler;
 import com.google.ratel.service.json.*;
-import com.google.ratel.service.json.jackson.JacksonService;
+import com.google.ratel.service.json.jackson.RatelJsonService;
 import com.google.ratel.service.log.*;
 import com.google.ratel.service.log.LogService;
 import com.google.ratel.service.resolver.*;
@@ -237,7 +237,7 @@ public class RatelConfig {
     }
 
     protected JsonService createJsonService() {
-        JacksonService service = new JacksonService();
+        RatelJsonService service = new RatelJsonService();
 
         if (getMode().isDevelopmentModes()) {
             service.setPrettyPrint(true);
