@@ -1,6 +1,5 @@
 define(function(require) {
     window.onerror = function MOO() {
-        console.log("MOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
     }
     var $ = require("jquery");
     require("domReady!");
@@ -31,7 +30,6 @@ define(function(require) {
             for (var prop in routesByName) {
                 routesByPath[routesByName[prop]] = prop;
             }
-            //console.log("routesByPath", routesByPath);
         };
         this.init = function(options) {
             if (initialized) {
@@ -46,7 +44,6 @@ define(function(require) {
             if (options) {
                 defaultView = options.defaultView;
                 var routes = options.routes;
-                //console.log("setting Routes", routes);
                 this.setRoutes(routes);
             }
 
@@ -57,35 +54,24 @@ define(function(require) {
                 //event.preventDefault();
                 //event.stopPropagation();
 
-                //console.log("E:", event);
                 if (processHashChange) {
                     var viewName = event.path;
-                    //console.log("name", name);
-                    //console.log("hash", $.address.hash());
-                    //console.log("path", $.address.path());
-                    //console.log("value", $.address.value());
-                    //console.log("parameterNames", $.address.parameterNames());
                     var viewPath = routesByName[viewName];
                     if (!viewPath) {
                         viewPath = viewName;
                     }
-                    //console.log("address.change ViewName", viewName);
 
                     if (viewPath) {// ensure path is not blank
                         //if (name !== event.path) { // ensure we don't process path twice
-                        //console.log("name", viewPath, "event.path", event.path);
                         var params = event.parameters;
-                        //console.log("URL PArams", params);
                         that.showView({view: viewPath, params: params});
                         //}
                     }
                 }
             });
-            //console.log("address path", $.address.path());
             if ($.address.path()) {
                 //viewManager.showView({view: Home});
                 //$.address.value($.address.value());
-                //console.log("updating");
                 $.address.update();
             } else {
 
@@ -185,7 +171,6 @@ define(function(require) {
             //$.address.value(viewName);
             //route[viewName] = arguments;
             //$.address.parameter("pok", "moo");
-            //console.log("param", $.address.parameter("pok"));
 
 
             var dom = new function Dom() {
@@ -340,7 +325,6 @@ define(function(require) {
         this.attachViewWithAnim = function(html, options) {
 
             var target = options.target;
-            console.log("T:", target);
             $(target).fadeOut('fast', function() {
 
                 $(target).empty();
@@ -375,16 +359,13 @@ define(function(require) {
         }
 
         function removeGlobalErrorHandler(target) {
-            console.log("globalErrorHandler removing", target);
             var i = $.inArray(target, errorHandlerStack);
             if (i !== -1) {
                 errorHandlerStack.splice(i, 1);
-                console.log("globalErrorHandler removed", target);
             }
         }
 
         function addGlobalErrorHandler(target) {
-            console.log("addGlobalErrorHandler", target);
             var i = $.inArray(target, errorHandlerStack);
             if (i !== -1) {
                 return;
@@ -392,13 +373,11 @@ define(function(require) {
 
             if (errorHandlerStack.length >= 1) {
                 errorHandlerStack.push(target);
-                console.log("addGlobalErrorHandler already present", target);
                 return;
             }
 
             errorHandlerStack.push(target);
             if (window.onerror === globalErrorHandler) {
-                console.log("globalErrorHandler is already se as window.onerror");
                 return;
             }
 
@@ -408,8 +387,6 @@ define(function(require) {
         }
 
         function globalErrorHandler(message, url, lineNumber) {
-            console.log("Global called");
-            console.log("Old error", globalErrorHandler.prevError);
             for (var i = 0; i < errorHandlerStack.length; i++) {
                 var target = errorHandlerStack[i];
                 targetErrorHandler(message, url, lineNumber, target);
@@ -420,12 +397,10 @@ define(function(require) {
             if (prevError) {
                 //window.onerror = currentError;
                 prevError(message, url, lineNumber);
-                console.log("Current error called " + target);
             }
         }
         
         function targetErrorHandler(message, url, lineNumber, target) {
-                console.log("targetErrorHandler for " + target, message, url, lineNumber);
                 that.clear(target);
                 $(target).finish();
                 $(target).clearQueue().stop(true, true);
