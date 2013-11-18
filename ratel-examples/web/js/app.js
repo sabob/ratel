@@ -5,19 +5,15 @@
 requirejs.config({
     "baseUrl": "lib",
     "paths": {
-      "app": "../app",
-      "hb": "spamd/hb",
-        "moment": "moment",
-        "numeral": "numeral"
-               
-    },
-    "shim": {
-        "jquery.alpha": ["jquery"],
-        "jquery.beta": ["jquery"],
-        "jquery.deserialize": ["jquery"],
-        "handlebars": { exports: "Handlebars"}
+      "app": "../app"
     }
+    /*
+    , "shim": {
+    }*/
 });
 
 // Load the main app module to start the app
-requirejs(["app/main"]);
+console.log("Loading MAIN!@");
+//requirejs(['spamd/onResourceLoad', "app/main"]);
+requirejs(["spamd/spamd"]);
+requirejs([ "app/main"]);

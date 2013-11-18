@@ -138,7 +138,7 @@ define(function(require) {
                 if (!_loaded) {
                     _loaded = TRUE;
                     _options();
-                    $('a[rel*="address:"]').address();
+                    //$('a[rel*="address:"]').address();
                     if (_opts.wrap) {
                         var body = $('body'),
                             wrap = $('body > *')

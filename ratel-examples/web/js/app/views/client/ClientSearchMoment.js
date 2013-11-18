@@ -25,7 +25,7 @@ define(function(require) {
 
         this.onInit = function(dom, args) {
             var request = $.ajax({
-                url: "/ratel-examples/clientservice/clients",
+                url: "/ratel-examples/service/clientservice/clients",
                 type: "GET",
                 dataType: "json"
                         //contentType: "application/json"
@@ -64,7 +64,7 @@ define(function(require) {
                 var id = $(e.target).attr('value');
                 console.log("ID", id);
                 var args = {id: id, ClientSearch: ClientSearch};
-                viewManager.showView(ClientEdit, args);
+                viewManager.showView({view: ClientEdit, args: args});
             });
 
             $("#table").on("click", ".delete-link", function(e) {

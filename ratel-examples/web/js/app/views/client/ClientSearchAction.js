@@ -29,7 +29,7 @@ define(function(require) {
 
         this.onInit = function(dom, args) {
             var request = $.ajax({
-                url: "/ratel-examples/clientservice/clients",
+                url: "/ratel-examples/service/clientservice/clients",
                 type: "GET",
                 dataType: "json"
                         //contentType: "application/json"

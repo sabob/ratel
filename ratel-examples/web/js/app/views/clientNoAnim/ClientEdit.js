@@ -5,45 +5,49 @@ define(function(require) {
     var viewManager = require("spamd/view/view-manager");
     var errorUtils = require("spamd/utils/error-utils");
     require("domReady!");
-    
-        
-        function ClientEdit() {
-            
-            var that = this;
-            var id = null;
-            var ClientSearch;
-        
+
+
+    function ClientEdit() {
+
+        var that = this;
+        var id = null;
+        var ClientSearch;
+
         this.getTemplate = function() {
             return template;
         };
-        
-        this.onInit = function(dom, args) {
-            id = args.id;
-            ClientSearch = args.ClientSearch;
+
+        this.onInit = function(dom, options) {
+            id = options.args.id;
+            ClientSearch = options.args.ClientSearch;
 
             getClient(dom);
         };
-        
-        function onAttached() {
+
+        function onAttached(data) {
+            //copy data to form
+            utils.fromObject("form", data);
+
             $("#save").click(function(e) {
                 saveClient(ClientSearch);
-                
+
             });
         }
-        
+
         function getClient(dom) {
             var request = $.ajax({
-                url: "/ratel-examples/clientService/getClient",
+                url: "/ratel-examples/service/clientservice/client",
                 data: "id=" + id,
                 type: "GET",
                 dataType: "json"
-                //contentType: "application/json"
+                        //contentType: "application/json"
             });
 
             request.done(function(data, textStatus, jqXHR) {
-                dom.attach(that.getTemplate());
-                utils.fromObject("form", data);
-                //copy data to form
+                console.log("getClient() completed: ", textStatus);
+                dom.attach(that.getTemplate(), {anim: false}).then(function() {
+                    onAttached(data);
+                });
             });
 
             request.fail(function(jqXHR, textStatus, errorThrown) {
@@ -53,8 +57,6 @@ define(function(require) {
                 errorUtils.showError(text);
             });
             request.always(function(arg1, textStatus, arg3) {
-                console.log("getClient() completed: ", textStatus);
-                onAttached();
             });
         }
 
@@ -62,7 +64,7 @@ define(function(require) {
             var json = utils.toJson("form");
 
             var request = $.ajax({
-                url: "/ratel-examples/clientService/saveClient",
+                url: "/ratel-examples/service/clientservice/save",
                 data: json,
                 type: "POST",
                 dataType: "json",
@@ -71,7 +73,7 @@ define(function(require) {
 
             request.done(function(data, textStatus, jqXHR) {
                 console.log('done', data);
-                viewManager.showView(ClientSearch);
+                viewManager.showView({view: ClientSearch});
             });
 
             request.fail(function(jqXHR, textStatus, errorThrown) {

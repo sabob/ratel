@@ -17,9 +17,9 @@ define(function(require) {
             return template;
         };
 
-        this.onInit = function(dom, args) {
-            id = args.id;
-            ClientSearch = args.ClientSearch;
+        this.onInit = function(dom, options) {
+            id = options.args.id;
+            ClientSearch = options.args.ClientSearch;
 
             getClient(dom);
         };
@@ -34,7 +34,7 @@ define(function(require) {
 
         function getClient(dom) {
             var request = $.ajax({
-                url: "/ratel-examples/clientService/getClient",
+                url: "/ratel-examples/service/clientservice/client",
                 data: "id=" + id,
                 type: "GET",
                 dataType: "json"
@@ -65,7 +65,7 @@ define(function(require) {
             var json = utils.toJson("form");
 
             var request = $.ajax({
-                url: "/ratel-examples/clientService/saveClient",
+                url: "/ratel-examples/service/clientservice/save",
                 data: json,
                 type: "POST",
                 dataType: "json",
@@ -74,7 +74,7 @@ define(function(require) {
 
             request.done(function(data, textStatus, jqXHR) {
                 console.log('done', data);
-                viewManager.showView(ClientSearch);
+                viewManager.showView({view : ClientSearch});
             });
 
             request.fail(function(jqXHR, textStatus, errorThrown) {
