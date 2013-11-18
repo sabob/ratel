@@ -1,6 +1,7 @@
 define(function(require) {
     var $ = require("jquery");
     var Intro = require("./views/intro/Intro");
+    var Docs = require("./views/docs/Docs");
     var Home = require("./views/home/Home");
     var footer = require("hb!./views/footer/footer.htm");
     var errorUtils = require("./utils/error-utils");
@@ -54,7 +55,7 @@ define(function(require) {
 
     $("#menu-docs").click(function(e) {
         e.preventDefault();
-        viewManager.showView(Intro);
+        viewManager.showView(Docs);
         //var link = e.target;
         //setActiveMenu(link);
     });
