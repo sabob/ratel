@@ -5,7 +5,10 @@
  *
  * Dual licensed under the MIT and GPLv2 licenses.
  */
-(function( jQuery, undefined ) {
+define(function(require) {
+    var jQuery = require("jquery");
+    
+//(function( jQuery, undefined ) {
 var push = Array.prototype.push,
     rcheck = /^(?:radio|checkbox)$/i,
     rplus = /\+/g,
@@ -138,4 +141,5 @@ jQuery.fn.deserialize = function( data, options ) {
     return this;
 };
 
-})( $ );
+//})( $ );
+});
