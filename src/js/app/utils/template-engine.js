@@ -1,6 +1,7 @@
 define(function(require) {
     var $ = require("jquery");
-    var utils = require("./utils");
+    require("jquery.address");
+    var utils = require("../utils/utils");
     var Handlebars = require("handlebars");
     var moment = require("moment");
     var numeral = require("numeral");
@@ -24,12 +25,12 @@ define(function(require) {
             /*
             var container = actionRegistryTypes[target];
                 for (var type in container.types) {
-                    $(container).off(type, "[data-ratel-action]");
+                    $(container).off(type, "[data-kv-action]");
                 }*/
             //}
             actionRegistry = [];
             //delete actionRegistryTypes[target];
-            console.log("TemplateEngine was reset!");
+            //console.log("TemplateEngine was reset!");
         };
 
         this.render = function(template, context, options) {
@@ -56,12 +57,12 @@ define(function(require) {
             console.log("container:", container, "target:", target);
             for (var type in container) {
                 console.log("type:", type);
-                $(target).off(type, "[data-ratel-action]");
-                $(target).on(type, "[data-ratel-action]", function(e) {
-                    var currentID = this.attributes["data-ratel-action"].value;
+                $(target).off(type, "[data-kv-action]");
+                $(target).on(type, "[data-kv-action]", function(e) {
+                    var currentID = this.attributes["data-kv-action"].value;
                     //console.log(currentID);
                     var currentAction = actionRegistry[currentID];
-                    if (type !== currentAction.type) {
+                    if (type !== currentAction.on) {
                         return;
                     }
                     currentAction.action(e, currentAction.objectRef);
@@ -71,20 +72,37 @@ define(function(require) {
 
         this.bind = function(target) {
             target = target || "body";
-            console.log("binding target:", target);
+            //console.log("binding target:", target);
             
-            // Select target with data-ratel-attributge and all children with data-ratel-attributge, hence the ',' in the selector below
+            // Select target with data-kv-attribute and all children with data-kv-attribute, hence the ',' in the selector below. Note the
+            // space between the target and data-attribute.
             $("[data-kv-action]", target).addBack("[data-kv-action]").each(function(i, item) {
-                var currentID = this.attributes["data-ratel-action"].value;
-                // TODO remove data-ratel-acion
+                var currentID = this.attributes["data-kv-action"].value;
+                // TODO remove data-kv-acion
                 var currentAction = actionRegistry[currentID];
                 
+                //$(this).off(currentAction.on);
                 var node = $(this);
-                node.on(currentAction.type, function(e) {
-                    currentAction.action(e, currentAction.objectRef, currentAction.options);
+                node.on(currentAction.on, function(e) {
+                    if (currentAction.on === "click") {
+                        //e.preventDefault();
+                    }
+
+                    // Bind jQuery this to action
+                   currentAction.action.call(this, e, currentAction.objectRef, currentAction.options);
+                 /*
+                    var tagName = node.prop("tagName").toLowerCase();
+                    var isAnchor = 'a' === tagName;
+                    if (isAnchor) {
+                        var href = node.attr('href');
+                        //$.address.value(href);
+                        e.preventDefault();
+                        //console.log(href);
+                    }
+                    */
                 });
                 // remove the action attribute
-                node.removeAttr("data-ratel-action");
+                node.removeAttr("data-kv-action");
             });
             
             this.reset();
@@ -99,7 +117,7 @@ define(function(require) {
 
             checkHelper('action');
             Handlebars.registerHelper('action', function(action, options) {
-                var type = options.hash.type || "click";
+                var on = options.hash.on || "click";
 
                 var actionRef = action;
                 if (typeof actionRef === "string") {
@@ -113,7 +131,7 @@ define(function(require) {
                     }
                 }
                 var actionData = {
-                    type: type,
+                    on: on,
                     action: actionRef,
                     options: options,
                     objectRef: this
@@ -126,13 +144,13 @@ define(function(require) {
                     container = {};
                     actionRegistryTypes[target] = container;
                 }
-                container[type] = null;
+                container[on] = null;
                 */
                 
                 var length = actionRegistry.push(actionData);
                 var id = length - 1;
 
-                return new Handlebars.SafeString("data-ratel-action=\"" + id + "\"");
+                return new Handlebars.SafeString("data-kv-action=\"" + id + "\"");
             });
 
             checkHelper('formatDate');
