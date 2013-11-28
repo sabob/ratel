@@ -87,7 +87,9 @@ define(function(require) {
                     if (currentAction.on === "click") {
                         //e.preventDefault();
                     }
-                   currentAction.action(e, currentAction.objectRef, currentAction.options); 
+
+                    // Bind jQuery this to action
+                   currentAction.action.call(this, e, currentAction.objectRef, currentAction.options);
                  /*
                     var tagName = node.prop("tagName").toLowerCase();
                     var isAnchor = 'a' === tagName;
