@@ -7,6 +7,7 @@
         <META HTTP-EQUIV="EXPIRES" CONTENT="0">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="js/lib/jquery.js"></script>
+        <script src="js/lib/spamd/utils/error-utils.js"></script>
 
         <script>
             function toJson(formId) {
@@ -286,7 +287,7 @@
                 });
                 request.fail(function(jqXHR, textStatus) {
                     var text = jqXHR.responseText;
-                    $.ratel.showError(text);
+                    $.spamd.showError(text);
 
                 });
             }
@@ -309,48 +310,48 @@
         <h3>Tests</h3>
 
         <p>
-            <a href="tests/PersonService/getJson" id="getJson">getJson(java.lang.String)</a>
+            <a href="service/tests/PersonService/getJson" id="getJson">getJson(java.lang.String)</a>
         </p>
 
         <p>
-            <a href="tests/PersonService/getPojo" id="getPojo">getPojo(Person)</a>
+            <a href="service/tests/PersonService/getPojo" id="getPojo">getPojo(Person)</a>
         </p>
 
         <p>
-            <a href="tests/PersonService/getNestedPojo" id="getNestedPojo">getNestedPojo(Person)</a>
+            <a href="service/tests/PersonService/getNestedPojo" id="getNestedPojo">getNestedPojo(Person)</a>
         </p>
 
         <p>
-            <a href="tests/PersonService/getArray" id="getArray">getArray(5, 30000, true, Person)</a>            
+            <a href="service/tests/PersonService/getArray" id="getArray">getArray(5, 30000, true, Person)</a>            
         </p>
 
         <p>
-            <a href="tests/PersonService/getPrimitiveBoolean" id="getPrimitiveBoolean">getPrimitiveBoolean(true)</a>
+            <a href="service/tests/PersonService/getPrimitiveBoolean" id="getPrimitiveBoolean">getPrimitiveBoolean(true)</a>
         </p>
 
         <p>
-            <a href="tests/PersonService/getInteger" id="getInteger">getInteger(9)</a>
+            <a href="service/tests/PersonService/getInteger" id="getInteger">getInteger(9)</a>
         </p>
 
         <p>
-            <a href="tests/PersonService/getIntegerArray?id=9&id=8&id=7" id="getIntegerArray">getIntegerArray(9, 8, 7)</a>
+            <a href="service/tests/PersonService/getIntegerArray?id=9&id=8&id=7" id="getIntegerArray">getIntegerArray(9, 8, 7)</a>
         </p>
 
         <p>
-            <a href="tests/PersonService/getPrimitiveLong" id="getPrimitiveLong">getPrimitiveLong(999999999999999)</a>
+            <a href="service/tests/PersonService/getPrimitiveLong" id="getPrimitiveLong">getPrimitiveLong(999999999999999)</a>
         </p>
 
         <p>
-            <a href="tests/PersonService/getPrimitiveLongArray?id=9&id=8&id=7" id="getPrimitiveLongArray">getPrimitiveLongArray(9, 8, 7)</a>
+            <a href="service/tests/PersonService/getPrimitiveLongArray?id=9&id=8&id=7" id="getPrimitiveLongArray">getPrimitiveLongArray(9, 8, 7)</a>
         </p>
 
 
         <p>
-            <a href="tests/PersonService/getParam?id=789" id="getParam">getParam(789)</a>
+            <a href="service/tests/PersonService/getParam?id=789" id="getParam">getParam(789)</a>
         </p>
 
         <p>
-            <a href="tests/PersonService/getParams?id=789&employed=true&description=Hello" id="getParams">getParams(789, true, "Hello")</a>
+            <a href="service/tests/PersonService/getParams?id=789&employed=true&description=Hello" id="getParams">getParams(789, true, "Hello")</a>
         </p>
         
         <p>
@@ -358,14 +359,14 @@
         </p>
 
         <p>
-            <a href="tests/PersonService/getExceptionWithArgs" id="getExceptionWithArgs">getExceptionWithArgs()</a>
+            <a href="service/tests/PersonService/getExceptionWithArgs" id="getExceptionWithArgs">getExceptionWithArgs()</a>
         </p>
 
         <p>
-            <a href="tests/PersonService/getExceptionWithRuntime" id="getExceptionWithRuntime">getExceptionWithRuntime()</a>
+            <a href="service/tests/PersonService/getExceptionWithRuntime" id="getExceptionWithRuntime">getExceptionWithRuntime()</a>
         </p>
 
-        <form action="tests/PersonService/getExceptionWithJson" method="post" id='getExceptionWithJson'>
+        <form action="service/tests/PersonService/getExceptionWithJson" method="post" id='getExceptionWithJson'>
             <p>
                 Exception while posting JSON
             </p>
@@ -377,15 +378,15 @@
         </form>
 
         <p>
-            <a href='tests/PersonService/getJsonParam?person={"firstname": "bob", "lastname":"Smith", "org" : {"name":"Mega corp"}}' id="getJsonParam">getJsonParam({"firstname": "bob", "lastname":"Smith", "org" : {"name":"Mega corp"}})</a>
+            <a href='service/tests/PersonService/getJsonParam?person={"firstname": "bob", "lastname":"Smith", "org" : {"name":"Mega corp"}}' id="getJsonParam">getJsonParam({"firstname": "bob", "lastname":"Smith", "org" : {"name":"Mega corp"}})</a>
         </p>
 
         <p>
-            <a href='tests/PersonService/getMixedParams?person={"firstname": "bob", "lastname":"Smith", "org" : {"name":"Mega corp"}}&description=Hello' id="getMixedParams">getMixedParams({"firstname": "bob", "lastname":"Smith", "org" : {"name":"Mega corp"}}, Hello)</a>
+            <a href='service/tests/PersonService/getMixedParams?person={"firstname": "bob", "lastname":"Smith", "org" : {"name":"Mega corp"}}&description=Hello' id="getMixedParams">getMixedParams({"firstname": "bob", "lastname":"Smith", "org" : {"name":"Mega corp"}}, Hello)</a>
         </p>
 
 
-        <form action="tests/PersonService/formParam" method="post" id='formPostParam'>
+        <form action="service/tests/PersonService/formParam" method="post" id='formPostParam'>
             <p>
                 Form param test
             </p>
@@ -394,7 +395,7 @@
             <input type="submit" name="submit" value="Submit" id='formPostParamSubmit'>
         </form>
 
-        <form action="tests/PersonService/formParams" method="post" id='formPostParams'>
+        <form action="service/tests/PersonService/formParams" method="post" id='formPostParams'>
             <p>
                 Form params test
             </p>
@@ -408,10 +409,10 @@
 
 
         <p>
-            <a href='tests/PersonService/doFormPostParams' id="doFormPostParams">doFormPostParams()</a>
+            <a href='service/tests/PersonService/doFormPostParams' id="doFormPostParams">doFormPostParams()</a>
         </p>
 
-        <form action="tests/PersonService/upload" method="post" enctype="multipart/form-data">
+        <form action="service/tests/PersonService/upload" method="post" enctype="multipart/form-data">
             <p>
                 Upload File Test
             </p>
@@ -421,7 +422,7 @@
             <input type="submit" name="submit" value="Submit">
         </form>
 
-        <form action="tests/PersonService/uploadFileItem" method="post" enctype="multipart/form-data">
+        <form action="service/tests/PersonService/uploadFileItem" method="post" enctype="multipart/form-data">
             <p>
                 Upload File Item to a named service method parameter -> uploadFileItem(FileItem fileItem);
             </p>
@@ -430,7 +431,7 @@
             <input type="submit" name="submit" value="Submit">
         </form>
 
-        <form action="tests/PersonService/uploadFileItems" method="post" enctype="multipart/form-data">
+        <form action="service/tests/PersonService/uploadFileItems" method="post" enctype="multipart/form-data">
             <p>
                 Upload File Items to a named service method parameter -> uploadFileItems(FileItem[] fileItem);
             </p>

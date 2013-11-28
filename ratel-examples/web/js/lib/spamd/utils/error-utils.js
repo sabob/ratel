@@ -9,13 +9,19 @@
 }(function($) {
 // use $ safely, it's provided either by AMD or module pattern
 
-    var kv = {};
-    if (!$.kv) {
-        $.kv = kv;
+    var spamd = {};
+    if (!$.spamd) {
+        $.spamd = spamd;
     }
-    $.kv.showError = function(text) {
+    $.spamd.showError = function(text, selector) {
+        selector = selector || 'body';
         var tmpl = '<div id="kv-overlay" class="overlay"></div><div id="errorDialog"><div id="errorHolder"></div><div class="close bl-close"><a href="#">Close</a></div><div class="close br-close"><a href="#">Close</a></div></div>';
-        $(tmpl).appendTo('body');
+
+        if ($(selector).length == 0) {
+            console.log("selector '" + selector + " not found in the document!");
+            return;
+        }
+        $(tmpl).appendTo(selector);
         var iframe = $('<iframe id="dialogFrame"/>').appendTo('#errorHolder');
         var target = $(iframe).contents()[0];
         target.open();
@@ -143,5 +149,5 @@
             });
         }
     };
-    return kv;
+    return spamd;
 }));
