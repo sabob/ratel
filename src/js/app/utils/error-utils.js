@@ -9,19 +9,29 @@
 }(function($) {
 // use $ safely, it's provided either by AMD or module pattern
 
-    var ratel = {};
-    if (!$.ratel) {
-        $.ratel = ratel;
+    var spamd = {};
+    if (!$.spamd) {
+        $.spamd = spamd;
     }
-    $.ratel.showError = function(text) {
-        var tmpl = '<div id="ratel-overlay" class="overlay"></div><div id="errorDialog"><div id="errorHolder"></div><div class="close bl-close"><a href="#">Close</a></div><div class="close br-close"><a href="#">Close</a></div></div>';
-        $(tmpl).appendTo('body');
+    $.spamd.showError = function(text, selector) {
+        selector = selector || 'body';
+        var tmpl = '<div id="kv-overlay" class="overlay"></div><div id="errorDialog"><div id="errorHolder"></div><div class="close bl-close"><a href="#">Close</a></div><div class="close br-close"><a href="#">Close</a></div></div>';
+
+        if ($(selector).length == 0) {
+            console.log("selector '" + selector + " not found in the document!");
+            return;
+        }
+        $(tmpl).appendTo(selector);
         var iframe = $('<iframe id="dialogFrame"/>').appendTo('#errorHolder');
         var target = $(iframe).contents()[0];
         target.open();
         target.write('<!doctype html><html><head></head><body></body></html>');
         target.close();
-        $('#dialogFrame').contents().find('body').empty().append(text);
+        $('#dialogFrame').contents().find('body').empty().html(text);
+
+        if (typeof prettyPrint !== "undefined") {
+            prettyPrint(null, $('#dialogFrame')[0].contentDocument.body);
+        }
 
         applyStyling();
 
@@ -52,7 +62,7 @@
             $("#errorDialog").hide();
             $('.overlay').off('click');
             $(document).off('keydown');
-            $("#ratel-overlay").remove();
+            $("#kv-overlay").remove();
             $("#errorDialog").remove();
         }
 
@@ -60,7 +70,7 @@
             var h = ($(window).height());
             var w = ($(window).width());
             h = h / 150 * 100;
-            w = w / 150 * 100;
+            w = w / 120 * 100;
             element.css("height", Math.max(0, h) + "px");
             element.css("width", Math.max(0, w) + "px");
         }
@@ -71,17 +81,18 @@
             var ow = element.outerWidth();
             var wh = $(window).height();
             var ww = $(window).width();
-            var st = $(window).scrollTop();
-            var sl = $(window).scrollLeft();
             var t = ((wh - oh) / 2);
             var l = ((ww - ow) / 2);
+            t += $(document).scrollTop();
+            l += $(document).scrollLeft();
+
             element.css("top", Math.max(0, t) + "px");
             element.css("left", Math.max(0, l) + "px");
         }
 
         function applyStyling() {
 
-            $('#ratel-overlay').css({
+            $('#kv-overlay').css({
                 width: '100%',
                 height: '100%',
                 position: 'fixed',
@@ -113,7 +124,7 @@
                 'border-radius': '10px',
                 border: '1px solid #ccc',
                 'border-color': '#9ecaed',
-                'box-shadow': '0 0 10px 10px #333'
+                'box-shadow': '0 0 5px 5px #ddd'
             });
 
             $('#dialogFrame').css({
@@ -138,5 +149,5 @@
             });
         }
     };
-    return ratel;
+    return spamd;
 }));
