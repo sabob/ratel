@@ -47,5 +47,17 @@
         <delete file="${root}/README.md"/>
         <delete file="${root}/index.html"/>
     </target>
+    
+     <target name="copy-from-jock" description="Copy jock sources in this project">
+        <copy todir="../src/js/lib" verbose="true">
+            <fileset dir="c:/dev/os/jock/jock/src/js/lib"/>
+        </copy>
+    </target>
+    
+    <target name="copy-to-jock" description="Copy this project sources to jock">
+        <copy todir="c:/dev/os/jock/jock/src/js/lib" verbose="true">
+            <fileset dir="../src/js/lib"/>
+        </copy>
+    </target>
 
 </project>
